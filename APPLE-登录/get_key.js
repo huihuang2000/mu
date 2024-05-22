@@ -17944,4 +17944,3 @@ function get_KEY(name) {
     let c = A2.publicValue
     return btoa(String.fromCharCode.apply(String, new Uint8Array(c.buffer)))
 }
-console.log(get_KEY('1111111'))
