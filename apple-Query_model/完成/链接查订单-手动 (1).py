@@ -5,7 +5,15 @@ import aiohttp
 import os
 import time
 from itertools import zip_longest
-from PyQt6.QtWidgets import QApplication,QWidget,QPushButton,QTableWidget,QTableWidgetItem,QVBoxLayout,QHBoxLayout
+from PyQt6.QtWidgets import (
+    QApplication,
+    QWidget,
+    QPushButton,
+    QTableWidget,
+    QTableWidgetItem,
+    QVBoxLayout,
+    QHBoxLayout,
+)
 from PyQt6.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, Qt
 from openpyxl import Workbook
 import openpyxl
@@ -29,7 +37,7 @@ class AsyncRequest(QObject):
         for attempt in range(max_retries):
             try:
                 async with aiohttp.ClientSession() as session:
-                    response = await session.get(self.url,timeout=5)
+                    response = await session.get(self.url, timeout=5)
                     response.raise_for_status()
                     response_text = await response.text()
 
@@ -44,19 +52,29 @@ class AsyncRequest(QObject):
                     dd = r'/shop/order/detail/\d+/([^"/]+)'
                     status = r'"deliveryDate"\s*:\s*"([^"]+)"'
                     pattern = r'"currentStatus"\s*:\s*"([^"]+)"'
-                    Order_number = r'trackingURLMap\":\s*\{\"(.*?)\"\:\s*\"(.*?)\"'
+                    Order_number = r"trackingURLMap\":\s*\{\"(.*?)\"\:\s*\"(.*?)\""
                     # 仓库
                     first_names = re.findall(r'"firstName":"([^"]+)"', response_text)
                     last_names = re.findall(r'"lastName":"([^"]+)"', response_text)
                     name_pairs = [
                         f"{name1.strip()} {name2.strip()}"
-                        for name1, name2 in zip_longest(first_names, last_names, fillvalue='')
+                        for name1, name2 in zip_longest(
+                            first_names, last_names, fillvalue=""
+                        )
                     ]
                     unique_name_pairs = list(set(name_pairs))
-                    sorted_unique_name_pairs = sorted(unique_name_pairs, key=lambda pair: (len(pair.split()[0]), pair.lower()))
-                    first_variable = sorted_unique_name_pairs[0] if sorted_unique_name_pairs else ''
-                    second_variable = sorted_unique_name_pairs[1] if len(sorted_unique_name_pairs) > 1 else ''
-
+                    sorted_unique_name_pairs = sorted(
+                        unique_name_pairs,
+                        key=lambda pair: (len(pair.split()[0]), pair.lower()),
+                    )
+                    first_variable = (
+                        sorted_unique_name_pairs[0] if sorted_unique_name_pairs else ""
+                    )
+                    second_variable = (
+                        sorted_unique_name_pairs[1]
+                        if len(sorted_unique_name_pairs) > 1
+                        else ""
+                    )
 
                     MODO = re.search(modo, response_text)
                     TIME = re.search(time, response_text)
@@ -68,15 +86,21 @@ class AsyncRequest(QObject):
 
                     if MODO and TIME and DD and STATUS:
                         result_data = {
-                            "productName": MODO.group(1) if MODO else '',
-                            "orderPlacedDate": TIME.group(1) if TIME else '',
-                            "orderNumber": DD.group(1) if DD else '',
-                            "status": STATUS.group(1) if STATUS else '',
+                            "productName": MODO.group(1) if MODO else "",
+                            "orderPlacedDate": TIME.group(1) if TIME else "",
+                            "orderNumber": DD.group(1) if DD else "",
+                            "status": STATUS.group(1) if STATUS else "",
                             "Track_shipment": Track_shipment,
-                            "The_status_of_the_goods": The_status_of_the_goods.group(1) if The_status_of_the_goods else '',
-                            "Order_number": Order_number.group(1) if Order_number else '',
-                            "Delivers":first_variable,
-                            "Bills_to":second_variable
+                            "The_status_of_the_goods": (
+                                The_status_of_the_goods.group(1)
+                                if The_status_of_the_goods
+                                else ""
+                            ),
+                            "Order_number": (
+                                Order_number.group(1) if Order_number else ""
+                            ),
+                            "Delivers": first_variable,
+                            "Bills_to": second_variable,
                         }
                         # print(result_data)
                         self.result.emit(self.row, result_data)
@@ -142,7 +166,7 @@ class InterFace(QWidget):
                 "Order_number",
                 "Track shipment",
                 "Delivers",
-                "Bills to"
+                "Bills to",
             ]
         )
         self.table_widget.setShowGrid(True)
@@ -212,13 +236,8 @@ class InterFace(QWidget):
             self.table_widget.setItem(
                 row, 7, QTableWidgetItem(str(result["Track_shipment"]))
             )
-            self.table_widget.setItem(
-                row, 8, QTableWidgetItem(str(result["Delivers"]))
-            )
-            self.table_widget.setItem(
-                row, 9, QTableWidgetItem(str(result["Bills_to"]))
-            )
-
+            self.table_widget.setItem(row, 8, QTableWidgetItem(str(result["Delivers"])))
+            self.table_widget.setItem(row, 9, QTableWidgetItem(str(result["Bills_to"])))
 
     def Get_link(self):
         clipboard = QApplication.clipboard().text()
@@ -252,7 +271,7 @@ class InterFace(QWidget):
             "Order_number",
             "Track shipment",
             "Delivers",
-            "Bills to"
+            "Bills to",
         ]
         ws.append(headers)
 
@@ -260,7 +279,7 @@ class InterFace(QWidget):
             empty_columns = all(
                 self.table_widget.item(row, col) is None
                 or self.table_widget.item(row, col).text() == ""
-                for col in [1, 2, 3, 4, 5, 6, 7,8,9]
+                for col in [1, 2, 3, 4, 5, 6, 7, 8, 9]
             )
             if not empty_columns:
                 row_data = [
@@ -301,7 +320,7 @@ class InterFace(QWidget):
             "order time",
             "status",
             "The status of the goods",
-            "Track shipment"
+            "Track shipment",
         ]
         ws.append(headers)
 
@@ -310,16 +329,17 @@ class InterFace(QWidget):
             # 检查是否包含 'Cancelled' 或者至少有一个空列
             status_item = self.table_widget.item(row, 4)  # 假设第5列是状态列
             empty_columns = all(
-                self.table_widget.item(row, col) is None or 
-                self.table_widget.item(row, col).text() == ""
+                self.table_widget.item(row, col) is None
+                or self.table_widget.item(row, col).text() == ""
                 for col in range(1, 7)  # 假设第2列到第7列是需要检查的列
             )
 
-            if empty_columns or (status_item and status_item.text() == 'Cancelled'):
+            if empty_columns or (status_item and status_item.text() == "Cancelled"):
                 row_data = [
                     (
-                        self.table_widget.item(row, col).text() 
-                        if self.table_widget.item(row, col) else ""
+                        self.table_widget.item(row, col).text()
+                        if self.table_widget.item(row, col)
+                        else ""
                     )
                     for col in range(self.table_widget.columnCount())
                 ]
@@ -327,8 +347,12 @@ class InterFace(QWidget):
 
         # 自动调整列宽
         for col in ws.columns:
-            max_length = max(len(str(cell.value)) for cell in col if cell.value is not None)
-            ws.column_dimensions[openpyxl.utils.get_column_letter(col[0].column)].width = max_length
+            max_length = max(
+                len(str(cell.value)) for cell in col if cell.value is not None
+            )
+            ws.column_dimensions[
+                openpyxl.utils.get_column_letter(col[0].column)
+            ].width = max_length
 
         # 保存工作簿
         wb.save(file_path)
