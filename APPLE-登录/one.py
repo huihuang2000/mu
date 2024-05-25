@@ -60,5 +60,8 @@ response_4 = requests.post(
     headers=headers,
     json=json_data,
 )
+print("4-账号状态---", response_4.text)
+print("*" * 100)
+
 print("4-账号状态---", response_4.headers)
 print("*" * 100)
