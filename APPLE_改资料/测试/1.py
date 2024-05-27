@@ -74,10 +74,15 @@ dssid2_match = re.search(dssid2_pattern, CK)
 dssid2_match = dssid2_match.group(1)
 
 match = re.search(r'"x-aos-stk":"([^"]+)"', response.text)
+as_sfa_pattern = r'as_sfa=([^;]+)'
+
+as_sfa_ = re.search(as_sfa_pattern, response.text)
 x_aos_stk_value = match.group(1)
+as_sfa = as_sfa_.group(1)
 
 logging.info(f"dssid2_2: {dssid2_match}")
 logging.info(f"x-aos-stk: {x_aos_stk_value}")
+logging.info(f"as_sfa: {as_sfa}")
 logging.info('-'*200)
 
 # ------------------------------------------------------------------------------------------------------
@@ -88,7 +93,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_fid': '22A68F50E3445E2D-0B08E505DA15764C',
@@ -167,7 +172,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_cc': 'true',
@@ -222,7 +227,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_cc': 'true',
@@ -288,7 +293,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_cc': 'true',
@@ -351,11 +356,11 @@ logging.info('-'*200)
 # 第三次转
 
 cookies = {
-    'dssid2': '888d1e0d-f7f3-448c-8c3e-767fd4afff74',
+    'dssid2': dssid2,
     'dssf': '1',
-    'as_pcts': 'ZJ_L-d0ARHPi9MEixtp7ZfCPQ2ZOwAItuT7RN2jydmWVAAFaW4q_krqS3FZTfS4cp3M2:c6Cp9QYcmVS:BaaqTxgT435tUahz89bwHaPITv0NDEYv-hVEiOlS4CcLZl0lZBTHsTrRm+63jYO0JD:lUiwnPCx8bSsf8+2X:w+7ERjCUDvZN6',
+    'as_pcts': as_pcts_match,
     'as_dc': 'ucp3',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     's_fid': '1734BD72CAB684C2-2F460012A8259460',
     's_cc': 'true',
@@ -364,10 +369,10 @@ cookies = {
     'dslang': 'US-EN',
     'site': 'USA',
     'as_rumid': 'c20dc5ca-19fb-429a-b074-c36db4eccd54',
-    'as_cn': '~o64i6uZb4PuY27kIPLY3lh6XZD-jepmeS9EPzQFZZPM=',
-    'as_disa': 'AAAjAAABht7Qum9pYB4UMXkLbvPEtuwIUVoxcXMhZyIbu_vzNYw_vIGluX8typQ7vUBbCBJRAAIBZ9uq3f71sNo_1c4jEq2FIL33CSYpFczBtkFnWyxgszk=',
-    'as_rec': '1f197c5c77d611e4b10f782772172a4ada18d4beaa869a590b3233c77ff8e0797c6e344991ee1e0eac79375fc8694044123ed6e609fc9a71e1ff72d053ab91a803d1f587e2223c0ec93d9508114c218b',
-    'as_ltn_us': 'AAQEAMOztWEUr4ejXJG2xWyfIbE1Tu3LQ8tx7twMu3psrKCUUFiMarBxBVDj4ULggLnRjbxRDL8MpC0YFdgwxYWfpDv6Gye_iwQ',
+    'as_cn': as_cn,
+    'as_disa': as_disa,
+    'as_rec': as_rec,
+    'as_ltn_us': x_aos_stk_value,
     's_sq': 'applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520account%25252Fhome%2526link%253Deditedit%252520shipping%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520account%25252Fhome%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DBUTTON',
 }
 
@@ -393,7 +398,7 @@ headers = {
     'syntax': 'graviton',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
     'x-aos-model-page': 'RetailHome',
-    'x-aos-stk': 'OZ9QHQnM6slaE2GRrkHbhXOd-DV1zfxJ1B2cb6P_6uY',
+    'x-aos-stk': x_aos_stk_value,
     'x-requested-with': 'Fetch',
 }
 
@@ -423,7 +428,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_cc': 'true',
@@ -488,7 +493,7 @@ cookies = {
     'dssf': '1',
     'as_pcts': as_pcts_match,
     'as_dc': 'ucp5',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+    'as_sfa': as_sfa,
     'geo': 'CN',
     'pxro': '1',
     's_cc': 'true',
@@ -534,7 +539,7 @@ params = {
     '_m': 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress',
 }
 
-data = 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-1111&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US'
+data = 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-2222&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US'
 
 response = requests.post(
     'https://secure8.store.apple.com/shop/accounthomex',
