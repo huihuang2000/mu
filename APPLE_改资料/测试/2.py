@@ -3,8 +3,7 @@ import re
 import logging
 #------------------------------
 req = requests.session()
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
 # -----------------------------------------------------------------------------------------------------------------------------
 headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -24,7 +23,7 @@ headers = {
     'sec-ch-ua-platform': '"Windows"',
 }
 
-response = requests.get('https://secure8.store.apple.com/shop/account/home', headers=headers, allow_redirects=False)
+response = req.get('https://secure8.store.apple.com/shop/account/home', headers=headers, allow_redirects=False)
 
 dssid2_pattern = r"dssid2=([a-z0-9\-]+);"
 as_pcts_pattern = r"as_pcts=([^;]+);"
@@ -37,7 +36,6 @@ dssid2_match = dssid2_match.group(1)
 as_pcts_match = as_pcts_match.group(1)
 
 ssi = response.headers['Location']
-
 logging.info(f"dssid2: {dssid2_match}")
 logging.info(f"as_pcts: {as_pcts_match}")
 logging.info(f"ssi: {ssi}")
@@ -104,7 +102,7 @@ cookies = {
     'dslang': 'US-EN',
     'site': 'USA',
     'as_rumid': '719045a8-955d-47e5-8d54-ceda7aea0529',
-    'myacinfo': 'DAWTKNV323952cf8084a204fb20ab2508441a07d02d38bdd128a46b8cffd5ffab066b4a3600e8e24d9e77c8120c9aea5e1e6985d341d16a020c943ac9603d0a30e53846cdfea1119b7b9028e6c2f035e7489e5303a6c992c596a93062bb70f2c8d1963f63102f6ae22f7227538450a93f9ab6886a1ac42a6d9d7dfd558935a7351d8e76908b55c79c83cdc46d39ed3eec76f9475885ef20b32ebc0f6e2989e653d6bfe5c9c7dfd4fd7f53d37969da9099469b6e921bb3b6de5b7423150d2a538d5aff82e9d52b579ff4636ca78e8dd46bfb8126ba7d3af31f5497c17a9fcdb8985bde166d7494478c4a4b322c3630f6a1a270c84bb633a2f800d0e5fa2de83931cc7e954fe0aa887daf162f269695f84ff7083f83e5aea18a1132f4f2c038ec34ff03c1b199160689247c9eb686cca57b8b415b01dcfe0a1e8e28f8dd391101e74cc7e7cf0c9a5e67ba1dcc9cf4488145db3ada1bb46f6d45fbb79217ff51bdb859a769b0775275498209e5698e61986e90fe9a62a3b123efe9fee18b3a6255b0a17813ed736da076eecb5374b8df271fff41a4969fa82aa2d73589b2d0b0c509f11affcda2548c28c594b5339516b150ae7955130ad0d77f0980361b472a117145fb50f89a7de4a6452b0a2a7a8cb8c38646c52fde7b15bbc6e620666d0aaeef28e12589f1348953982f0ce565d2a4846b7e142797e585a47V3',
+    'myacinfo': 'DAWTKNV323952cf8084a204fb20ab2508441a07d02d346764e5aa6b5ba4f075f9afd733f09be374c10b6076a21bfc98c57552b2e949c4e31c130c66b4790f536c35d257dd30ed22bb213785a6a8855394f833ca298d0b7e8cf20a709cac91eeaa905921c68e18ca7eb81f58ceaa6aa3f48706be6a9e3b23d23d7049151b0418a18df16e33690e465941e8727e240561804583c98cefc174d011b2338d4f7d638b0f1a5de6626955d21fdca3b572230ea4d83b64725b231a4478c1c9ba265379bab07edcc93a18273708a7b3af41dd8d62a3e0da058c225626cbc1fb9443823f21ac685e7e3650246ab6901c6d104362762f0ab54a60a273c1bc881cf52bd396a04c10a993a8058be53b3455aed1b5f9d24b8a38401cada278eac2c2d0726d299a3452546cbbb6bd084e9aa35402e32b382199860929133c5ee8d677e26df853683a0390b70f210b81d61e8cc703643b4967882c938f2e4000c87131466e0ebe7cd7b8c99e32700a124852f7f5f904edd2306d24f9d72852e73890a4aaf343f43ac60ed677fdffdb880af62a041689814904d70b057fdfec1c5178f6edc9409613780f6ef2baa5a6c98dae832aa5da82d830e26be81d28c9b900aeb4570ec4b9f6450606c00fd72afdc1c4fea727185eb1ca6d88c652f7f74ea291b05591716fc3becdbe2408eff30cbc0b030960a48cfe5e14948680c585a47V3',
 }
 
 headers = {
@@ -357,24 +355,27 @@ logging.info('-'*200)
 # ----------------------------------------------------------------------------------------------
 # 第三次转
 
+import requests
+
 cookies = {
     'dssid2': dssid2,
     'dssf': '1',
     'as_pcts': as_pcts_match,
-    'as_dc': 'ucp3',
+    'as_dc': 'ucp5',
     'as_sfa': as_sfa,
     'geo': 'CN',
-    's_fid': '1734BD72CAB684C2-2F460012A8259460',
+    's_fid': '762698CEE2481357-3B293E76210DCA85',
     's_cc': 'true',
+    's_vi': '[CS]v1|332A2A6AF79150E6-40000B85671EC1C4[CE]',
     'pxro': '1',
-    's_vi': '[CS]v1|332A1858BF37119D-600004F0E086E007[CE]',
     'dslang': 'US-EN',
     'site': 'USA',
-    'as_rumid': 'c20dc5ca-19fb-429a-b074-c36db4eccd54',
+    'as_rumid': '221b0286-389e-499e-ae79-a63cc4f1b0b1',
+    'at_check': 'true',
     'as_cn': as_cn,
     'as_disa': as_disa,
     'as_rec': as_rec,
-    'as_ltn_us': x_aos_stk_value,
+    'as_ltn_us': as_ltn_us_3,
     's_sq': 'applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520account%25252Fhome%2526link%253Deditedit%252520shipping%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520account%25252Fhome%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DBUTTON',
 }
 
@@ -384,13 +385,13 @@ headers = {
     'cache-control': 'no-cache',
     # 'content-length': '0',
     'content-type': 'application/x-www-form-urlencoded',
-    # 'cookie': 'dssid2=888d1e0d-f7f3-448c-8c3e-767fd4afff74; dssf=1; as_pcts=ZJ_L-d0ARHPi9MEixtp7ZfCPQ2ZOwAItuT7RN2jydmWVAAFaW4q_krqS3FZTfS4cp3M2:c6Cp9QYcmVS:BaaqTxgT435tUahz89bwHaPITv0NDEYv-hVEiOlS4CcLZl0lZBTHsTrRm+63jYO0JD:lUiwnPCx8bSsf8+2X:w+7ERjCUDvZN6; as_dc=ucp3; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; s_fid=1734BD72CAB684C2-2F460012A8259460; s_cc=true; pxro=1; s_vi=[CS]v1|332A1858BF37119D-600004F0E086E007[CE]; dslang=US-EN; site=USA; as_rumid=c20dc5ca-19fb-429a-b074-c36db4eccd54; as_cn=~o64i6uZb4PuY27kIPLY3lh6XZD-jepmeS9EPzQFZZPM=; as_disa=AAAjAAABht7Qum9pYB4UMXkLbvPEtuwIUVoxcXMhZyIbu_vzNYw_vIGluX8typQ7vUBbCBJRAAIBZ9uq3f71sNo_1c4jEq2FIL33CSYpFczBtkFnWyxgszk=; as_rec=1f197c5c77d611e4b10f782772172a4ada18d4beaa869a590b3233c77ff8e0797c6e344991ee1e0eac79375fc8694044123ed6e609fc9a71e1ff72d053ab91a803d1f587e2223c0ec93d9508114c218b; as_ltn_us=AAQEAMOztWEUr4ejXJG2xWyfIbE1Tu3LQ8tx7twMu3psrKCUUFiMarBxBVDj4ULggLnRjbxRDL8MpC0YFdgwxYWfpDv6Gye_iwQ; s_sq=applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520account%25252Fhome%2526link%253Deditedit%252520shipping%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520account%25252Fhome%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DBUTTON',
+    # 'cookie': 'dssid2=39057b27-49d9-466f-9425-6d2997d2bd1d; dssf=1; as_pcts=YqI51yg4_TVldif:hbXqnkJyjUsN55wUYFIObzt_1hMrLlcLZi7pHdFaC1HvMf-u2HrNQ8Mn7P5za2c0kyViB5F_kC-EGZ:qSInWe_ioNyVh2nL4CW+dsQiI9duafH9b0L-MVIoDM6y2DkJ9cOXom5yv3HpHEbrI20EgFPaeuZtEoKak2px; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; s_fid=762698CEE2481357-3B293E76210DCA85; s_cc=true; s_vi=[CS]v1|332A2A6AF79150E6-40000B85671EC1C4[CE]; pxro=1; dslang=US-EN; site=USA; as_rumid=221b0286-389e-499e-ae79-a63cc4f1b0b1; at_check=true; as_cn=~o64i6uZb4PuY27kIPLY3lh6XZD-jepmeS9EPzQFZZPM=; as_disa=AAAjAAABHUHwbEOSMCqJKa_6qvrcTSsxKR-u5YAxcgFVPFfXtlUbyJ86E78b0uKzx-_NHchyAAIBSpPIWPZbEbeu8_wavxdORBI8iKNMV6H8fkjE5GcMOtU=; as_rec=2831064a2fa95669011b7084d3eac482dab9c5277cc6d6667932bc9c990898186931359e7febea8376ad75e1295552cb0aed0eb331f84ad95a2f85d76a3e736a7cbbb7547e5c5803ad754b9b61185dd4; as_ltn_us=AAQEAMHSKBUDSLStazo77_JE8k5t_koYumDZZeyJ6chxa4fjQFiMarBxBVDj4ULggLnRjbxRYq41EXIb9ZuY43jiuU5_hLZ_L3g; s_sq=applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520account%25252Fhome%2526link%253Deditedit%252520shipping%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520account%25252Fhome%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DBUTTON',
     'dnt': '1',
     'modelversion': 'v2',
-    'origin': 'https://secure6.store.apple.com',
+    'origin': 'https://secure8.store.apple.com',
     'pragma': 'no-cache',
     'priority': 'u=1, i',
-    'referer': 'https://secure6.store.apple.com/shop/account/home',
+    'referer': 'https://secure8.store.apple.com/shop/account/home',
     'sec-ch-ua': '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"Windows"',
@@ -409,7 +410,7 @@ params = {
     '_m': 'home.customerAccount.shippingInfo.shippingAddress',
 }
 
-response = req.post('https://secure6.store.apple.com/shop/accounthomex', params=params, cookies=cookies, headers=headers)
+response = req.post('https://secure8.store.apple.com/shop/accounthomex', params=params, cookies=cookies, headers=headers)
 
 
 
@@ -541,7 +542,7 @@ params = {
     '_m': 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress',
 }
 
-data = 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-2222&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US'
+data = 'home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US'
 
 response = req.post(
     'https://secure8.store.apple.com/shop/accounthomex',
