@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
 
         self.tableWidget = QTableWidget()
         self.tableWidget.setColumnCount(12)
-        self.tableWidget.setFixedWidth(1200)  # 设置列表框的宽度
+        self.tableWidget.setFixedWidth(1200)
         self.tableWidget.setFixedHeight(500)
         table_layout.addWidget(self.tableWidget)
         self.tableWidget.setHorizontalHeaderLabels(
