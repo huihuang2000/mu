@@ -68,7 +68,6 @@ as_pcts = as_pcts_match.group(1)
 # ssi = response_2.headers['Location']
 logging.info(dssid2)
 logging.info(as_pcts)
-# logging.info(ssi)
 logging.info(f"第二步返回dssid2,,as_pcts" + ("-" * 200))
 
 # ------------------------------------第三步返回dssid2,,ssi----------------------------------------------------------------------------------------------
@@ -463,64 +462,63 @@ as_ltn_us_2 = as_ltn_us_match.group(1) if as_ltn_us_match else None
 logging.info(f"dssid2_2: {dssid2}")
 logging.info(f"home_as_ltn_us: {as_ltn_us_2}")
 logging.info("-" * 200)
-
 # -----------------------------------------第十步估计是过检测-----------------------------------------------------------------------------------------------
 
 
-headers = {
-    "accept": "*/*",
-    "accept-language": "zh-CN,zh;q=0.9",
-    "cache-control": "no-cache",
-    # 'content-length': '4531',
-    "content-type": "application/json; charset=utf-8",
-    "cookie": f"xp_aostkn=xVXefVuS8R-_X6o783kD98LxrdT3Y8LxrdT3YwA; as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332ABCD5F8E1638B-400017842FB7A4DE[CE]; as_dc=ucp4; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
-    "origin": "https://secure7.store.apple.com",
-    "pragma": "no-cache",
-    "priority": "u=4, i",
-    "referer": "https://secure7.store.apple.com/",
-    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-}
+# headers = {
+#     "accept": "*/*",
+#     "accept-language": "zh-CN,zh;q=0.9",
+#     "cache-control": "no-cache",
+#     # 'content-length': '4531',
+#     "content-type": "application/json; charset=utf-8",
+#     "cookie": f"xp_aostkn=xVXefVuS8R-_X6o783kD98LxrdT3Y8LxrdT3YwA; as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332ABCD5F8E1638B-400017842FB7A4DE[CE]; as_dc=ucp4; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
+#     "origin": "https://secure7.store.apple.com",
+#     "pragma": "no-cache",
+#     "priority": "u=4, i",
+#     "referer": "https://secure7.store.apple.com/",
+#     "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+#     "sec-ch-ua-mobile": "?0",
+#     "sec-ch-ua-platform": '"Windows"',
+#     "sec-fetch-dest": "empty",
+#     "sec-fetch-mode": "cors",
+#     "sec-fetch-site": "same-site",
+#     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+# }
 
-response_10 = requests.post(
-    "https://xp.apple.com/report/2/xp_aos_clientperf", headers=headers
-)
+# response_10 = requests.post(
+#     "https://xp.apple.com/report/2/xp_aos_clientperf", headers=headers
+# )
 
 # --------------------------------------404再过一遍-----------------------------------------------------------------------------------------------------------
 
 
-headers = {
-    "accept": "*/*",
-    "accept-language": "zh-CN,zh;q=0.9",
-    "cache-control": "no-cache",
-    "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332ABCD5F8E1638B-400017842FB7A4DE[CE]; as_dc=ucp4; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
-    "pragma": "no-cache",
-    "priority": "u=1, i",
-    "referer": "https://secure7.store.apple.com/shop/account/home",
-    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-}
+# headers = {
+#     "accept": "*/*",
+#     "accept-language": "zh-CN,zh;q=0.9",
+#     "cache-control": "no-cache",
+#     "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332ABCD5F8E1638B-400017842FB7A4DE[CE]; as_dc=ucp4; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
+#     "pragma": "no-cache",
+#     "priority": "u=1, i",
+#     "referer": "https://secure7.store.apple.com/shop/account/home",
+#     "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+#     "sec-ch-ua-mobile": "?0",
+#     "sec-ch-ua-platform": '"Windows"',
+#     "sec-fetch-dest": "empty",
+#     "sec-fetch-mode": "cors",
+#     "sec-fetch-site": "same-origin",
+#     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+# }
 
-params = {
-    "src": "globalnav",
-    "locale": "en_US",
-}
+# params = {
+#     "src": "globalnav",
+#     "locale": "en_US",
+# }
 
-response = requests.get(
-    "https://secure7.store.apple.com/search-services/suggestions/defaultlinks/",
-    params=params,
-    headers=headers,
-)
+# response = requests.get(
+#     "https://secure7.store.apple.com/search-services/suggestions/defaultlinks/",
+#     params=params,
+#     headers=headers,
+# )
 
 # ---------------------------------------第十一步开始转换第一次-------------------------------------------------------------------------------------------
 
@@ -571,43 +569,43 @@ logging.info("-" * 200)
 
 # ---------------------------------------第十二步开始转换第二次,此处估计是检测，生成但是不用-------------------------------------------------------------------------------------------
 
-headers = {
-    "accept": "*/*",
-    "accept-language": "zh-CN,zh;q=0.9",
-    "cache-control": "no-cache",
-    # 'content-length': '0',
-    "content-type": "application/x-www-form-urlencoded",
-    "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
-    "modelversion": "v2",
-    "origin": "https://secure6.store.apple.com",
-    "pragma": "no-cache",
-    "priority": "u=1, i",
-    "referer": "https://secure6.store.apple.com/shop/account/home",
-    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "syntax": "graviton",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "x-aos-model-page": "RetailHome",
-    "x-aos-stk": x_aos_stk,
-    "x-requested-with": "Fetch",
-}
+# headers = {
+#     "accept": "*/*",
+#     "accept-language": "zh-CN,zh;q=0.9",
+#     "cache-control": "no-cache",
+#     # 'content-length': '0',
+#     "content-type": "application/x-www-form-urlencoded",
+#     "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; s_sq=%5B%5BB%5D%5D; as_disa={as_disa}; as_rec={as_rec}; as_ltn_us={as_ltn_us_2}",
+#     "modelversion": "v2",
+#     "origin": "https://secure6.store.apple.com",
+#     "pragma": "no-cache",
+#     "priority": "u=1, i",
+#     "referer": "https://secure6.store.apple.com/shop/account/home",
+#     "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+#     "sec-ch-ua-mobile": "?0",
+#     "sec-ch-ua-platform": '"Windows"',
+#     "sec-fetch-dest": "empty",
+#     "sec-fetch-mode": "cors",
+#     "sec-fetch-site": "same-origin",
+#     "syntax": "graviton",
+#     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+#     "x-aos-model-page": "RetailHome",
+#     "x-aos-stk": x_aos_stk,
+#     "x-requested-with": "Fetch",
+# }
 
-params = {
-    "_a": "fetchDevices",
-    "_m": "home.devices",
-}
+# params = {
+#     "_a": "fetchDevices",
+#     "_m": "home.devices",
+# }
 
-response_12 = requests.post(
-    "https://secure6.store.apple.com/shop/accounthomex",
-    params=params,
-    cookies=cookies,
-    headers=headers,
-)
-logging.info(response_12.headers)
+# response_12 = requests.post(
+#     "https://secure6.store.apple.com/shop/accounthomex",
+#     params=params,
+#     cookies=cookies,
+#     headers=headers,
+# )
+# logging.info(response_12.headers)
 
 # ---------------------------------------第十三步开始转换第三次-------------------------------------------------------------------------------------------
 
@@ -656,69 +654,69 @@ logging.info("-" * 200)
 
 # --------------------------------第十四步开始转换第四次-这个转出来直接提交-----------------------------------------------------------------------------------------------------------
 
-cookies = {
-    "as_rumid": "d5de47da-70ec-481f-816b-db71ee321a80",
-    "dssid2": dssid2,
-    "dssf": "1",
-    "as_pcts": as_pcts,
-    "as_sfa": "Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE",
-    "geo": "CN",
-    "pxro": "1",
-    "s_cc": "true",
-    "dslang": "US-EN",
-    "site": "USA",
-    "as_cn": as_cn,
-    "s_fid": "6CDDD52C21065486-3346E9DAB52C8CE9",
-    "s_vi": "[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]",
-    "as_dc": "ucp3",
-    "as_disa": as_disa,
-    "as_rec": as_rec,
-    "s_sq": "%5B%5BB%5D%5D",
-    "as_ltn_us": as_ltn_us_4,
-}
+# cookies = {
+#     "as_rumid": "d5de47da-70ec-481f-816b-db71ee321a80",
+#     "dssid2": dssid2,
+#     "dssf": "1",
+#     "as_pcts": as_pcts,
+#     "as_sfa": "Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE",
+#     "geo": "CN",
+#     "pxro": "1",
+#     "s_cc": "true",
+#     "dslang": "US-EN",
+#     "site": "USA",
+#     "as_cn": as_cn,
+#     "s_fid": "6CDDD52C21065486-3346E9DAB52C8CE9",
+#     "s_vi": "[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]",
+#     "as_dc": "ucp3",
+#     "as_disa": as_disa,
+#     "as_rec": as_rec,
+#     "s_sq": "%5B%5BB%5D%5D",
+#     "as_ltn_us": as_ltn_us_4,
+# }
 
-headers = {
-    "accept": "*/*",
-    "accept-language": "zh-CN,zh;q=0.9",
-    "cache-control": "no-cache",
-    # 'content-length': '0',
-    "content-type": "application/x-www-form-urlencoded",
-    "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; as_disa={as_disa}; as_rec={as_rec}; s_sq=%5B%5BB%5D%5D; as_ltn_us={as_ltn_us_4}",
-    "modelversion": "v2",
-    "origin": "https://secure6.store.apple.com",
-    "pragma": "no-cache",
-    "priority": "u=1, i",
-    "referer": "https://secure6.store.apple.com/shop/account/home",
-    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "syntax": "graviton",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "x-aos-model-page": "RetailHome",
-    "x-aos-stk": x_aos_stk,
-    "x-requested-with": "Fetch",
-}
+# headers = {
+#     "accept": "*/*",
+#     "accept-language": "zh-CN,zh;q=0.9",
+#     "cache-control": "no-cache",
+#     # 'content-length': '0',
+#     "content-type": "application/x-www-form-urlencoded",
+#     "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={dssid2}; dssf=1; as_pcts={as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; as_disa={as_disa}; as_rec={as_rec}; s_sq=%5B%5BB%5D%5D; as_ltn_us={as_ltn_us_4}",
+#     "modelversion": "v2",
+#     "origin": "https://secure6.store.apple.com",
+#     "pragma": "no-cache",
+#     "priority": "u=1, i",
+#     "referer": "https://secure6.store.apple.com/shop/account/home",
+#     "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+#     "sec-ch-ua-mobile": "?0",
+#     "sec-ch-ua-platform": '"Windows"',
+#     "sec-fetch-dest": "empty",
+#     "sec-fetch-mode": "cors",
+#     "sec-fetch-site": "same-origin",
+#     "syntax": "graviton",
+#     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+#     "x-aos-model-page": "RetailHome",
+#     "x-aos-stk": x_aos_stk,
+#     "x-requested-with": "Fetch",
+# }
 
-params = {
-    "_a": "fetchDashboard",
-    "_m": "home.dashboards",
-}
+# params = {
+#     "_a": "fetchDashboard",
+#     "_m": "home.dashboards",
+# }
 
-response_14 = requests.post(
-    "https://secure6.store.apple.com/shop/accounthomex", params=params, headers=headers
-)
-set_cookie_header = response_14.headers.get("Set-Cookie", "")
-dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
-as_ltn_us_match = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
-dssid2 = dssid2_match.group(1) if dssid2_match else None
-as_ltn_us_5 = as_ltn_us_match.group(1) if as_ltn_us_match else None
+# response_14 = requests.post(
+#     "https://secure6.store.apple.com/shop/accounthomex", params=params, headers=headers
+# )
+# set_cookie_header = response_14.headers.get("Set-Cookie", "")
+# dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
+# as_ltn_us_match = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
+# dssid2 = dssid2_match.group(1) if dssid2_match else None
+# as_ltn_us_5 = as_ltn_us_match.group(1) if as_ltn_us_match else None
 
-logging.info(f"dssid2: {dssid2}")
-logging.info(f"editAddress: {as_ltn_us_5}")
-logging.info("-" * 200)
+# logging.info(f"dssid2: {dssid2}")
+# logging.info(f"editAddress: {as_ltn_us_5}")
+# logging.info("-" * 200)
 
 
 # -------------------------------------------提交--------------------------------------------------------------------------------------------------
@@ -753,7 +751,7 @@ params = {
     "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
 }
 
-data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-8803&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
+data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-1111&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
 
 response = requests.post(
     "https://secure6.store.apple.com/shop/accounthomex",
