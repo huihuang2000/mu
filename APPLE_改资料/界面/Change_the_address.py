@@ -1,3 +1,9 @@
+import pandas as pd
+from datetime import datetime
+import os
+from pathlib import Path
+from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
@@ -10,9 +16,9 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QTableWidget,
-    QInputDialog, 
+    QInputDialog,
+    QTableWidgetItem,
     QMessageBox,
-    QTableWidgetItem
 )
 
 
@@ -148,15 +154,17 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def on_click_button1(self):
-        text, ok = QInputDialog.getMultiLineText(self, "导入信息", "请输入邮箱和密码（每行一个，用空格分隔）:")
+        text, ok = QInputDialog.getMultiLineText(
+            self, "导入信息", "请输入邮箱和密码(每行一个，用空格分隔)"
+        )
         if ok and text:
-            lines = text.split('\n')
+            lines = text.split("\n")
             for line in lines:
                 line = line.strip()
                 if line:
-                    email, password = line.split(' ', 1)
+                    email, password = line.split(" ", 1)
                     self.add_email_and_password_to_table(email, password)
-            QMessageBox.information(self, "导入成功", "所有邮箱和密码已成功导入")
+            # QMessageBox.information(self, "导入成功", "邮箱和密码已成功导入")
 
     def add_email_and_password_to_table(self, email, password):
         row_position = self.tableWidget.rowCount()
@@ -164,25 +172,47 @@ class MainWindow(QMainWindow):
         email_item = QTableWidgetItem(email)
         password_item = QTableWidgetItem(password)
         self.tableWidget.setItem(row_position, 0, email_item)
-        self.tableWidget.setItem(row_position, 1, password_item) 
-
-
-
-
-
-
-
-
-
+        self.tableWidget.setItem(row_position, 1, password_item)
 
     def on_click_button2(self):
-        print('2')
+        print("2")
+
     def on_click_button3(self):
-        print('3')
+        desktop_path = str(Path.home() / "Desktop")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"地址_{timestamp}.xlsx"
+        file_path = os.path.join(desktop_path, filename)
+        df = self.tableWidgetToDataFrame(self.tableWidget)
+        df.to_excel(file_path, index=False, engine='openpyxl')
+        wb = load_workbook(file_path)
+        ws = wb.active
+        for col in range(1, ws.max_column + 1):
+            max_length = 0
+            for row in range(1, ws.max_row + 1):
+                cell = ws.cell(row=row, column=col)
+                if cell.value is not None:
+                    max_length = max(max_length, len(str(cell.value)))
+            ws.column_dimensions[get_column_letter(col)].width = max_length + 5
+        wb.save(file_path)
+        wb.close()
+        QMessageBox.information(self, "导出完成", f"数据已导出到 {file_path}")
+
+    def tableWidgetToDataFrame(self, tableWidget):
+        num_rows = tableWidget.rowCount()
+        num_cols = tableWidget.columnCount()
+        columns = [tableWidget.horizontalHeaderItem(i).text() for i in range(num_cols)]
+        df = pd.DataFrame(columns=columns)
+        for i in range(num_rows):
+            row_data = [
+                tableWidget.item(i, j).text() if tableWidget.item(i, j) else ""
+                for j in range(num_cols)
+            ]
+            df.loc[i] = row_data
+        return df
+
     def on_click_button4(self):
-        print('4')
-
-
+        self.tableWidget.clearContents()
+        self.tableWidget.setRowCount(0)
 
 
 def main():
@@ -193,5 +223,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()
