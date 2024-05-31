@@ -1,10 +1,13 @@
 import requests,re,logging
+from fake_useragent import UserAgent
+
+user_agent = UserAgent()
 logging.basicConfig(level=logging.INFO)
 
 class APPLE:
     def __init__(self) -> None:
         self.requests_ = requests.session()
-        self.name = "my_hero.hero@softbank.ne.jp"
+        self.name = "freesia.e-fpb@softbank.ne.jp"
         self.pwd = "Aa147369"
 
     def t0(self):
@@ -23,7 +26,7 @@ class APPLE:
             "sec-fetch-site": "none",
             "sec-fetch-user": "?1",
             "upgrade-insecure-requestsuests": "1",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "user-agent": user_agent.random,
         }
         response = self.requests_.get("https://secure.store.apple.com/shop/account/home",headers=headers,allow_redirects=False)
         CK = response.headers.get("Set-Cookie")
@@ -33,7 +36,7 @@ class APPLE:
         self.as_pcts = as_pcts_match.group(1)
         logging.info(self.dssid2)
         logging.info(self.as_pcts)
-        logging.info(f"第一步返回dssid2,,as_pcts" + ("-" * 200))
+        logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 200))
         return self.t1()
 
     def t1(self):
@@ -61,7 +64,7 @@ class APPLE:
         self.ssi = response.headers["Location"]
         logging.info(self.dssid2)
         logging.info(self.ssi)
-        logging.info(f"第二步返回dssid2,,ssi" + ("-" * 200))
+        logging.info(f"T1_返回dssid2,,ssi" + ("-" * 200))
         return self.t2()
 
     def t2(self):
@@ -90,7 +93,7 @@ class APPLE:
         self.dssid2 = dssid2_match.group(1)
         logging.info(self.dssid2)
         logging.info(self.x_aos_stk)
-        logging.info(f"第三步返回dssid2,,x_aos_stk" + ("-" * 200))
+        logging.info(f"T2_返回dssid2,,x_aos_stk" + ("-" * 200))
         return self.t3()
 
     def t3(self):
@@ -124,7 +127,7 @@ class APPLE:
         logging.info(self.aasp)
         logging.info(self.X_Apple_Auth_Attributes)
         logging.info(self.scnt)
-        logging.info(f"第四步返回aasp,,X_Apple_Auth_Attributes,,scnt" + ("-" * 200))
+        logging.info(f"T4_返回aasp,,X_Apple_Auth_Attributes,,scnt" + ("-" * 200))
         return self.t4()
 
     def t4(self):
@@ -285,7 +288,7 @@ class APPLE:
         myacinfo_match = myacinfo_pattern.search(CK)
         self.myacinfo = myacinfo_match.group(1)
         logging.info(self.myacinfo)
-        logging.info(f"加密_4" + ("-" * 200))
+        logging.info(f"T4_" + ("-" * 200))
         return self.t5()
 
     def t5(self):
@@ -342,7 +345,7 @@ class APPLE:
         logging.info(f"as_disa: {self.as_disa}")
         logging.info(f"as_ltn_us: {self.as_ltn_us_1}")
         logging.info(f"as_rec: {self.as_rec}")
-        logging.info("-" * 200)
+        logging.info(f"t5_" + ("-" * 200))
         return self.t6()
 
     def t6(self):
@@ -376,7 +379,7 @@ class APPLE:
 
         logging.info(f"dssid2_2: {self.dssid2}")
         logging.info(f"home_as_ltn_us: {self.as_ltn_us_2}")
-        logging.info("-" * 200)
+        logging.info(f"t6_" + ("-" * 200))
         return self.t7()
 
     def t7(self):
@@ -420,7 +423,7 @@ class APPLE:
         self.as_ltn_us_3 = as_ltn_us_match.group(1) if as_ltn_us_match else None
         logging.info(f"dssid2: {self.dssid2}")
         logging.info(f"fetchDashboard: {self.as_ltn_us_3}")
-        logging.info("-" * 200)
+        logging.info(f"t7_" + ("-" * 200))
         return self.t8()
 
     def t8(self):
@@ -464,7 +467,7 @@ class APPLE:
 
         logging.info(f"dssid2: {self.dssid2}")
         logging.info(f"editAddress: {self.as_ltn_us_4}")
-        logging.info("-" * 200)
+        logging.info(f"t8_" + ("-" * 200))
         return self.t9()
 
     def t9(self):
@@ -495,7 +498,7 @@ class APPLE:
             "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
         }
 
-        data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
+        data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-1345&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
 
         response = self.requests_.post(
             "https://secure8.store.apple.com/shop/accounthomex",
@@ -503,7 +506,9 @@ class APPLE:
             headers=headers,
             data=data,
         )
+
         logging.info(response.headers)
+        logging.info(f"t9_" + ("-" * 200))
 
 
 apple  = APPLE().t0()
