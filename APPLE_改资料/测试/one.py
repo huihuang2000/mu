@@ -2,13 +2,64 @@ import requests, re, logging
 from fake_useragent import UserAgent
 from requests.exceptions import RequestException
 
+"""
+APPLE 类用于管理与 Apple 服务的交互，包括用户认证、会话管理以及个人信息的编辑等。
+
+属性:
+    COMMON_HEADERS (dict): 请求的通用头部信息。
+    name (str): 用户的姓名或邮箱。
+    pwd (str): 用户的密码。
+    fullDaytimePhone (str): 用户的日间联系电话。
+    street2 (str): 用户的街道地址的第二部分。
+    lastName (str): 用户的姓氏。
+    firstName (str): 用户的名字。
+    companyName (str): 用户的公司名称。
+    street (str): 用户的街道地址。
+    city (str): 用户所在城市。
+    state (str): 用户所在州。
+    postalCode (str): 用户的邮政编码。
+    countryCode (str): 用户的国家代码。
+    session (requests.Session): 用于发送HTTP请求的共享会话。
+    dssid2 (str): 用于跟踪会话的标识符。
+    as_pcts (str): Apple 的会话跟踪参数。
+    ssi (str): 服务器会话标识符。
+    x_aos_stk (str): Apple 的安全令牌。
+    aasp (str): Apple 的认证服务提供商令牌。
+    X_Apple_Auth_Attributes (str): Apple 认证属性。
+    scnt (str): Apple 的会话计数器。
+    myacinfo (str): Apple 的账户信息。
+
+方法:
+    _send_request(method, url, **kwargs): 发送HTTP请求并返回响应。
+    _build_headers(additional_headers=None): 构建请求头部。
+    t0(): 初始化步骤,开始与Apple服务的交互。
+    t1(): 第二步，处理服务器响应并准备下一步。
+    t2(): 第三步，继续交互过程。
+    t3(): 第四步，进一步处理认证和会话。
+    t4(): 第五步，完成用户认证。
+    t5(): 第六步，处理账户信息。
+    t6(): 第七步，获取账户仪表板信息。
+    t7(): 第八步，编辑账户信息。
+    t8(): 第九步，提交编辑的账户信息。
+    t9(): 最后一步，确认信息提交并返回最终响应。
+
+注意:
+    - 本类中的所有方法都假定 `session` 是一个有效的 `requests.Session` 对象。
+    - 所有与Apple服务交互的方法都应遵循Apple的API使用条款。
+"""
+
+
 user_agent = UserAgent()
-logging.basicConfig(level=logging.INFO)
+shared_session = requests.Session()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 
 class APPLE:
-    def __init__(self) -> None:
-        self.session = requests.Session()
+    def __init__(self, **address_details) -> None:
         self.COMMON_HEADERS = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "accept-language": "zh-CN,zh;q=0.9",
@@ -24,32 +75,43 @@ class APPLE:
             "upgrade-insecure-requests": "1",
             "user-agent": user_agent.random,
         }
-        self.name = "freesia.e-fpb@softbank.ne.jp"
-        self.pwd = "Aa147369"
+        self.name = address_details.get("name")
+        self.pwd = address_details.get("pwd")
+        self.fullDaytimePhone = address_details.get("fullDaytimePhone")
+        self.street2 = address_details.get("street2")
+        self.lastName = address_details.get("lastName")
+        self.firstName = address_details.get("firstName")
+        self.companyName = address_details.get("companyName")
+        self.street = address_details.get("street")
+        self.city = address_details.get("city")
+        self.state = address_details.get("state")
+        self.postalCode = address_details.get("postalCode")
+        self.countryCode = address_details.get("countryCode")
+        self.session = shared_session
+        self.t0()
 
     def _send_request(self, method, url, **kwargs):
         if not url:
             raise ValueError("URL cannot be empty")
         try:
-            timeout = kwargs.get('timeout', 5)
-            if 'timeout' not in kwargs:
-                kwargs['timeout'] = timeout
+            timeout = kwargs.get("timeout", 5)
+            if "timeout" not in kwargs:
+                kwargs["timeout"] = timeout
             response = self.session.request(method, url, **kwargs)
             return response
         except RequestException as e:
-            raise 
+            raise
 
     def _build_headers(self, additional_headers=None):
-            headers = self.COMMON_HEADERS.copy()
-            if additional_headers:
-                headers.update(additional_headers)
-            return headers
+        headers = self.COMMON_HEADERS.copy()
+        if additional_headers:
+            headers.update(additional_headers)
+        return headers
 
     def t0(self):
         response = self._send_request(
             method="get",
             url="https://secure.store.apple.com/shop/account/home",
-
             allow_redirects=False,
         )
         CK = response.headers.get("Set-Cookie")
@@ -59,7 +121,7 @@ class APPLE:
         self.as_pcts = as_pcts_match.group(1)
         logging.info(self.dssid2)
         logging.info(self.as_pcts)
-        logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 200))
+        logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 40))
         return self.t1()
 
     def t1(self):
@@ -79,7 +141,7 @@ class APPLE:
         self.ssi = response.headers["Location"]
         logging.info(self.dssid2)
         logging.info(self.ssi)
-        logging.info(f"T1_返回dssid2,,ssi" + ("-" * 200))
+        logging.info(f"T1_返回dssid2,,ssi" + ("-" * 40))
         return self.t2()
 
     def t2(self):
@@ -95,7 +157,7 @@ class APPLE:
         self.dssid2 = dssid2_match.group(1)
         logging.info(self.dssid2)
         logging.info(self.x_aos_stk)
-        logging.info(f"T2_返回dssid2,,x_aos_stk" + ("-" * 200))
+        logging.info(f"T2_返回dssid2,,x_aos_stk" + ("-" * 40))
         return self.t3()
 
     def t3(self):
@@ -117,7 +179,7 @@ class APPLE:
         logging.info(self.aasp)
         logging.info(self.X_Apple_Auth_Attributes)
         logging.info(self.scnt)
-        logging.info(f"T4_返回aasp,,X_Apple_Auth_Attributes,,scnt" + ("-" * 200))
+        logging.info(f"T4_返回aasp,,X_Apple_Auth_Attributes,,scnt" + ("-" * 40))
         return self.t4()
 
     def t4(self):
@@ -126,7 +188,7 @@ class APPLE:
         payload = {f"email": {self.name}}
         Key = self._send_request(method="post", url=url, data=payload).json()
         logging.info(Key)
-        logging.info(f"加密_1" + ("-" * 200))
+        logging.info(f"加密_1" + ("-" * 40))
         # ---------------------------------------------------------
         combined_headers_and_cookies = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -148,10 +210,9 @@ class APPLE:
             url="https://idmsa.apple.com/appleauth/auth/signin/init",
             headers=headers,
             json=json_data,
-
         ).json()
         logging.info(Key)
-        logging.info(f"加密_2" + ("-" * 200))
+        logging.info(f"加密_2" + ("-" * 40))
         # ---------------------------------------------------------
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
         payload = {
@@ -166,7 +227,7 @@ class APPLE:
         }
         response_3 = self._send_request(method="post", url=url, json=payload).json()
         logging.info(response_3)
-        logging.info(f"加密_3" + ("-" * 200))
+        logging.info(f"加密_3" + ("-" * 40))
         # ---------------------------------------------------------
         cookies = {
             "as_rumid": "9f9a7e8708ebbde2daf02b478473eccd",
@@ -212,7 +273,7 @@ class APPLE:
         myacinfo_match = myacinfo_pattern.search(CK)
         self.myacinfo = myacinfo_match.group(1)
         logging.info(self.myacinfo)
-        logging.info(f"T4_" + ("-" * 200))
+        logging.info(f"T4_" + ("-" * 40))
         return self.t5()
 
     def t5(self):
@@ -256,7 +317,7 @@ class APPLE:
         logging.info(f"as_disa: {self.as_disa}")
         logging.info(f"as_ltn_us: {self.as_ltn_us_1}")
         logging.info(f"as_rec: {self.as_rec}")
-        logging.info(f"t5_" + ("-" * 200))
+        logging.info(f"t5_" + ("-" * 40))
         return self.t6()
 
     def t6(self):
@@ -279,7 +340,7 @@ class APPLE:
 
         logging.info(f"dssid2_2: {self.dssid2}")
         logging.info(f"home_as_ltn_us: {self.as_ltn_us_2}")
-        logging.info(f"t6_" + ("-" * 200))
+        logging.info(f"t6_" + ("-" * 40))
         return self.t7()
 
     def t7(self):
@@ -343,7 +404,7 @@ class APPLE:
 
     def t9(self):
         headers = {
-            "content-type": "application/x-www-form-urlencoded",#此处为坑,不加这个就算成功，值也不会改变
+            "content-type": "application/x-www-form-urlencoded",  # 此处为坑,不加这个就算成功，值也不会改变
             "user-agent": user_agent.random,
             "x-aos-stk": self.x_aos_stk,
             "x-requested-with": "Fetch",
@@ -354,16 +415,18 @@ class APPLE:
             "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
         }
 
-        data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-1111&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&" \
-            "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
+        data = (
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone={self.fullDaytimePhone}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2={self.street2}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName={self.lastName}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName={self.firstName}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName={self.companyName}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street={self.street}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city={self.city}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state={self.state}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode={self.postalCode}&"
+            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode={self.countryCode}"
+        )
         headers = self._build_headers(headers)
         response = self._send_request(
             method="post",
@@ -377,10 +440,25 @@ class APPLE:
         logging.info(f"t9_" + ("-" * 200))
         return response.headers
 
-def main():
-    apple_instance = APPLE()
-    result = apple_instance.t0()
-    return result
+
+def main(**kwargs):
+    apple_instance = APPLE(**kwargs)
+    return apple_instance
+
 
 if __name__ == "__main__":
-    main()
+    params = {
+        "name": "freesia.e-fpb@softbank.ne.jp",
+        "pwd": "Aa147369",
+        "fullDaytimePhone": "20111-1111",
+        "street2": "212231312",
+        "lastName": "lllll3333",
+        "firstName": "hhhjjj11166666",
+        "companyName": "122332",
+        "street": "777776667777",
+        "city": "Albany",
+        "state": "CH",
+        "postalCode": "11111-4444",
+        "countryCode": "CH",
+    }
+    main_instance = main(**params)
