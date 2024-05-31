@@ -39,26 +39,22 @@ class APPLE:
     def t1(self):
         headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; pt-dm=v1~x~tgu4kwv1~m~3; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_dc=ucp3",
+            "dnt": "1",
             "pragma": "no-cache",
             "priority": "u=0, i",
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "document",
             "sec-fetch-mode": "navigate",
             "sec-fetch-site": "none",
             "sec-fetch-user": "?1",
-            "upgrade-insecure-requestsuests": "1",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
+            "Cookie": f"pt-dm=v1~x~wedrj4y2~m~3; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_dc=ucp2"
         }
-        response= self.requests_.get(
-                    "https://secure6.store.apple.com/shop/account/home",
-                    headers=headers,
-                    allow_redirects=False,
-                )
+
+        response = requests.request("GET", 'https://secure5.store.apple.com/shop/account/home',headers=headers,allow_redirects=False)
         CK = response.headers.get("Set-Cookie")
         dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
         self.dssid2 = dssid2_match.group(1)
@@ -294,44 +290,39 @@ class APPLE:
 
     def t5(self):
         extracted_part = self.ssi.split("shop/signIn/account?ssi=")[1]
+        url = "https://secure8.store.apple.com/shop/signIn/idms/authx"
+
+        querystring = {"ssi":extracted_part}
+
+        payload = "deviceID=TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;zh-CN;undefined;secure8.store.apple.com;undefined;undefined;undefined;undefined;false;false;1717165745644;8;2005/6/7%2021%3A33%3A44;1920;1080;;;;;;;;-480;-480;2024/5/31%2022%3A29%3A05;24;1920;1032;0;0;;;;;;;;;;;;;;;;;;;25;&grantCode="
         headers = {
             "accept": "*/*",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
             "content-type": "application/x-www-form-urlencoded",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_dc=ucp3; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_fid=6323376718433557-371662D1A66E1B14; s_cc=true; s_vi=[CS]v1|332AA8C7A36C871F-40000E40A15E97D6[CE]; dslang=US-EN; site=USA; myacinfo={self.myacinfo}",
+            "dnt": "1",
             "modelversion": "v2",
-            "origin": "https://secure6.store.apple.com",
+            "origin": "https://secure8.store.apple.com",
             "pragma": "no-cache",
             "priority": "u=1, i",
             "referer": self.ssi,
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "syntax": "graviton",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
             "x-aos-model-page": "idmsSignInPage",
             "x-aos-stk": self.x_aos_stk,
             "x-requested-with": "Fetch",
-        }
-
-        params = {
-            "ssi": extracted_part
-        }
-
-        data = {
-            "deviceID": "TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/124.0.0.0%20Safari/537.36;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/124.0.0.0%20Safari/537.36;zh-CN;undefined;secure6.store.apple.com;undefined;undefined;undefined;undefined;false;false;1716867481875;8;2005/6/7%2021%3A33%3A44;1920;1080;;;;;;;;-480;-480;2024/5/28%2011%3A38%3A01;24;1920;1032;0;0;;;;;;;;;;;;;;;;;;;25;",
-            "grantCode": "",
+            "Cookie": f"dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; as_rumid=37080742-fff1-41f3-aecd-2fd0c562336d; pxro=1; s_fid=0007D0AD63AE65D7-1498FEB6AB3B83FB; s_cc=true; s_vi=[CS]v1|332CEF48AE078368-40000140001631B7[CE]; dslang=US-EN; site=USA; myacinfo={self.myacinfo}"
         }
 
         response = self.requests_.post(
-            "https://secure6.store.apple.com/shop/signIn/idms/authx",
-            params=params,
+            url=url,
+            params=querystring,
             headers=headers,
-            data=data,
+            data=payload,
         )
         set_cookie_header = response.headers.get("Set-Cookie", "")
         dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
@@ -357,25 +348,24 @@ class APPLE:
     def t6(self):
         headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_dc=ucp3; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_fid=6323376718433557-371662D1A66E1B14; s_cc=true; s_vi=[CS]v1|332AA8C7A36C871F-40000E40A15E97D6[CE]; dslang=US-EN; site=USA; as_cn={self.as_cn}; as_disa={self.as_disa}; as_ltn_us={self.as_ltn_us_1}; as_rec={self.as_rec}; pt-dm=v1~x~tgu4kwv1~m~3~n~AOS%3A%20Checkout%20Sign%20In~r~aos%3Aaccount",
+            "dnt": "1",
             "pragma": "no-cache",
             "priority": "u=0, i",
             "referer": self.ssi,
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "document",
             "sec-fetch-mode": "navigate",
             "sec-fetch-site": "same-origin",
             "sec-fetch-user": "?1",
-            "upgrade-insecure-requestsuests": "1",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
+            "Cookie": f"dssid2={self.dssid2}; dssf=1; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; s_fid=0007D0AD63AE65D7-1498FEB6AB3B83FB; s_vi=[CS]v1|332CEF48AE078368-40000140001631B7[CE]; mbox=session#5df4d833cda1439dae08fc5cf557d782#1717168937|PC#5df4d833cda1439dae08fc5cf557d782.38_0#1717168877; as_pcts={self.as_pcts}; geo=CN; s_cc=true; dslang=US-EN; site=USA; as_rumid=0337ce99-a633-4190-ab73-87560b78c6df; as_cn={self.as_cn}; as_disa=AAAjAAABm6kIsKnxnYIB02LQUPS-onIQNufcLz7wrgdpIhPebJDOxA1TQlsz8z64F8PHkqzTAAIBpNndNH-D4O5j9_xJowW_k4O5r8FyprwQ0hqUA37H0eU=; as_ltn_us={self.as_ltn_us_1}; as_rec=b1ec3fef2d0c48da641d9cf8026397f0516d06eb6ff8f41696cd149003e40a70e9978fe86c283d7095116dfec28e68c5993c3813b40e1b3010f467d2e32e607a1cfa4c84a446babf298da9b43d29fafe; pt-dm=v1~x~n0vouo54~m~3~n~AOS: Checkout Sign In~r~aos:account"
         }
 
         response = self.requests_.get(
-            "https://secure6.store.apple.com/shop/account/home",
+            "https://secure8.store.apple.com/shop/account/home",
             headers=headers,
         )
         set_cookie_header = response.headers.get("Set-Cookie", "")
@@ -392,27 +382,26 @@ class APPLE:
     def t7(self):
         headers = {
             "accept": "*/*",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
-            # 'content-length': '0',
+            "content-length": "0",
             "content-type": "application/x-www-form-urlencoded",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={self.as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; s_sq=%5B%5BB%5D%5D; as_disa={self.as_disa}; as_rec={self.as_rec}; as_ltn_us={self.as_ltn_us_2}",
+            "dnt": "1",
             "modelversion": "v2",
-            "origin": "https://secure6.store.apple.com",
+            "origin": "https://secure8.store.apple.com",
             "pragma": "no-cache",
             "priority": "u=1, i",
-            "referer": "https://secure6.store.apple.com/shop/account/home",
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "referer": "https://secure8.store.apple.com/shop/account/home",
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "syntax": "graviton",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
             "x-aos-model-page": "RetailHome",
             "x-aos-stk": self.x_aos_stk,
             "x-requested-with": "Fetch",
+            "Cookie": f"dssid2={self.dssid2}; dssf=1; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; s_fid=0007D0AD63AE65D7-1498FEB6AB3B83FB; s_vi=[CS]v1|332CEF48AE078368-40000140001631B7[CE]; mbox=session#5df4d833cda1439dae08fc5cf557d782#1717168937|PC#5df4d833cda1439dae08fc5cf557d782.38_0#1717168877; as_pcts={self.as_pcts}; geo=CN; s_cc=true; dslang=US-EN; site=USA; as_rumid=0337ce99-a633-4190-ab73-87560b78c6df; as_cn={self.as_cn}; as_disa={self.as_disa}; as_rec=b1ec3fef2d0c48da641d9cf8026397f0516d06eb6ff8f41696cd149003e40a70e9978fe86c283d7095116dfec28e68c5993c3813b40e1b3010f467d2e32e607a1cfa4c84a446babf298da9b43d29fafe; as_ltn_us={self.as_ltn_us_2}"
         }
 
         params = {
@@ -421,7 +410,7 @@ class APPLE:
         }
 
         response = self.requests_.post(
-            "https://secure6.store.apple.com/shop/accounthomex", params=params, headers=headers
+            "https://secure8.store.apple.com/shop/accounthomex", params=params, headers=headers
         )
 
         set_cookie_header = response.headers.get("Set-Cookie", "")
@@ -435,29 +424,28 @@ class APPLE:
         return self.t8()
 
     def t8(self):
-        headers = {
+        headers ={
             "accept": "*/*",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
-            # 'content-length': '0',
+            "content-length": "0",
             "content-type": "application/x-www-form-urlencoded",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={self.as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; as_disa={self.as_disa}; as_rec={self.as_rec}; as_ltn_us={self.as_ltn_us_3}; s_sq=applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520account%25252Fhome%2526link%253Deditedit%252520shipping%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520account%25252Fhome%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DBUTTON",
+            "dnt": "1",
             "modelversion": "v2",
-            "origin": "https://secure6.store.apple.com",
+            "origin": "https://secure8.store.apple.com",
             "pragma": "no-cache",
             "priority": "u=1, i",
-            "referer": "https://secure6.store.apple.com/shop/account/home",
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "referer": "https://secure8.store.apple.com/shop/account/home",
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "syntax": "graviton",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
             "x-aos-model-page": "RetailHome",
             "x-aos-stk": self.x_aos_stk,
             "x-requested-with": "Fetch",
+            "Cookie": f"dssid2={self.dssid2}; dssf=1; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; s_fid=0007D0AD63AE65D7-1498FEB6AB3B83FB; s_vi=[CS]v1|332CEF48AE078368-40000140001631B7[CE]; mbox=session#5df4d833cda1439dae08fc5cf557d782#1717168937|PC#5df4d833cda1439dae08fc5cf557d782.38_0#1717168877; as_pcts={self.as_pcts}; geo=CN; s_cc=true; dslang=US-EN; site=USA; as_rumid=0337ce99-a633-4190-ab73-87560b78c6df; as_cn={self.as_cn}; as_disa={self.as_disa}; as_rec=b1ec3fef2d0c48da641d9cf8026397f0516d06eb6ff8f41696cd149003e40a70e9978fe86c283d7095116dfec28e68c5993c3813b40e1b3010f467d2e32e607a1cfa4c84a446babf298da9b43d29fafe; as_ltn_us={self.as_ltn_us_3}"
         }
 
         params = {
@@ -466,7 +454,7 @@ class APPLE:
         }
 
         response = self.requests_.post(
-            "https://secure6.store.apple.com/shop/accounthomex", params=params, headers=headers
+            "https://secure8.store.apple.com/shop/accounthomex", params=params, headers=headers
         )
         set_cookie_header = response.headers.get("Set-Cookie", "")
         dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
@@ -482,28 +470,26 @@ class APPLE:
     def t9(self):
         headers = {
             "accept": "*/*",
-            "accept-language": "zh-CN,zh;q=0.9",
+            "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
             "cache-control": "no-cache",
             "content-type": "application/x-www-form-urlencoded",
-            "cookie": f"as_rumid=d5de47da-70ec-481f-816b-db71ee321a80; dssid2={self.dssid2}; dssf=1; as_pcts={self.as_pcts}; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; pxro=1; s_cc=true; dslang=US-EN; site=USA; as_cn={self.as_cn}; s_fid=6CDDD52C21065486-3346E9DAB52C8CE9; s_vi=[CS]v1|332AC4C3C85BFB44-40001D14E2C77ABD[CE]; as_dc=ucp3; as_disa={self.as_disa}; as_rec={self.as_rec}; as_ltn_us={self.as_ltn_us_4}; s_sq=%5B%5BB%5D%5D",
+            "dnt": "1",
             "modelversion": "v2",
-            "origin": "https://secure6.store.apple.com",
+            "origin": "https://secure8.store.apple.com",
             "pragma": "no-cache",
             "priority": "u=1, i",
-            "referer": "https://secure6.store.apple.com/shop/account/home",
-            "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "referer": "https://secure8.store.apple.com/shop/account/home",
             "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "empty",
             "sec-fetch-mode": "cors",
             "sec-fetch-site": "same-origin",
             "syntax": "graviton",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
             "x-aos-model-page": "RetailHome",
             "x-aos-stk": self.x_aos_stk,
             "x-requested-with": "Fetch",
+            "Cookie": f"dssid2={self.dssid2}; dssf=1; as_dc=ucp5; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; as_pcts={self.as_pcts}; geo=CN; s_cc=true; dslang=US-EN; site=USA; as_rumid=0337ce99-a633-4190-ab73-87560b78c6df; s_fid=14FE3FCD7955D882-0CD59C3A0ACF70DD; at_check=true; mbox=session#357e8d6c88e74bfd8b1bed3317df4b52#1717171254|PC#357e8d6c88e74bfd8b1bed3317df4b52.38_0#1717171194; s_vi=[CS]v1|332CF679F7916F0E-40000B8569FA266A[CE]; as_cn={self.as_cn}; as_disa={self.as_disa}; as_rec=4c14a2b74cc829d4164aa6e377ff54afbf3ce95f7415867b463ac4a7a1da799f6dc2f15790091bcf48a9f833f71872a435e9d126ac9de8dc66d40b91efdb00089d0c9b825e81ed19ba6c8edbf04ab312; as_ltn_us={self.as_ltn_us_4}; s_sq=[[B]]"
         }
-
         params = {
             "_a": "address-submit",
             "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
@@ -512,7 +498,7 @@ class APPLE:
         data = "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone=(861)%20111-3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2=212231312&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName=lllll3333&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName=hhhjjj11166666&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName=122332&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street=88888888888&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city=Albany&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state=NY&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode=11111-4444&home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode=US"
 
         response = self.requests_.post(
-            "https://secure6.store.apple.com/shop/accounthomex",
+            "https://secure8.store.apple.com/shop/accounthomex",
             params=params,
             headers=headers,
             data=data,
