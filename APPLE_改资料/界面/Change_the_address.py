@@ -1,10 +1,13 @@
 import pandas as pd
+import asyncio
 from datetime import datetime
 import os
 from pathlib import Path
+from one import APPLE
+from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot, QRunnable, QThreadPool,Signal,QObject
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -19,7 +22,33 @@ from PySide6.QtWidgets import (
     QInputDialog,
     QTableWidgetItem,
     QMessageBox,
+    
 )
+
+class Asynctask(QRunnable):
+    def __init__(self, row, email, callback, **address_details):
+        super().__init__()
+        self.row = row
+        self.email = email
+        self.callback = callback
+        self.address_details = address_details
+
+    def run(self):
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(self.run_on_executor())
+        loop.close()
+
+    async def run_on_executor(self):
+        loop = asyncio.get_running_loop()
+        executor = ThreadPoolExecutor()
+        apple = await loop.run_in_executor(executor, self.run_sync_method)
+        self.callback(self.row, self.email, apple)
+        # 这可以打包成元组，然后返回
+
+    def run_sync_method(self):
+        apple = APPLE(**self.address_details)
+        return apple
+
 
 
 class MainWindow(QMainWindow):
@@ -28,6 +57,8 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Change_the_address")
         self.setGeometry(300, 300, 1200, 600)
+
+        self.thread_pool = QThreadPool() 
 
         main_layout = QVBoxLayout()
         button_layout = QHBoxLayout()
@@ -173,9 +204,37 @@ class MainWindow(QMainWindow):
         password_item = QTableWidgetItem(password)
         self.tableWidget.setItem(row_position, 0, email_item)
         self.tableWidget.setItem(row_position, 1, password_item)
-
+   
+    
     def on_click_button2(self):
-        print("2")
+        for row in range(self.tableWidget.rowCount()):
+            if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
+                email = self.tableWidget.item(row, 0).text()
+                password = self.tableWidget.item(row, 1).text()
+                address_details = {
+                    "name":email,
+                    "pwd":password,
+                    "fullDaytimePhone": self.line_edit1.text(),
+                    "street2": self.line_edit2.text(),
+                    "lastName": self.line_edit3.text(),
+                    "firstName": self.line_edit4.text(),
+                    "companyName": self.line_edit5.text(),
+                    "street": self.line_edit6.text(),
+                    "city": self.line_edit7.text(),
+                    "state": self.line_edit8.text(),
+                    "postalCode": self.line_edit9.text(),
+                    "countryCode": self.line_edit10.text(),
+                }
+                params = {**address_details}
+                task = Asynctask(row, email, self.update_table_item, **params)
+                self.thread_pool.start(task)
+
+    def update_table_item(self, row, email, apple):
+        # 检查当前行的邮箱是否与传入的邮箱匹配
+        if self.tableWidget.item(row, 0).text() == email:
+            display_str = str(apple)  # 假设可以直接转换为字符串
+            update_item = QTableWidgetItem(display_str)
+            self.tableWidget.setItem(row, 2, update_item)  # 更新第三列
 
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")

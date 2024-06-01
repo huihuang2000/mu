@@ -91,8 +91,7 @@ class APPLE:
         self.t0()
 
     def _send_request(self, method, url, **kwargs):
-        if not url:
-            raise ValueError("URL cannot be empty")
+
         try:
             timeout = kwargs.get("timeout", 5)
             if "timeout" not in kwargs:
@@ -100,7 +99,7 @@ class APPLE:
             response = self.session.request(method, url, **kwargs)
             return response
         except RequestException as e:
-            raise
+            pass
 
     def _build_headers(self, additional_headers=None):
         headers = self.COMMON_HEADERS.copy()
@@ -436,9 +435,9 @@ class APPLE:
             data=data,
         )
 
-        logging.info(response.headers)
+        logging.info(response.json())
         logging.info(f"t9_" + ("-" * 200))
-        return response.headers
+        return response.json()
 
 
 def main(**kwargs):
@@ -448,7 +447,7 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "freesia.e-fpb@softbank.ne.jp",
+        "name": "my_hero.hero@softbank.ne.jp",
         "pwd": "Aa147369",
         "fullDaytimePhone": "20111-1111",
         "street2": "212231312",
