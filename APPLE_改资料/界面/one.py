@@ -13,7 +13,24 @@ logging.basicConfig(
 )
 
 
-def retry_on_exception(max_attempts=5,exceptions=(Exception,)):
+# def retry_on_exception(max_attempts=5,exceptions=(Exception,)):
+#     def decorator(func):
+#         @wraps(func)
+#         def wrapper(*args, **kwargs):
+#             attempts = 0
+#             while attempts < max_attempts:
+#                 try:
+#                     return func(*args, **kwargs)
+#                 except exceptions as e:
+#                     attempts += 1
+#                     logging.warning(f"Exception {e} occurred, retrying... (Attempt {attempts}/{max_attempts})")
+#                     # time.sleep(backoff_factor * (2 ** (attempts - 1)))  # exponential backoff
+#             # You can raise the last exception or return a default value
+#             logging.error(f"Max retries reached, giving up.")
+#             raise  # Reraise the last exception
+#         return wrapper
+#     return decorator
+def retry_on_exception(max_attempts=5, exceptions=(Exception,)):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -24,12 +41,13 @@ def retry_on_exception(max_attempts=5,exceptions=(Exception,)):
                 except exceptions as e:
                     attempts += 1
                     logging.warning(f"Exception {e} occurred, retrying... (Attempt {attempts}/{max_attempts})")
-                    # time.sleep(backoff_factor * (2 ** (attempts - 1)))  # exponential backoff
-            # You can raise the last exception or return a default value
-            logging.error(f"Max retries reached, giving up.")
-            raise  # Reraise the last exception
+                    if attempts == max_attempts:
+                        logging.error(f"Max retries reached, giving up.")
+                        raise  # Reraise the last exception after max_attempts
+            return func(*args, **kwargs)  # This line will never be reached with the current logic
         return wrapper
     return decorator
+
 
 
 
@@ -68,16 +86,10 @@ class APPLE:
 
     @retry_on_exception(max_attempts=20)
     def _send_request(self, method, url, **kwargs):
-        # 你的原始_send_request方法的代码
         try:
             self.DL = self.dl()
-            
-            # timeout = kwargs.get("timeout", 1)
-            # if "timeout" not in kwargs:
-            #     kwargs["timeout"] = timeout
-            response = self.session.request(method, url, **kwargs, proxies=self.DL,timeout=2)
-            response.raise_for_status()  # 如果状态码是4XX或5XX，将引发异常
-            # 正则表达式匹配逻辑...
+            response = self.session.request(method, url, **kwargs, proxies=self.DL,timeout=5)
+            response.raise_for_status()
             return response
         except RequestException as e:
             self.DL = self.dl()
@@ -98,20 +110,40 @@ class APPLE:
         return proxies
 
     def t0(self):
-        response = self._send_request(
-            method="get",
-            url="https://secure.store.apple.com/shop/account/home",
-            allow_redirects=False,
-        )
-        CK = response.headers.get("Set-Cookie")
-        dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
-        as_pcts_match = re.search(r"as_pcts=([^;]+);", CK)
-        self.dssid2 = dssid2_match.group(1)
-        self.as_pcts = as_pcts_match.group(1)
-        logging.info(self.dssid2)
-        logging.info(self.as_pcts)
-        logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 40))
-        return self.t1()
+        max_retries = 5  # 设置最大重试次数
+        retry_delay = 2  # 重试间隔时间，单位为秒
+        for attempt in range(max_retries):
+            try:
+                response = self._send_request(
+                    method="get",
+                    url="https://secure.store.apple.com/shop/account/home",
+                    allow_redirects=False,
+                )
+                CK = response.headers.get("Set-Cookie")
+                dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
+                as_pcts_match = re.search(r"as_pcts=([^;]+);", CK)
+                
+                # 检查是否找到匹配项
+                if dssid2_match and as_pcts_match:
+                    self.dssid2 = dssid2_match.group(1)
+                    self.as_pcts = as_pcts_match.group(1)
+                    logging.info(self.dssid2)
+                    logging.info(self.as_pcts)
+                    logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 40))
+                    return self.t1()  # 如果成功找到匹配项，继续执行 t1
+                else:
+                    raise ValueError("正则表达式没有找到匹配的值")
+                
+            except ValueError as e:
+                logging.warning(f"重试 #{attempt + 1}，错误：{e}")
+            except RequestException as e:
+                # 对于请求异常，可以选择重试或记录日志后停止
+                logging.error(f"请求失败，停止重试。错误：{e}")
+                break
+        
+        # 如果达到最大重试次数，可以选择抛出异常或返回错误信息
+        logging.error("达到最大重试次数，无法获取 dssid2 和 as_pcts")
+        raise RuntimeError("无法获取必要的会话信息")
 
     def t1(self):
         additional_headers = {
