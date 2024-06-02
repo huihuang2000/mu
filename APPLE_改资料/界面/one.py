@@ -92,7 +92,7 @@ class APPLE:
             response.raise_for_status()
             return response
         except RequestException as e:
-            self.DL = self.dl()
+            # self.DL = self.dl()
             logging.error(f"Request failed with exception: {e}")
             raise  # 让装饰器处理重试逻辑
 
@@ -110,8 +110,7 @@ class APPLE:
         return proxies
 
     def t0(self):
-        max_retries = 5  # 设置最大重试次数
-        retry_delay = 2  # 重试间隔时间，单位为秒
+        max_retries = 100  # 设置最大重试次数
         for attempt in range(max_retries):
             try:
                 response = self._send_request(
@@ -123,15 +122,15 @@ class APPLE:
                 dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
                 as_pcts_match = re.search(r"as_pcts=([^;]+);", CK)
                 
-                # 检查是否找到匹配项
                 if dssid2_match and as_pcts_match:
                     self.dssid2 = dssid2_match.group(1)
                     self.as_pcts = as_pcts_match.group(1)
                     logging.info(self.dssid2)
                     logging.info(self.as_pcts)
                     logging.info(f"T0_返回dssid2,,as_pcts" + ("-" * 40))
-                    return self.t1()  # 如果成功找到匹配项，继续执行 t1
+                    return self.t1()
                 else:
+                    self.DL = self.dl()
                     raise ValueError("正则表达式没有找到匹配的值")
                 
             except ValueError as e:
@@ -424,42 +423,97 @@ class APPLE:
         return self.t9()
 
 
-    def t9(self):
-        headers = {
-            "content-type": "application/x-www-form-urlencoded",  # 此处为坑,不加这个就算成功，值也不会改变
-            "user-agent": user_agent.random,
-            "x-aos-stk": self.x_aos_stk,
-            "x-requested-with": "Fetch",
-            "Cookie": f"dssid2={self.dssid2}; dssf=1;as_pcts={self.as_pcts};as_cn={self.as_cn}; as_disa={self.as_disa};as_ltn_us={self.as_ltn_us_4}",
-        }
-        params = {
-            "_a": "address-submit",
-            "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
-        }
+    # def t9(self):
+    #     headers = {
+    #         "content-type": "application/x-www-form-urlencoded",  # 此处为坑,不加这个就算成功，值也不会改变
+    #         "user-agent": user_agent.random,
+    #         "x-aos-stk": self.x_aos_stk,
+    #         "x-requested-with": "Fetch",
+    #         "Cookie": f"dssid2={self.dssid2}; dssf=1;as_pcts={self.as_pcts};as_cn={self.as_cn}; as_disa={self.as_disa};as_ltn_us={self.as_ltn_us_4}",
+    #     }
+    #     params = {
+    #         "_a": "address-submit",
+    #         "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
+    #     }
 
-        data = (
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone={self.fullDaytimePhone}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2={self.street2}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName={self.lastName}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName={self.firstName}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName={self.companyName}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street={self.street}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city={self.city}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state={self.state}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode={self.postalCode}&"
-            f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode={self.countryCode}"
-        )
-        headers = self._build_headers(headers)
-        response = self._send_request(
-            method="post",
-            url="https://secure8.store.apple.com/shop/accounthomex",
-            params=params,
-            headers=headers,
-            data=data,
-        ).json()
-        logging.info(response)
-        logging.info(f"t9_" + ("-" * 200))
-        return response['body']['home']['customerAccount']['shippingInfo']['shippingAddress']['d']
+    #     data = (
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone={self.fullDaytimePhone}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2={self.street2}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName={self.lastName}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName={self.firstName}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName={self.companyName}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street={self.street}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city={self.city}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state={self.state}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode={self.postalCode}&"
+    #         f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode={self.countryCode}"
+    #     )
+    #     headers = self._build_headers(headers)
+    #     response = self._send_request(
+    #         method="post",
+    #         url="https://secure8.store.apple.com/shop/accounthomex",
+    #         params=params,
+    #         headers=headers,
+    #         data=data,
+    #     ).json()
+    #     logging.info(response)
+    #     logging.info(f"t9_" + ("-" * 200))
+    #     return response['body']['home']['customerAccount']['shippingInfo']['shippingAddress']['d']
+
+    def t9(self):
+        max_retries = 5  # 设置最大重试次数
+        retry_delay = 2  # 重试间隔时间，单位为秒
+        
+        for attempt in range(max_retries):
+            try:
+                # 准备请求的headers和data等
+                headers = self._build_headers({
+                    "content-type": "application/x-www-form-urlencoded",
+                    "user-agent": user_agent.random,
+                    "x-aos-stk": self.x_aos_stk,
+                    "x-requested-with": "Fetch",
+                    "Cookie": f"dssid2={self.dssid2}; dssf=1;as_pcts={self.as_pcts};as_cn={self.as_cn}; as_disa={self.as_disa};as_ltn_us={self.as_ltn_us_4}",
+                })
+                params = {
+                    "_a": "address-submit",
+                    "_m": "home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress",
+                }
+                data = (
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.fullDaytimePhone={self.fullDaytimePhone}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street2={self.street2}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.lastName={self.lastName}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.firstName={self.firstName}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.companyName={self.companyName}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.street={self.street}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.city={self.city}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.state={self.state}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.postalCode={self.postalCode}&"
+                f"home.customerAccount.shippingInfo.shippingAddress.editShippingAddress.editAddress.zipLookup.countryCode={self.countryCode}"
+            )
+
+                # 发送请求
+                response = self._send_request(
+                    method="post",
+                    url="https://secure8.store.apple.com/shop/accounthomex", 
+                    params=params,
+                    headers=headers,
+                    data=data,
+                ).json()
+
+                # 假设只要没有异常，就认为请求是成功的
+                logging.info(response)
+                logging.info(f"t9_" + ("-" * 200))
+                return response['body']['home']['customerAccount']['shippingInfo']['shippingAddress']['d']
+
+            except Exception as e:  # 捕获所有异常作为重试的条件
+                logging.warning(f"重试 #{attempt + 1}，错误：{e}")
+                # time.sleep(retry_delay)  # 等待一段时间后重试
+                continue  # 继续下一次循环
+
+        logging.error("达到最大重试次数，无法完成t9")
+        raise RuntimeError("t9方法失败")
+
+
 
 
 def main(**kwargs):
