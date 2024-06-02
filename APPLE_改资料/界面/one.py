@@ -1,52 +1,8 @@
 import requests, re, logging
 from fake_useragent import UserAgent
 from requests.exceptions import RequestException
-
-"""
-APPLE 类用于管理与 Apple 服务的交互，包括用户认证、会话管理以及个人信息的编辑等。
-
-属性:
-    COMMON_HEADERS (dict): 请求的通用头部信息。
-    name (str): 用户的姓名或邮箱。
-    pwd (str): 用户的密码。
-    fullDaytimePhone (str): 用户的日间联系电话。
-    street2 (str): 用户的街道地址的第二部分。
-    lastName (str): 用户的姓氏。
-    firstName (str): 用户的名字。
-    companyName (str): 用户的公司名称。
-    street (str): 用户的街道地址。
-    city (str): 用户所在城市。
-    state (str): 用户所在州。
-    postalCode (str): 用户的邮政编码。
-    countryCode (str): 用户的国家代码。
-    session (requests.Session): 用于发送HTTP请求的共享会话。
-    dssid2 (str): 用于跟踪会话的标识符。
-    as_pcts (str): Apple 的会话跟踪参数。
-    ssi (str): 服务器会话标识符。
-    x_aos_stk (str): Apple 的安全令牌。
-    aasp (str): Apple 的认证服务提供商令牌。
-    X_Apple_Auth_Attributes (str): Apple 认证属性。
-    scnt (str): Apple 的会话计数器。
-    myacinfo (str): Apple 的账户信息。
-
-方法:
-    _send_request(method, url, **kwargs): 发送HTTP请求并返回响应。
-    _build_headers(additional_headers=None): 构建请求头部。
-    t0(): 初始化步骤,开始与Apple服务的交互。
-    t1(): 第二步，处理服务器响应并准备下一步。
-    t2(): 第三步，继续交互过程。
-    t3(): 第四步，进一步处理认证和会话。
-    t4(): 第五步，完成用户认证。
-    t5(): 第六步，处理账户信息。
-    t6(): 第七步，获取账户仪表板信息。
-    t7(): 第八步，编辑账户信息。
-    t8(): 第九步，提交编辑的账户信息。
-    t9(): 最后一步，确认信息提交并返回最终响应。
-
-注意:
-    - 本类中的所有方法都假定 `session` 是一个有效的 `requests.Session` 对象。
-    - 所有与Apple服务交互的方法都应遵循Apple的API使用条款。
-"""
+from requests.exceptions import RequestException
+from functools import wraps
 
 user_agent = UserAgent()
 shared_session = requests.Session()
@@ -55,6 +11,26 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+
+
+def retry_on_exception(max_attempts=5,exceptions=(Exception,)):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            attempts = 0
+            while attempts < max_attempts:
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    attempts += 1
+                    logging.warning(f"Exception {e} occurred, retrying... (Attempt {attempts}/{max_attempts})")
+                    # time.sleep(backoff_factor * (2 ** (attempts - 1)))  # exponential backoff
+            # You can raise the last exception or return a default value
+            logging.error(f"Max retries reached, giving up.")
+            raise  # Reraise the last exception
+        return wrapper
+    return decorator
+
 
 
 class APPLE:
@@ -88,19 +64,25 @@ class APPLE:
         self.countryCode = address_details.get("countryCode")
         self.session = shared_session
         # self.t0()
+        
 
-
+    @retry_on_exception(max_attempts=20)
     def _send_request(self, method, url, **kwargs):
-
+        # 你的原始_send_request方法的代码
         try:
             self.DL = self.dl()
-            timeout = kwargs.get("timeout", 5)
-            if "timeout" not in kwargs:
-                kwargs["timeout"] = timeout
-            response = self.session.request(method, url, **kwargs,proxies=self.DL)
+            
+            # timeout = kwargs.get("timeout", 1)
+            # if "timeout" not in kwargs:
+            #     kwargs["timeout"] = timeout
+            response = self.session.request(method, url, **kwargs, proxies=self.DL,timeout=2)
+            response.raise_for_status()  # 如果状态码是4XX或5XX，将引发异常
+            # 正则表达式匹配逻辑...
             return response
         except RequestException as e:
-            pass
+            self.DL = self.dl()
+            logging.error(f"Request failed with exception: {e}")
+            raise  # 让装饰器处理重试逻辑
 
     def _build_headers(self, additional_headers=None):
         headers = self.COMMON_HEADERS.copy()
