@@ -43,11 +43,24 @@ class Asynctask(QRunnable):
         executor = ThreadPoolExecutor()
         apple = await loop.run_in_executor(executor, self.run_sync_method)
         self.callback(self.row, self.email, apple)
-        # 这可以打包成元组，然后返回
+        
 
     def run_sync_method(self):
         apple = APPLE(**self.address_details)
-        return apple
+        apple.t0() 
+        result = {
+            'firstName': apple.firstName,
+            'lastName': apple.lastName,
+            'companyName': apple.companyName,
+            'street': apple.street,
+            'street2': apple.street2,
+            'postalCode': apple.postalCode,
+            'city': apple.city,
+            'state': apple.state,
+            'countryCode': apple.countryCode,
+            'fullDaytimePhone': apple.fullDaytimePhone,
+        }
+        return result
 
 
 
@@ -211,30 +224,50 @@ class MainWindow(QMainWindow):
             if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
                 email = self.tableWidget.item(row, 0).text()
                 password = self.tableWidget.item(row, 1).text()
-                address_details = {
-                    "name":email,
-                    "pwd":password,
-                    "fullDaytimePhone": self.line_edit1.text(),
-                    "street2": self.line_edit2.text(),
-                    "lastName": self.line_edit3.text(),
-                    "firstName": self.line_edit4.text(),
-                    "companyName": self.line_edit5.text(),
-                    "street": self.line_edit6.text(),
-                    "city": self.line_edit7.text(),
-                    "state": self.line_edit8.text(),
-                    "postalCode": self.line_edit9.text(),
-                    "countryCode": self.line_edit10.text(),
-                }
-                params = {**address_details}
+                # address_details = {
+                #     "name":email,
+                #     "pwd":password,
+                #     "fullDaytimePhone": self.line_edit1.text(),
+                #     "street2": self.line_edit2.text(),
+                #     "lastName": self.line_edit3.text(),
+                #     "firstName": self.line_edit4.text(),
+                #     "companyName": self.line_edit5.text(),
+                #     "street": self.line_edit6.text(),
+                #     "city": self.line_edit7.text(),
+                #     "state": self.line_edit8.text(),
+                #     "postalCode": self.line_edit9.text(),
+                #     "countryCode": self.line_edit10.text(),
+                # }
+                params = {
+                "name":email,
+                "pwd":password,
+                "fullDaytimePhone": "111111-2222",
+                "street2": "212231312",
+                "lastName": "lllll3333",
+                "firstName": "hhhjjj11166666",
+                "companyName": "122332",
+                "street": "777776667777",
+                "city": "Albany",
+                "state": "CH",
+                "postalCode": "11111-1111",
+                "countryCode": "CH",
+            }
+                params = {**params}
                 task = Asynctask(row, email, self.update_table_item, **params)
                 self.thread_pool.start(task)
 
-    def update_table_item(self, row, email, apple):
-        # 检查当前行的邮箱是否与传入的邮箱匹配
+    def update_table_item(self, row, email, result):
         if self.tableWidget.item(row, 0).text() == email:
-            display_str = str(apple)  # 假设可以直接转换为字符串
-            update_item = QTableWidgetItem(display_str)
-            self.tableWidget.setItem(row, 2, update_item)  # 更新第三列
+            self.tableWidget.setItem(row, 2, QTableWidgetItem(result['firstName']))
+            self.tableWidget.setItem(row, 3, QTableWidgetItem(result['lastName']))
+            self.tableWidget.setItem(row, 4, QTableWidgetItem(result['companyName']))
+            self.tableWidget.setItem(row, 5, QTableWidgetItem(result['street']))
+            self.tableWidget.setItem(row, 6, QTableWidgetItem(result['street2']))
+            self.tableWidget.setItem(row, 7, QTableWidgetItem(result['postalCode']))
+            self.tableWidget.setItem(row, 8, QTableWidgetItem(result['city']))
+            self.tableWidget.setItem(row, 9, QTableWidgetItem(result['state']))
+            self.tableWidget.setItem(row, 10, QTableWidgetItem(result['countryCode']))
+            self.tableWidget.setItem(row, 11, QTableWidgetItem(result['fullDaytimePhone']))
 
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")

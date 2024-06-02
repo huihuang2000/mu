@@ -48,7 +48,6 @@ APPLE 类用于管理与 Apple 服务的交互，包括用户认证、会话管�
     - 所有与Apple服务交互的方法都应遵循Apple的API使用条款。
 """
 
-
 user_agent = UserAgent()
 shared_session = requests.Session()
 logging.basicConfig(
@@ -88,15 +87,17 @@ class APPLE:
         self.postalCode = address_details.get("postalCode")
         self.countryCode = address_details.get("countryCode")
         self.session = shared_session
-        self.t0()
+        # self.t0()
+
 
     def _send_request(self, method, url, **kwargs):
 
         try:
+            self.DL = self.dl()
             timeout = kwargs.get("timeout", 5)
             if "timeout" not in kwargs:
                 kwargs["timeout"] = timeout
-            response = self.session.request(method, url, **kwargs)
+            response = self.session.request(method, url, **kwargs,proxies=self.DL)
             return response
         except RequestException as e:
             pass
@@ -106,6 +107,13 @@ class APPLE:
         if additional_headers:
             headers.update(additional_headers)
         return headers
+
+    def dl(self):
+        dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=get&uid=94212&vkey=9B6E155B17E7B42A415A2C63FD1E8172&num=1&time=30&plat=1&re=0&type=0&so=1&ow=1&spl=1&addr=&db=1"
+        dL = requests.get(url=dl_url).text.replace("\r\n", "")
+        proxies = {"https": f"{dL}"}
+        print(proxies)
+        return proxies
 
     def t0(self):
         response = self._send_request(
@@ -401,6 +409,7 @@ class APPLE:
         logging.info(f"t8_" + ("-" * 200))
         return self.t9()
 
+
     def t9(self):
         headers = {
             "content-type": "application/x-www-form-urlencoded",  # 此处为坑,不加这个就算成功，值也不会改变
@@ -433,15 +442,14 @@ class APPLE:
             params=params,
             headers=headers,
             data=data,
-        )
-
-        logging.info(response.json())
+        ).json()
+        logging.info(response)
         logging.info(f"t9_" + ("-" * 200))
-        return response.json()
+        return response['body']['home']['customerAccount']['shippingInfo']['shippingAddress']['d']
 
 
 def main(**kwargs):
-    apple_instance = APPLE(**kwargs)
+    apple_instance = APPLE(**kwargs).t0()
     return apple_instance
 
 
