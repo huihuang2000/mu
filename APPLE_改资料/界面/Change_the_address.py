@@ -7,7 +7,7 @@ from one import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt, Slot, QRunnable, QThreadPool,Signal,QObject
+from PySide6.QtCore import Qt, Slot, QRunnable, QThreadPool, Signal, QObject
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -22,8 +22,8 @@ from PySide6.QtWidgets import (
     QInputDialog,
     QTableWidgetItem,
     QMessageBox,
-    
 )
+
 
 class Asynctask(QRunnable):
     def __init__(self, row, email, callback, **address_details):
@@ -43,25 +43,23 @@ class Asynctask(QRunnable):
         executor = ThreadPoolExecutor()
         apple = await loop.run_in_executor(executor, self.run_sync_method)
         self.callback(self.row, self.email, apple)
-        
 
     def run_sync_method(self):
         apple = APPLE(**self.address_details)
-        apple.t0() 
+        apple.t0()
         result = {
-            'firstName': apple.firstName,
-            'lastName': apple.lastName,
-            'companyName': apple.companyName,
-            'street': apple.street,
-            'street2': apple.street2,
-            'postalCode': apple.postalCode,
-            'city': apple.city,
-            'state': apple.state,
-            'countryCode': apple.countryCode,
-            'fullDaytimePhone': apple.fullDaytimePhone,
+            "firstName": apple.firstName,
+            "lastName": apple.lastName,
+            "companyName": apple.companyName,
+            "street": apple.street,
+            "street2": apple.street2,
+            "postalCode": apple.postalCode,
+            "city": apple.city,
+            "state": apple.state,
+            "countryCode": apple.countryCode,
+            "fullDaytimePhone": apple.fullDaytimePhone,
         }
         return result
-
 
 
 class MainWindow(QMainWindow):
@@ -71,7 +69,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Change_the_address")
         self.setGeometry(300, 300, 1200, 600)
 
-        self.thread_pool = QThreadPool() 
+        self.thread_pool = QThreadPool()
 
         main_layout = QVBoxLayout()
         button_layout = QHBoxLayout()
@@ -217,8 +215,7 @@ class MainWindow(QMainWindow):
         password_item = QTableWidgetItem(password)
         self.tableWidget.setItem(row_position, 0, email_item)
         self.tableWidget.setItem(row_position, 1, password_item)
-   
-    
+
     def on_click_button2(self):
         for row in range(self.tableWidget.rowCount()):
             if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
@@ -239,35 +236,37 @@ class MainWindow(QMainWindow):
                 #     "countryCode": self.line_edit10.text(),
                 # }
                 params = {
-                "name":email,
-                "pwd":password,
-                "fullDaytimePhone": "111111-2222",
-                "street2": "212231312",
-                "lastName": "lllll3333",
-                "firstName": "hhhjjj11166666",
-                "companyName": "122332",
-                "street": "777776667777",
-                "city": "Albany",
-                "state": "CH",
-                "postalCode": "11111-1111",
-                "countryCode": "CH",
-            }
+                    "name": email,
+                    "pwd": password,
+                    "fullDaytimePhone": "111111-2222",
+                    "street2": "212231312",
+                    "lastName": "lllll3333",
+                    "firstName": "hhhjjj11166666",
+                    "companyName": "122332",
+                    "street": "777776667777",
+                    "city": "Albany",
+                    "state": "CH",
+                    "postalCode": "11111-1111",
+                    "countryCode": "CH",
+                }
                 params = {**params}
                 task = Asynctask(row, email, self.update_table_item, **params)
                 self.thread_pool.start(task)
 
     def update_table_item(self, row, email, result):
         if self.tableWidget.item(row, 0).text() == email:
-            self.tableWidget.setItem(row, 2, QTableWidgetItem(result['firstName']))
-            self.tableWidget.setItem(row, 3, QTableWidgetItem(result['lastName']))
-            self.tableWidget.setItem(row, 4, QTableWidgetItem(result['companyName']))
-            self.tableWidget.setItem(row, 5, QTableWidgetItem(result['street']))
-            self.tableWidget.setItem(row, 6, QTableWidgetItem(result['street2']))
-            self.tableWidget.setItem(row, 7, QTableWidgetItem(result['postalCode']))
-            self.tableWidget.setItem(row, 8, QTableWidgetItem(result['city']))
-            self.tableWidget.setItem(row, 9, QTableWidgetItem(result['state']))
-            self.tableWidget.setItem(row, 10, QTableWidgetItem(result['countryCode']))
-            self.tableWidget.setItem(row, 11, QTableWidgetItem(result['fullDaytimePhone']))
+            self.tableWidget.setItem(row, 2, QTableWidgetItem(result["firstName"]))
+            self.tableWidget.setItem(row, 3, QTableWidgetItem(result["lastName"]))
+            self.tableWidget.setItem(row, 4, QTableWidgetItem(result["companyName"]))
+            self.tableWidget.setItem(row, 5, QTableWidgetItem(result["street"]))
+            self.tableWidget.setItem(row, 6, QTableWidgetItem(result["street2"]))
+            self.tableWidget.setItem(row, 7, QTableWidgetItem(result["postalCode"]))
+            self.tableWidget.setItem(row, 8, QTableWidgetItem(result["city"]))
+            self.tableWidget.setItem(row, 9, QTableWidgetItem(result["state"]))
+            self.tableWidget.setItem(row, 10, QTableWidgetItem(result["countryCode"]))
+            self.tableWidget.setItem(
+                row, 11, QTableWidgetItem(result["fullDaytimePhone"])
+            )
 
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")
