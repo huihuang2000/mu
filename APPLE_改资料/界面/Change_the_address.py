@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QInputDialog,
     QTableWidgetItem,
     QMessageBox,
+    QComboBox
 )
 
 
@@ -125,74 +126,96 @@ class MainWindow(QMainWindow):
         self.button4.clicked.connect(self.on_click_button4)
 
         self.label1 = QLabel("名")
-        self.label1.setFixedWidth(50)
+        self.label1.setFixedWidth(100)
         label_layout.addWidget(self.label1)
-        self.line_edit1 = QLineEdit()
-        self.line_edit1.setFixedWidth(50)
-        form_layout.addWidget(self.line_edit1)
+        self.comboBox1 = QComboBox()
+        self.comboBox1.setFixedWidth(100)
+        self.comboBox1.addItem("选项1", "值1")
+        self.comboBox1.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox1)
+
 
         self.label2 = QLabel("姓")
-        self.label2.setFixedWidth(50)
+        self.label2.setFixedWidth(100)
         label_layout.addWidget(self.label2)
-        self.line_edit2 = QLineEdit()
-        self.line_edit2.setFixedWidth(50)
-        form_layout.addWidget(self.line_edit2)
+        self.comboBox2 = QComboBox()
+        self.comboBox2.setFixedWidth(100)
+        self.comboBox2.addItem("选项1", "值1")
+        self.comboBox2.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox2)
 
         self.label3 = QLabel("公司名称")
-        self.label3.setFixedWidth(70)
+        self.label3.setFixedWidth(100)
         label_layout.addWidget(self.label3)
-        self.line_edit3 = QLineEdit()
-        self.line_edit3.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit3)
+        self.comboBox3 = QComboBox()
+        self.comboBox3.setFixedWidth(100)
+        self.comboBox3.addItem("选项1", "值1")
+        self.comboBox3.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox3)
 
         self.label4 = QLabel("街道地址")
-        self.label4.setFixedWidth(70)
+        self.label4.setFixedWidth(100)
         label_layout.addWidget(self.label4)
-        self.line_edit4 = QLineEdit()
-        self.line_edit4.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit4)
+        self.comboBox4 = QComboBox()
+        self.comboBox4.setFixedWidth(100)
+        self.comboBox4.addItem("选项1", "值1")
+        self.comboBox4.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox4)
 
         self.label5 = QLabel("公寓")
-        self.label5.setFixedWidth(70)
+        self.label5.setFixedWidth(100)
         label_layout.addWidget(self.label5)
-        self.line_edit5 = QLineEdit()
-        self.line_edit5.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit5)
+        self.comboBox5 = QComboBox()
+        self.comboBox5.setFixedWidth(100)
+        self.comboBox5.addItem("选项1", "值1")
+        self.comboBox5.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox5)
 
         self.label6 = QLabel("邮政编码")
-        self.label6.setFixedWidth(70)
+        self.label6.setFixedWidth(100)
         label_layout.addWidget(self.label6)
-        self.line_edit6 = QLineEdit()
-        self.line_edit6.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit6)
+        self.comboBox6 = QComboBox()
+        self.comboBox6.setFixedWidth(100)
+        self.comboBox6.addItem("选项1", "值1")
+        self.comboBox6.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox6)
 
         self.label7 = QLabel("城市")
-        self.label7.setFixedWidth(70)
+        self.label7.setFixedWidth(100)
         label_layout.addWidget(self.label7)
-        self.line_edit7 = QLineEdit()
-        self.line_edit7.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit7)
+        self.comboBox7 = QComboBox()
+        self.comboBox7.setFixedWidth(100)
+        self.comboBox7.addItem("选项1", "值1")
+        self.comboBox7.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox7)
+
 
         self.label8 = QLabel("州")
-        self.label8.setFixedWidth(70)
+        self.label8.setFixedWidth(100)
         label_layout.addWidget(self.label8)
-        self.line_edit8 = QLineEdit()
-        self.line_edit8.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit8)
+        self.comboBox8 = QComboBox()
+        self.comboBox8.setFixedWidth(100)
+        self.comboBox8.addItem("选项1", "值1")
+        self.comboBox8.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox8)
 
         self.label9 = QLabel("国家地区")
-        self.label9.setFixedWidth(70)
+        self.label9.setFixedWidth(100)
         label_layout.addWidget(self.label9)
-        self.line_edit9 = QLineEdit()
-        self.line_edit9.setFixedWidth(70)
-        form_layout.addWidget(self.line_edit9)
+        self.comboBox9 = QComboBox()
+        self.comboBox9.setFixedWidth(100)
+        self.comboBox9.addItem("选项1", "值1")
+        self.comboBox9.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox9)
 
         self.label10 = QLabel("电话号码")
-        self.label10.setFixedWidth(80)
+        self.label10.setFixedWidth(100)
         label_layout.addWidget(self.label10)
-        self.line_edit10 = QLineEdit()
-        self.line_edit10.setFixedWidth(80)
-        form_layout.addWidget(self.line_edit10)
+        self.comboBox10 = QComboBox()
+        self.comboBox10.setFixedWidth(100)
+        self.comboBox10.addItem("选项1", "值1")
+        self.comboBox10.addItem("选项2", "值2")
+        form_layout.addWidget(self.comboBox10)
 
         widget = QWidget()
         widget.setLayout(main_layout)
@@ -225,20 +248,20 @@ class MainWindow(QMainWindow):
             if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
                 email = self.tableWidget.item(row, 0).text()
                 password = self.tableWidget.item(row, 1).text()
-                # address_details = {
-                #     "name":email,
-                #     "pwd":password,
-                #     "fullDaytimePhone": self.line_edit1.text(),
-                #     "street2": self.line_edit2.text(),
-                #     "lastName": self.line_edit3.text(),
-                #     "firstName": self.line_edit4.text(),
-                #     "companyName": self.line_edit5.text(),
-                #     "street": self.line_edit6.text(),
-                #     "city": self.line_edit7.text(),
-                #     "state": self.line_edit8.text(),
-                #     "postalCode": self.line_edit9.text(),
-                #     "countryCode": self.line_edit10.text(),
-                # }
+                address_details = {
+                    "name":email,
+                    "pwd":password,
+                    "fullDaytimePhone": self.comboBox1.currentText(),
+                    "street2": self.comboBox2.currentText(),
+                    "lastName": self.comboBox3.currentText(),
+                    "firstName": self.comboBox4.currentText(),
+                    "companyName": self.comboBox5.currentText(),
+                    "street": self.comboBox6.currentText(),
+                    "city": self.comboBox7.currentText(),
+                    "state": self.comboBox8.currentText(),
+                    "postalCode": self.comboBox9.currentText(),
+                    "countryCode": self.comboBox10.currentText(),
+                }
                 params = {
                     "name": email,
                     "pwd": password,
