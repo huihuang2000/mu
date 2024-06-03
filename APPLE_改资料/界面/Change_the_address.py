@@ -139,6 +139,10 @@ class MainWindow(QMainWindow):
         self.comboBox1 = QComboBox()
         self.comboBox1.setFixedWidth(1000)
         form_layout.addWidget(self.comboBox1)
+        self.comboBox1.setStyleSheet("QComboBox { border: 1px solid lightgray; background-color: black; } "
+                             "QComboBox QAbstractItemView { border: 0; } "
+                             "QComboBox QAbstractItemView::item { border-bottom: 1px solid lightgray; }")
+
 
 
         self.label2 = QLabel("姓")
@@ -257,31 +261,31 @@ class MainWindow(QMainWindow):
                 address_details = {
                     "name":email,
                     "pwd":password,
-                    "fullDaytimePhone": self.comboBox1.currentText(),
+                    "fullDaytimePhone": self.comboBox1.currentText(),#7
                     "street2": self.comboBox2.currentText(),
-                    "lastName": self.comboBox3.currentText(),
-                    "firstName": self.comboBox4.currentText(),
+                    "lastName": self.comboBox3.currentText(),#1
+                    "firstName": self.comboBox4.currentText(),#2
                     "companyName": self.comboBox5.currentText(),
-                    "street": self.comboBox6.currentText(),
-                    "city": self.comboBox7.currentText(),
-                    "state": self.comboBox8.currentText(),
-                    "postalCode": self.comboBox9.currentText(),
+                    "street": self.comboBox6.currentText(),#3
+                    "city": self.comboBox7.currentText(),#5
+                    "state": self.comboBox8.currentText(),#6
+                    "postalCode": self.comboBox9.currentText(),#4
                     "countryCode": self.comboBox10.currentText(),
                 }
-                params = {
-                    "name": email,
-                    "pwd": password,
-                    "fullDaytimePhone": "111111-2222",
-                    "street2": "212231312",
-                    "lastName": "lllll3333",
-                    "firstName": "hhhjjj11166666",
-                    "companyName": "122332",
-                    "street": "777776667777",
-                    "city": "Albany",
-                    "state": "CH",
-                    "postalCode": "11111-1111",
-                    "countryCode": "CH",
-                }
+                # params = {
+                #     "name": email,
+                #     "pwd": password,
+                #     "fullDaytimePhone": "111111-2222",
+                #     "street2": "212231312",
+                #     "lastName": "lllll3333",
+                #     "firstName": "hhhjjj11166666",
+                #     "companyName": "122332",
+                #     "street": "777776667777",
+                #     "city": "Albany",
+                #     "state": "CH",
+                #     "postalCode": "11111-1111",
+                #     "countryCode": "CH",
+                # }
                 params = {**params}
                 task = Asynctask(row, email, self.update_table_item, **params)
                 self.thread_pool.start(task)
@@ -358,7 +362,6 @@ class MainWindow(QMainWindow):
     def on_click_button4(self):
         self.tableWidget.clearContents()
         self.tableWidget.setRowCount(0)
-
 
     def on_click_button5(self):
         file_path, _ = QFileDialog.getOpenFileName(
