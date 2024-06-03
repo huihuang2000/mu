@@ -2,7 +2,6 @@ import requests, re, logging
 from fake_useragent import UserAgent
 
 user_agent = UserAgent()
-shared_session = requests.Session()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -40,9 +39,9 @@ class APPLE:
         self.postalCode = address_details.get("postalCode")
         self.countryCode = address_details.get("countryCode")
         self.stast = None
-        self.session = shared_session
+        self.session = requests.Session()
         self.DL = self.dl()
-        self.lens = 10
+        self.lens = 20
         self.times = 5
 
     def _build_headers(self, additional_headers=None):
@@ -84,7 +83,6 @@ class APPLE:
         max_retries = self.lens
         for attempt in range(max_retries):
             try:
-
                 headers = {
                     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                     "accept-language": "zh-CN,zh;q=0.9",
@@ -105,8 +103,8 @@ class APPLE:
                     url="https://secure.store.apple.com/shop/account/home",
                     headers=headers,
                     allow_redirects=False,
-                    # proxies=self.DL,
-                    timeout=self.times,
+                    proxies=self.DL,
+   
                 )
                 CK = response.headers.get("Set-Cookie")
                 dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)

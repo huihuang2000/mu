@@ -7,7 +7,7 @@ from one import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt, Slot, QRunnable, QThreadPool, Signal, QObject
+from PySide6.QtCore import Qt,QRunnable, QThreadPool
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
