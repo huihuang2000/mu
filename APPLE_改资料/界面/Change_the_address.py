@@ -47,18 +47,21 @@ class Asynctask(QRunnable):
     def run_sync_method(self):
         apple = APPLE(**self.address_details)
         apple.t0()
-        result = {
-            "firstName": apple.firstName,
-            "lastName": apple.lastName,
-            "companyName": apple.companyName,
-            "street": apple.street,
-            "street2": apple.street2,
-            "postalCode": apple.postalCode,
-            "city": apple.city,
-            "state": apple.state,
-            "countryCode": apple.countryCode,
-            "fullDaytimePhone": apple.fullDaytimePhone,
-        }
+        if hasattr(apple, 'stast') and apple.stast == "账号异常，无法获取必要的信息。":
+            result = {"firstName": "账号异常"}
+        else:
+            result = {
+                "firstName": apple.firstName,
+                "lastName": apple.lastName,
+                "companyName": apple.companyName,
+                "street": apple.street,
+                "street2": apple.street2,
+                "postalCode": apple.postalCode,
+                "city": apple.city,
+                "state": apple.state,
+                "countryCode": apple.countryCode,
+                "fullDaytimePhone": apple.fullDaytimePhone,
+            }
         return result
 
 
@@ -204,9 +207,10 @@ class MainWindow(QMainWindow):
             for line in lines:
                 line = line.strip()
                 if line:
-                    email, password = line.split(" ", 1)
+                    email, password, *rest = line.split(maxsplit=1)
+                    if rest:
+                        print(f"警告：格式错误 - 多余的空格被忽略。行内容：{line}")
                     self.add_email_and_password_to_table(email, password)
-            # QMessageBox.information(self, "导入成功", "邮箱和密码已成功导入")
 
     def add_email_and_password_to_table(self, email, password):
         row_position = self.tableWidget.rowCount()
@@ -254,20 +258,23 @@ class MainWindow(QMainWindow):
                 self.thread_pool.start(task)
 
     def update_table_item(self, row, email, result):
-        if self.tableWidget.item(row, 0).text() == email:
+        if result.get('firstName') == "账号异常":
             self.tableWidget.setItem(row, 2, QTableWidgetItem(result["firstName"]))
-            self.tableWidget.setItem(row, 3, QTableWidgetItem(result["lastName"]))
-            self.tableWidget.setItem(row, 4, QTableWidgetItem(result["companyName"]))
-            self.tableWidget.setItem(row, 5, QTableWidgetItem(result["street"]))
-            self.tableWidget.setItem(row, 6, QTableWidgetItem(result["street2"]))
-            self.tableWidget.setItem(row, 7, QTableWidgetItem(result["postalCode"]))
-            self.tableWidget.setItem(row, 8, QTableWidgetItem(result["city"]))
-            self.tableWidget.setItem(row, 9, QTableWidgetItem(result["state"]))
-            self.tableWidget.setItem(row, 10, QTableWidgetItem(result["countryCode"]))
-            self.tableWidget.setItem(
-                row, 11, QTableWidgetItem(result["fullDaytimePhone"])
-            )
+        else:
+            if self.tableWidget.item(row, 0).text() == email:
+                self.tableWidget.setItem(row, 2, QTableWidgetItem(result.get('firstName', '')))
+                self.tableWidget.setItem(row, 3, QTableWidgetItem(result.get('lastName', '')))
+                self.tableWidget.setItem(row, 4, QTableWidgetItem(result.get('companyName', '')))
+                self.tableWidget.setItem(row, 5, QTableWidgetItem(result.get('street', '')))
+                self.tableWidget.setItem(row, 6, QTableWidgetItem(result.get('street2', '')))
+                self.tableWidget.setItem(row, 7, QTableWidgetItem(result.get('postalCode', '')))
+                self.tableWidget.setItem(row, 8, QTableWidgetItem(result.get('city', '')))
+                self.tableWidget.setItem(row, 9, QTableWidgetItem(result.get('state', '')))
+                self.tableWidget.setItem(row, 10, QTableWidgetItem(result.get('countryCode', '')))
+                self.tableWidget.setItem(row, 11, QTableWidgetItem(result.get('fullDaytimePhone', '')))
 
+
+        
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

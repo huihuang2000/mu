@@ -4,7 +4,7 @@ from fake_useragent import UserAgent
 user_agent = UserAgent()
 shared_session = requests.Session()
 logging.basicConfig(
-    # level=logging.INFO,
+    level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
@@ -39,10 +39,11 @@ class APPLE:
         self.state = address_details.get("state")
         self.postalCode = address_details.get("postalCode")
         self.countryCode = address_details.get("countryCode")
+        self.stast = None
         self.session = shared_session
         self.DL = self.dl()
-        self.lens = 5
-        self.times = 10
+        self.lens = 10
+        self.times = 5
 
     def _build_headers(self, additional_headers=None):
         headers = self.COMMON_HEADERS.copy()
@@ -80,6 +81,7 @@ class APPLE:
                 return self.t1()
             except Exception as e:
                 attempt + 1
+                self.DL = self.dl()
                 logging.warning(f"t0重试 ，错误：{e}")
 
     def t1(self):
@@ -169,23 +171,32 @@ class APPLE:
                 logging.info(self.X_Apple_Auth_Attributes)
                 logging.info(self.scnt)
                 logging.info(f"T4_返回aasp,,X_Apple_Auth_Attributes,,scnt" + ("-" * 40))
-                return self.t4()
+                return self.t4_1()
             except Exception as e:
                 self.DL = self.dl()
                 attempt + 1
                 logging.warning(f"t3重试 ，错误：{e}")
 
-    def t4(self):
-        max_retries = self.lens
+    def t4_1(self):
+        max_retries = 5
         for attempt in range(max_retries):
             try:
                 # -------------------------------------------------------
                 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
                 payload = {f"email": {self.name}}
-                Key = self.session.request(method="post", url=url, data=payload).json()
-                logging.info(Key)
+                self.Key = self.session.request(method="post", url=url, data=payload).json()
+                logging.info(self.Key)
                 logging.info(f"加密_1" + ("-" * 40))
-                # ---------------------------------------------------------
+                return self.t4_2()
+            except Exception as e:
+                self.DL = self.dl()
+                attempt + 1
+                logging.warning(f"t4_1 ，错误：{e}")
+
+    def t4_2(self):
+        max_retries = 5
+        for attempt in range(max_retries):
+            try: 
                 combined_headers_and_cookies = {
                     "Accept": "application/json, text/javascript, */*; q=0.01",
                     "User-Agent": user_agent.random,
@@ -193,7 +204,7 @@ class APPLE:
                     "scnt": self.scnt,
                 }
                 json_data = {
-                    "a": Key["r"],
+                    "a": self.Key["r"],
                     "accountName": self.name,
                     "protocols": [
                         "s2k",
@@ -201,7 +212,7 @@ class APPLE:
                     ],
                 }
                 headers = self._build_headers(combined_headers_and_cookies)
-                response_2 = self.session.request(
+                self.response_2 = self.session.request(
                     method="post",
                     url="https://idmsa.apple.com/appleauth/auth/signin/init",
                     headers=headers,
@@ -209,26 +220,46 @@ class APPLE:
                     proxies=self.DL,
                     timeout=self.times,
                 ).json()
-                logging.info(Key)
+                logging.info(self.Key)
                 logging.info(f"加密_2" + ("-" * 40))
-                # ---------------------------------------------------------
+                return self.t4_3()
+            except Exception as e:
+                self.DL = self.dl()
+                attempt + 1
+                logging.warning(f"t4_2 ，错误：{e}")
+
+
+    def t4_3(self):
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:    
                 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
                 payload = {
                     "email": self.name,
-                    "iterations": response_2["iteration"],
-                    "Value": response_2["b"],
-                    "salt": response_2["salt"],
+                    "iterations": self.response_2["iteration"],
+                    "Value": self.response_2["b"],
+                    "salt": self.response_2["salt"],
                     "password": self.pwd,
-                    "protocol": response_2["protocol"],
-                    "privateHexValue": Key["privateHexValue"],
-                    "publicHexValue": Key["publicHexValue"],
+                    "protocol": self.response_2["protocol"],
+                    "privateHexValue": self.Key["privateHexValue"],
+                    "publicHexValue": self.Key["publicHexValue"],
                 }
-                response_3 = self.session.request(
+                self.response_3 = self.session.request(
                     method="post", url=url, json=payload
                 ).json()
-                logging.info(response_3)
+                logging.info(self.response_3)
                 logging.info(f"加密_3" + ("-" * 40))
-                # ---------------------------------------------------------
+                return self.t4_4()
+            except Exception as e:
+                self.DL = self.dl()
+                attempt + 1
+                logging.warning(f"t4_3 ，错误：{e}")
+
+
+    def t4_4(self):
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:  
                 cookies = {
                     "as_rumid": "9f9a7e8708ebbde2daf02b478473eccd",
                     "dssid2": self.dssid2,
@@ -257,9 +288,9 @@ class APPLE:
                 json_data = {
                     "accountName": self.name,
                     "rememberMe": False,
-                    "m1": response_3["M1"],
-                    "c": response_2["c"],
-                    "m2": response_3["M2"],
+                    "m1": self.response_3["M1"],
+                    "c": self.response_2["c"],
+                    "m2": self.response_3["M2"],
                 }
                 response_4 = self.session.request(
                     method="post",
@@ -279,8 +310,15 @@ class APPLE:
                 return self.t5()
             except Exception as e:
                 self.DL = self.dl()
-                attempt + 1
-                logging.warning(f"t4重试 ，错误：{e}")
+                logging.warning(f"t4_4 重试 {attempt + 1} 次，错误：{e}")
+                # 如果已经达到最大重试次数，则跳出循环
+                if attempt + 1 == max_retries:
+                    logging.warning(f"账号异常，无法获取必要的信息")
+                    self.stast = "账号异常，无法获取必要的信息。"
+                    return self.stast  # 返回错误信息
+
+
+
 
     def t5(self):
         max_retries = self.lens
@@ -485,9 +523,7 @@ class APPLE:
 
                 logging.info(response)
                 logging.info(f"t9_" + ("-" * 200))
-                return response["body"]["home"]["customerAccount"]["shippingInfo"][
-                    "shippingAddress"
-                ]["d"]
+                return response["body"]["home"]["customerAccount"]["shippingInfo"]["shippingAddress"]["d"]
             except Exception as e:
                 self.DL = self.dl()
                 attempt + 1
@@ -501,9 +537,9 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "unlockapi1@icloud.com",
+        "name": "leforza@asahi-net.email.ne.jp",
         "pwd": "Aa147369",
-        "fullDaytimePhone": "20111-1111",
+        "fullDaytimePhone": "111111-2222",
         "street2": "212231312",
         "lastName": "lllll3333",
         "firstName": "hhhjjj11166666",
