@@ -51,22 +51,61 @@ class APPLE:
             headers.update(additional_headers)
         return headers
 
+    # def dl(self):
+    #     dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
+    #     dL = requests.get(url=dl_url).text.replace("\r\n", "")
+    #     proxies = {"https": f"{dL}"}
+    #     print(proxies)
+    #     return proxies
+    
     def dl(self):
         dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
-        dL = requests.get(url=dl_url).text.replace("\r\n", "")
-        proxies = {"https": f"{dL}"}
-        print(proxies)
-        return proxies
+        while True:
+            response = requests.get(dl_url)
+            if response.status_code == 200:
+                proxy_str = response.text.strip()
+                ip, port = proxy_str.split(":")
+                proxy = {"https": f"http://{ip}:{port}"}
+                try:
+                    test_response = requests.get(
+                        "http://www.baidu.com", proxies=proxy
+                    )
+                    if test_response.status_code == 200:
+                        print(proxy)
+                        return proxy
+                except Exception as e:
+                    print(f"代理IP {proxy} 无效: {e}")
+            else:
+                print("获取代理IP失败，重试中...")
+
+
 
     def t0(self):
         max_retries = self.lens
         for attempt in range(max_retries):
             try:
+
+                headers = {
+                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                    "accept-language": "zh-CN,zh;q=0.9",
+                    "cache-control": "no-cache",
+                    "dnt": "1",
+                    "pragma": "no-cache",
+                    "priority": "u=0, i",
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-fetch-dest": "document",
+                    "sec-fetch-mode": "navigate",
+                    "sec-fetch-site": "none",
+                    "sec-fetch-user": "?1",
+                    "upgrade-insecure-requests": "1",
+                }
+                headers = self._build_headers(headers)
                 response = self.session.request(
                     method="get",
                     url="https://secure.store.apple.com/shop/account/home",
+                    headers=headers,
                     allow_redirects=False,
-                    proxies=self.DL,
+                    # proxies=self.DL,
                     timeout=self.times,
                 )
                 CK = response.headers.get("Set-Cookie")
@@ -184,7 +223,9 @@ class APPLE:
                 # -------------------------------------------------------
                 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
                 payload = {f"email": {self.name}}
-                self.Key = self.session.request(method="post", url=url, data=payload).json()
+                self.Key = self.session.request(
+                    method="post", url=url, data=payload
+                ).json()
                 logging.info(self.Key)
                 logging.info(f"加密_1" + ("-" * 40))
                 return self.t4_2()
@@ -196,7 +237,7 @@ class APPLE:
     def t4_2(self):
         max_retries = 5
         for attempt in range(max_retries):
-            try: 
+            try:
                 combined_headers_and_cookies = {
                     "Accept": "application/json, text/javascript, */*; q=0.01",
                     "User-Agent": user_agent.random,
@@ -228,11 +269,10 @@ class APPLE:
                 attempt + 1
                 logging.warning(f"t4_2 ，错误：{e}")
 
-
     def t4_3(self):
         max_retries = 5
         for attempt in range(max_retries):
-            try:    
+            try:
                 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
                 payload = {
                     "email": self.name,
@@ -255,11 +295,10 @@ class APPLE:
                 attempt + 1
                 logging.warning(f"t4_3 ，错误：{e}")
 
-
     def t4_4(self):
         max_retries = 5
         for attempt in range(max_retries):
-            try:  
+            try:
                 cookies = {
                     "as_rumid": "9f9a7e8708ebbde2daf02b478473eccd",
                     "dssid2": self.dssid2,
@@ -316,9 +355,6 @@ class APPLE:
                     logging.warning(f"账号异常，无法获取必要的信息")
                     self.stast = "账号异常，无法获取必要的信息。"
                     return self.stast  # 返回错误信息
-
-
-
 
     def t5(self):
         max_retries = self.lens
@@ -523,7 +559,9 @@ class APPLE:
 
                 logging.info(response)
                 logging.info(f"t9_" + ("-" * 200))
-                return response["body"]["home"]["customerAccount"]["shippingInfo"]["shippingAddress"]["d"]
+                return response["body"]["home"]["customerAccount"]["shippingInfo"][
+                    "shippingAddress"
+                ]["d"]
             except Exception as e:
                 self.DL = self.dl()
                 attempt + 1

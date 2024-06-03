@@ -47,7 +47,7 @@ class Asynctask(QRunnable):
     def run_sync_method(self):
         apple = APPLE(**self.address_details)
         apple.t0()
-        if hasattr(apple, 'stast') and apple.stast == "账号异常，无法获取必要的信息。":
+        if hasattr(apple, "stast") and apple.stast == "账号异常，无法获取必要的信息。":
             result = {"firstName": "账号异常"}
         else:
             result = {
@@ -258,23 +258,41 @@ class MainWindow(QMainWindow):
                 self.thread_pool.start(task)
 
     def update_table_item(self, row, email, result):
-        if result.get('firstName') == "账号异常":
+        if result.get("firstName") == "账号异常":
             self.tableWidget.setItem(row, 2, QTableWidgetItem(result["firstName"]))
         else:
             if self.tableWidget.item(row, 0).text() == email:
-                self.tableWidget.setItem(row, 2, QTableWidgetItem(result.get('firstName', '')))
-                self.tableWidget.setItem(row, 3, QTableWidgetItem(result.get('lastName', '')))
-                self.tableWidget.setItem(row, 4, QTableWidgetItem(result.get('companyName', '')))
-                self.tableWidget.setItem(row, 5, QTableWidgetItem(result.get('street', '')))
-                self.tableWidget.setItem(row, 6, QTableWidgetItem(result.get('street2', '')))
-                self.tableWidget.setItem(row, 7, QTableWidgetItem(result.get('postalCode', '')))
-                self.tableWidget.setItem(row, 8, QTableWidgetItem(result.get('city', '')))
-                self.tableWidget.setItem(row, 9, QTableWidgetItem(result.get('state', '')))
-                self.tableWidget.setItem(row, 10, QTableWidgetItem(result.get('countryCode', '')))
-                self.tableWidget.setItem(row, 11, QTableWidgetItem(result.get('fullDaytimePhone', '')))
+                self.tableWidget.setItem(
+                    row, 2, QTableWidgetItem(result.get("firstName", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 3, QTableWidgetItem(result.get("lastName", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 4, QTableWidgetItem(result.get("companyName", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 5, QTableWidgetItem(result.get("street", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 6, QTableWidgetItem(result.get("street2", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 7, QTableWidgetItem(result.get("postalCode", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 8, QTableWidgetItem(result.get("city", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 9, QTableWidgetItem(result.get("state", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 10, QTableWidgetItem(result.get("countryCode", ""))
+                )
+                self.tableWidget.setItem(
+                    row, 11, QTableWidgetItem(result.get("fullDaytimePhone", ""))
+                )
 
-
-        
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
