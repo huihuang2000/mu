@@ -2,12 +2,13 @@ import pandas as pd
 import asyncio
 from datetime import datetime
 import os
+import re
 from pathlib import Path
 from one import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt,QRunnable, QThreadPool
+from PySide6.QtCore import Qt,QRunnable, QThreadPool,QStandardPaths
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -22,7 +23,8 @@ from PySide6.QtWidgets import (
     QInputDialog,
     QTableWidgetItem,
     QMessageBox,
-    QComboBox
+    QComboBox,
+    QFileDialog
 )
 
 
@@ -128,100 +130,98 @@ class MainWindow(QMainWindow):
         self.button2.clicked.connect(self.on_click_button2)
         self.button3.clicked.connect(self.on_click_button3)
         self.button4.clicked.connect(self.on_click_button4)
-        # self.button3.clicked.connect(self.on_click_button5)
-        # self.button4.clicked.connect(self.on_click_button6)
+        self.button5.clicked.connect(self.on_click_button5)
+        self.button6.clicked.connect(self.on_click_button6)
 
         self.label1 = QLabel("名")
         self.label1.setFixedWidth(100)
         label_layout.addWidget(self.label1)
         self.comboBox1 = QComboBox()
-        self.comboBox1.setFixedWidth(100)
-        self.comboBox1.addItem("选项1", "值1")
-        self.comboBox1.addItem("选项2", "值2")
+        self.comboBox1.setFixedWidth(1000)
         form_layout.addWidget(self.comboBox1)
 
 
         self.label2 = QLabel("姓")
         self.label2.setFixedWidth(100)
         label_layout.addWidget(self.label2)
-        self.comboBox2 = QComboBox()
-        self.comboBox2.setFixedWidth(100)
-        self.comboBox2.addItem("选项1", "值1")
-        self.comboBox2.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox2)
+        # self.comboBox2 = QComboBox()
+        # self.comboBox2.setFixedWidth(100)
+        # self.comboBox2.addItem("选项1", "值1")
+        # self.comboBox2.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox2)
 
         self.label3 = QLabel("公司名称")
         self.label3.setFixedWidth(100)
         label_layout.addWidget(self.label3)
-        self.comboBox3 = QComboBox()
-        self.comboBox3.setFixedWidth(100)
-        self.comboBox3.addItem("选项1", "值1")
-        self.comboBox3.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox3)
+        # self.comboBox3 = QComboBox()
+        # self.comboBox3.setFixedWidth(100)
+        # self.comboBox3.addItem("选项1", "值1")
+        # self.comboBox3.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox3)
 
         self.label4 = QLabel("街道地址")
         self.label4.setFixedWidth(100)
         label_layout.addWidget(self.label4)
-        self.comboBox4 = QComboBox()
-        self.comboBox4.setFixedWidth(100)
-        self.comboBox4.addItem("选项1", "值1")
-        self.comboBox4.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox4)
+        # self.comboBox4 = QComboBox()
+        # self.comboBox4.setFixedWidth(100)
+        # self.comboBox4.addItem("选项1", "值1")
+        # self.comboBox4.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox4)
 
         self.label5 = QLabel("公寓")
         self.label5.setFixedWidth(100)
         label_layout.addWidget(self.label5)
-        self.comboBox5 = QComboBox()
-        self.comboBox5.setFixedWidth(100)
-        self.comboBox5.addItem("选项1", "值1")
-        self.comboBox5.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox5)
+        # self.comboBox5 = QComboBox()
+        # self.comboBox5.setFixedWidth(100)
+        # self.comboBox5.addItem("选项1", "值1")
+        # self.comboBox5.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox5)
 
         self.label6 = QLabel("邮政编码")
         self.label6.setFixedWidth(100)
         label_layout.addWidget(self.label6)
-        self.comboBox6 = QComboBox()
-        self.comboBox6.setFixedWidth(100)
-        self.comboBox6.addItem("选项1", "值1")
-        self.comboBox6.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox6)
+        # self.comboBox6 = QComboBox()
+        # self.comboBox6.setFixedWidth(100)
+        # self.comboBox6.addItem("选项1", "值1")
+        # self.comboBox6.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox6)
 
         self.label7 = QLabel("城市")
         self.label7.setFixedWidth(100)
         label_layout.addWidget(self.label7)
-        self.comboBox7 = QComboBox()
-        self.comboBox7.setFixedWidth(100)
-        self.comboBox7.addItem("选项1", "值1")
-        self.comboBox7.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox7)
+        # self.comboBox7 = QComboBox()
+        # self.comboBox7.setFixedWidth(100)
+        # self.comboBox7.addItem("选项1", "值1")
+        # self.comboBox7.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox7)
 
 
         self.label8 = QLabel("州")
         self.label8.setFixedWidth(100)
         label_layout.addWidget(self.label8)
-        self.comboBox8 = QComboBox()
-        self.comboBox8.setFixedWidth(100)
-        self.comboBox8.addItem("选项1", "值1")
-        self.comboBox8.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox8)
+        # self.comboBox8 = QComboBox()
+        # self.comboBox8.setFixedWidth(100)
+        # self.comboBox8.addItem("选项1", "值1")
+        # self.comboBox8.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox8)
 
         self.label9 = QLabel("国家地区")
         self.label9.setFixedWidth(100)
         label_layout.addWidget(self.label9)
-        self.comboBox9 = QComboBox()
-        self.comboBox9.setFixedWidth(100)
-        self.comboBox9.addItem("选项1", "值1")
-        self.comboBox9.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox9)
+        # self.comboBox9 = QComboBox()
+        # self.comboBox9.setFixedWidth(100)
+        # self.comboBox9.addItem("选项1", "值1")
+        # self.comboBox9.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox9)
 
         self.label10 = QLabel("电话号码")
         self.label10.setFixedWidth(100)
         label_layout.addWidget(self.label10)
-        self.comboBox10 = QComboBox()
-        self.comboBox10.setFixedWidth(100)
-        self.comboBox10.addItem("选项1", "值1")
-        self.comboBox10.addItem("选项2", "值2")
-        form_layout.addWidget(self.comboBox10)
+        # self.comboBox10 = QComboBox()
+        # self.comboBox10.setFixedWidth(100)
+        # self.comboBox10.addItem("选项1", "值1")
+        # self.comboBox10.addItem("选项2", "值2")
+        # form_layout.addWidget(self.comboBox10)
 
         widget = QWidget()
         widget.setLayout(main_layout)
@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
 
     def on_click_button1(self):
         text, ok = QInputDialog.getMultiLineText(
-            self, "导入信息", "请输入邮箱和密码(每行一个，用空格分隔)"
+            self, "导入账号密码", "请输入邮箱和密码(每行一个，用空格分隔)"
         )
         if ok and text:
             lines = text.split("\n")
@@ -358,6 +358,36 @@ class MainWindow(QMainWindow):
     def on_click_button4(self):
         self.tableWidget.clearContents()
         self.tableWidget.setRowCount(0)
+
+
+    def on_click_button5(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "选择文件",
+            QApplication.instance().applicationDirPath(),
+            "Excel Files (*.xlsx);;All Files (*)"
+        )
+        if file_path:
+            try:
+                df = pd.read_excel(file_path, engine='openpyxl')
+                self.comboBox1.clear()
+                df.fillna('     ', inplace=True)
+                for index, row in df.iterrows():
+                    full_address = (
+                        f"{row['姓']}----"  # 姓
+                        f"{row['名']}----"  # 名
+                        f"{row['城市']}----"  # 城市
+                        f"{row['地区']}----"  # 地区
+                        f"{row['地址一']}----"  # 地址一
+                        f"{row['地址二']}----"  # 地址二
+                        f"{row['邮编']}"  # 邮编
+                    )
+                    self.comboBox1.addItem(full_address.strip())
+            except Exception as e:
+                print(f"读取文件时发生错误: {e}")
+
+    def on_click_button6(self):
+        self.comboBox1.clear()
 
 
 def main():
