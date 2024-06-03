@@ -364,30 +364,33 @@ class MainWindow(QMainWindow):
         self.tableWidget.setRowCount(0)
 
     def on_click_button5(self):
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "选择文件",
-            QApplication.instance().applicationDirPath(),
-            "Excel Files (*.xlsx);;All Files (*)"
-        )
-        if file_path:
-            try:
-                df = pd.read_excel(file_path, engine='openpyxl')
-                self.comboBox1.clear()
-                df.fillna('     ', inplace=True)
-                for index, row in df.iterrows():
-                    full_address = (
-                        f"{row['姓']}----"  # 姓
-                        f"{row['名']}----"  # 名
-                        f"{row['城市']}----"  # 城市
-                        f"{row['地区']}----"  # 地区
-                        f"{row['地址一']}----"  # 地址一
-                        f"{row['地址二']}----"  # 地址二
-                        f"{row['邮编']}"  # 邮编
-                    )
-                    self.comboBox1.addItem(full_address.strip())
-            except Exception as e:
-                print(f"读取文件时发生错误: {e}")
+        try:
+            file_path, _ = QFileDialog.getOpenFileName(
+                self,
+                "选择文件",
+                QApplication.instance().applicationDirPath(),
+                "Excel Files (*.xlsx);;All Files (*)"
+            )
+            if file_path:
+                try:
+                    df = pd.read_excel(file_path, engine='openpyxl')
+                    self.comboBox1.clear()
+                    df.fillna('     ', inplace=True)
+                    for index, row in df.iterrows():
+                        full_address = (
+                            f"{row['姓']}----"
+                            f"{row['名']}----"
+                            f"{row['城市']}----"
+                            f"{row['地区']}----"
+                            f"{row['地址一']}----"
+                            f"{row['地址二']}----"
+                            f"{row['邮编']}"
+                        )
+                        self.comboBox1.addItem(full_address.strip())
+                except Exception as e:
+                    print(f"读取文件时发生错误: {e}")
+        except Exception as e:
+            QMessageBox.critical(self, "错误", f"读取文件时发生错误: {e}")            
 
     def on_click_button6(self):
         self.comboBox1.clear()
