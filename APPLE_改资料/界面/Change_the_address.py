@@ -2,23 +2,20 @@ import pandas as pd
 import asyncio
 from datetime import datetime
 import os
-import re
 from pathlib import Path
 from one import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt,QRunnable, QThreadPool,QStandardPaths
+from PySide6.QtCore import Qt,QRunnable, QThreadPool
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QPushButton,
     QVBoxLayout,
     QWidget,
-    QLineEdit,
     QHBoxLayout,
     QLabel,
-    QLineEdit,
     QTableWidget,
     QInputDialog,
     QTableWidgetItem,
