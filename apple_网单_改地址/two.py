@@ -418,6 +418,8 @@ class APPLE:
 
                     response = requests.get(self.signInURL, cookies=cookies, headers=headers,allow_redirects=False,)
                     self.ssi_3 = response.headers["Location"]
+                    print(self.ssi_3)
+                    print(f"T5" + ("-" * 40))
                     return self.t6()
                 except Exception as e:
                     # self.DL = self.dl()
@@ -504,12 +506,12 @@ class APPLE:
                 print(f"as_disa: {self.as_disa}")
                 print(f"as_ltn_us: {self.as_ltn_us_1}")
                 print(f"as_rec: {self.as_rec}")
-                print(f"t5" + ("-" * 40))
+                print(f"t6" + ("-" * 40))
                 return self.t7()
             except Exception as e:
                 # self.DL = self.dl()
                 attempt + 1
-                print(f"t5重试 ，错误：{e}")
+                print(f"t6重试 ，错误：{e}")
 
     def t7(self):
         max_retries = 5
@@ -566,7 +568,10 @@ class APPLE:
                 as_ltn_us_match = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
                 self.as_ltn_us_2 = as_ltn_us_match.group(1) if as_ltn_us_match else None
                 self.x_aos_stk_value_2 = self.x_aos_stk_value_2.group(1)
+                print(self.url_x)
                 print(self.as_ltn_us_2)
+                print(self.x_aos_stk_value_2)
+                print(f"T7" + ("-" * 40))
                 return self.t8()
             except Exception as e:
                 # self.DL = self.dl()
@@ -639,6 +644,7 @@ class APPLE:
                 as_ltn_us_match_3 = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
                 self.as_ltn_us_3 = as_ltn_us_match_3.group(1) if as_ltn_us_match_3 else None
                 print(self.as_ltn_us_3)
+                print(f"T8" + ("-" * 40))
                 return self.t9()
             except Exception as e:
                 # self.DL = self.dl()
@@ -722,6 +728,7 @@ class APPLE:
                 as_ltn_us_match_4 = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
                 self.as_ltn_us_4 = as_ltn_us_match_4.group(1) if as_ltn_us_match_4 else None
                 print(self.as_ltn_us_4)
+                print(f"T9" + ("-" * 40))
                 return self.t10()
             except Exception as e:
                 # self.DL = self.dl()
@@ -729,70 +736,78 @@ class APPLE:
                 print(f"t9重试 ，错误：{e}")
 
     def t10(self):
-        cookies = {
-            'dssid2': self.dssid2,
-            'dssf': '1',
-            'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
-            'pxro': '1',
-            'as_dc': 'ucp5',
-            's_fid': '05BD90C97D09DACB-0E981AE8E5C89EE3',
-            's_vi': '[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]',
-            'as_pcts': self.as_pcts_2,
-            's_cc': 'true',
-            'as_rumid': 'c643af2b-2aef-467f-b089-295dd3aa3fbc',
-            'dslang': 'US-EN',
-            'site': 'USA',
-            'geo': 'CN',
-            'as_cn': self.as_cn,
-            'as_disa': self.as_disa,
-            'as_rec': self.as_rec,
-            'as_ltn_us': self.as_ltn_us_3,
-            's_sq': 'applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520orders%25252Forder_detail%2526link%253Duse%252520this%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520orders%25252Forder_detail%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DSUBMIT',
-        }
+        max_retries = 5
+        for attempt in range(max_retries):
+            try:
+                cookies = {
+                    'dssid2': self.dssid2,
+                    'dssf': '1',
+                    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
+                    'pxro': '1',
+                    'as_dc': 'ucp5',
+                    's_fid': '05BD90C97D09DACB-0E981AE8E5C89EE3',
+                    's_vi': '[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]',
+                    'as_pcts': self.as_pcts_2,
+                    's_cc': 'true',
+                    'as_rumid': 'c643af2b-2aef-467f-b089-295dd3aa3fbc',
+                    'dslang': 'US-EN',
+                    'site': 'USA',
+                    'geo': 'CN',
+                    'as_cn': self.as_cn,
+                    'as_disa': self.as_disa,
+                    'as_rec': self.as_rec,
+                    'as_ltn_us': self.as_ltn_us_3,
+                    's_sq': 'applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520orders%25252Forder_detail%2526link%253Duse%252520this%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520orders%25252Forder_detail%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DSUBMIT',
+                }
 
-        headers = {
-            'accept': '*/*',
-            'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
-            'cache-control': 'no-cache',
-            'content-type': 'application/x-www-form-urlencoded',
-            # 'cookie': 'dssid2=2831cb99-bac8-4f9a-847a-1d01848126e5; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; as_dc=ucp5; s_fid=05BD90C97D09DACB-0E981AE8E5C89EE3; s_vi=[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]; as_pcts=R:8tGpf187I:o9KOkfnutY169q9Y7bLD7cV0v6ZRYCRXfAK-mzTp_89QdYyzzgrFNdY-QKXnc8x55MW5EqB+3_PBjhf8H2BeNp2xgLRV0LKD+alrGcK-5HWvglITbj14EwK0sZNVFB3lUZhnVdN9:ec6asJSA2+MVQFofjtf4uCrkUHYN4U38UNk; s_cc=true; as_rumid=c643af2b-2aef-467f-b089-295dd3aa3fbc; dslang=US-EN; site=USA; geo=CN; as_cn=~ABE5M1_eyIVWy5JqKVhJ-FJstBKzA_lw8iPk8JQHGxI=; as_disa=AAAjAAABtQk42s9PFb7aNkkPk54TvT2ktvX3XjwxveqJVIgUlxUAAgFDUMXqOfgzJl4mR1saALED4p36U_I_kuHKBBsAbEus7A==; as_rec=b80c98cde40c9d152ad6ed42b06fe34f0e75de19bebecd3d42d640f1661e61224377592a20ebeec6926e7c6ed0be3c0dea5f0e533a45ab9d66874469e076dd096afd384b6b7e8380466627e58e5ce92c; as_ltn_us=AAQEAMHd19vvg4jZFr57qCXF7A19bLbW4Rqvnhya0f9TfcUj1Ue4c26VeuELC7Pkmeiq31BT8YBtuAkeA2dZugtEaDfOBj8DrOw; s_sq=applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520orders%25252Forder_detail%2526link%253Duse%252520this%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520orders%25252Forder_detail%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DSUBMIT',
-            'dnt': '1',
-            'modelversion': 'v2',
-            'origin': 'https://secure8.store.apple.com',
-            'pragma': 'no-cache',
-            'priority': 'u=1, i',
-            'referer': self.signInURL,
-            'sec-ch-ua': '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'syntax': 'graviton',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-            'x-aos-model-page': 'OrderStatusDetail',
-            'x-aos-stk': self.x_aos_stk_value_2,
-            'x-requested-with': 'Fetch',
-        }
+                headers = {
+                    'accept': '*/*',
+                    'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+                    'cache-control': 'no-cache',
+                    'content-type': 'application/x-www-form-urlencoded',
+                    # 'cookie': 'dssid2=2831cb99-bac8-4f9a-847a-1d01848126e5; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pxro=1; as_dc=ucp5; s_fid=05BD90C97D09DACB-0E981AE8E5C89EE3; s_vi=[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]; as_pcts=R:8tGpf187I:o9KOkfnutY169q9Y7bLD7cV0v6ZRYCRXfAK-mzTp_89QdYyzzgrFNdY-QKXnc8x55MW5EqB+3_PBjhf8H2BeNp2xgLRV0LKD+alrGcK-5HWvglITbj14EwK0sZNVFB3lUZhnVdN9:ec6asJSA2+MVQFofjtf4uCrkUHYN4U38UNk; s_cc=true; as_rumid=c643af2b-2aef-467f-b089-295dd3aa3fbc; dslang=US-EN; site=USA; geo=CN; as_cn=~ABE5M1_eyIVWy5JqKVhJ-FJstBKzA_lw8iPk8JQHGxI=; as_disa=AAAjAAABtQk42s9PFb7aNkkPk54TvT2ktvX3XjwxveqJVIgUlxUAAgFDUMXqOfgzJl4mR1saALED4p36U_I_kuHKBBsAbEus7A==; as_rec=b80c98cde40c9d152ad6ed42b06fe34f0e75de19bebecd3d42d640f1661e61224377592a20ebeec6926e7c6ed0be3c0dea5f0e533a45ab9d66874469e076dd096afd384b6b7e8380466627e58e5ce92c; as_ltn_us=AAQEAMHd19vvg4jZFr57qCXF7A19bLbW4Rqvnhya0f9TfcUj1Ue4c26VeuELC7Pkmeiq31BT8YBtuAkeA2dZugtEaDfOBj8DrOw; s_sq=applestoreww%3D%2526c.%2526a.%2526activitymap.%2526page%253DAOS%25253A%252520orders%25252Forder_detail%2526link%253Duse%252520this%252520address%252520%252528inner%252520text%252529%252520%25257C%252520no%252520href%252520%25257C%252520body%2526region%253Dbody%2526pageIDType%253D1%2526.activitymap%2526.a%2526.c%2526pid%253DAOS%25253A%252520orders%25252Forder_detail%2526pidt%253D1%2526oid%253Dfunctionkd%252528%252529%25257B%25257D%2526oidt%253D2%2526ot%253DSUBMIT',
+                    'dnt': '1',
+                    'modelversion': 'v2',
+                    'origin': 'https://secure8.store.apple.com',
+                    'pragma': 'no-cache',
+                    'priority': 'u=1, i',
+                    'referer': self.signInURL,
+                    'sec-ch-ua': '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-origin',
+                    'syntax': 'graviton',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
+                    'x-aos-model-page': 'OrderStatusDetail',
+                    'x-aos-stk': self.x_aos_stk_value_2,
+                    'x-requested-with': 'Fetch',
+                }
 
-        params = {
-            '_a': 'selected-address-submit',
-            '_m': 'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses',
-        }
+                params = {
+                    '_a': 'selected-address-submit',
+                    '_m': 'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses',
+                }
 
-        data = {
-            'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses.selected': 'formatted-original-address',
-        }
+                data = {
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses.selected': 'formatted-original-address',
+                }
 
-        response = requests.post(
-            self.url_x,
-            params=params,
-            cookies=cookies,
-            headers=headers,
-            data=data,
-        )
-        pass
-
+                response = requests.post(
+                    self.url_x,
+                    params=params,
+                    cookies=cookies,
+                    headers=headers,
+                    data=data,
+                )
+                print(response.headers)
+                print(f"T10" + ("-" * 40))
+                return response.headers
+            except Exception as e:
+                # self.DL = self.dl()
+                attempt + 1
+                print(f"t10重试 ，错误：{e}")
 
 
 def main(**kwargs):
