@@ -1,4 +1,3 @@
-from zlib import DEF_BUF_SIZE
 import requests, re
 
 class APPLE:
@@ -16,7 +15,6 @@ class APPLE:
         self.street2 = address_details.get("street2")
 
         self.session = requests.Session()
-
 
     # def dl(self):
     #     dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
