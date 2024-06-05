@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime
 import os
 from pathlib import Path
-from one import APPLE
+from two import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
@@ -15,7 +15,6 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QHBoxLayout,
-    QLabel,
     QTableWidget,
     QInputDialog,
     QTableWidgetItem,
@@ -47,8 +46,8 @@ class Asynctask(QRunnable):
     def run_sync_method(self):
         apple = APPLE(**self.address_details)
         apple.t0()
-        if hasattr(apple, "stast") and apple.stast == "账号异常，无法获取必要的信息。":
-            result = {"firstName": "账号异常"}
+        if hasattr(apple, "retry_status") and apple.retry_status == "失败":
+            result = {"firstName": "失败"}
         else:
             result = {
                 "city": apple.city,
@@ -199,18 +198,21 @@ class MainWindow(QMainWindow):
                 self.thread_pool.start(task)
 
     def update_table_item(self, row, email, result):
-        if result.get("firstName") == "账号异常":
-            self.tableWidget.setItem(row, 2, QTableWidgetItem(result["firstName"]))
+        if result.get("firstName") == "失败":
+            self.tableWidget.setItem(row, 3, QTableWidgetItem(result["firstName"]))
         else:
-            if self.tableWidget.item(row, 0).text() == email:
-                self.tableWidget.setItem(row, 3, QTableWidgetItem(result.get("city", "")))
-                self.tableWidget.setItem(row, 4, QTableWidgetItem(result.get("state", "")))
-                self.tableWidget.setItem(row, 5, QTableWidgetItem(result.get("lastName", "")))
-                self.tableWidget.setItem(row, 6, QTableWidgetItem(result.get("firstName", "")))
-                self.tableWidget.setItem(row, 7, QTableWidgetItem(result.get("companyName", "")))
-                self.tableWidget.setItem(row, 8, QTableWidgetItem(result.get("street", "")))
-                self.tableWidget.setItem(row, 9, QTableWidgetItem(result.get("postalCode", "")))
-                self.tableWidget.setItem(row, 10, QTableWidgetItem(result.get("street2", "")))
+            column_mapping = {
+                "city": 3,
+                "state": 4,
+                "lastName": 5,
+                "firstName": 6,
+                "companyName": 7,
+                "street": 8,
+                "postalCode": 9,
+                "street2": 10,
+            }
+            for key, col_index in column_mapping.items():
+                self.tableWidget.setItem(row, col_index, QTableWidgetItem(result.get(key, "")))
                
 
     def on_click_button3(self):

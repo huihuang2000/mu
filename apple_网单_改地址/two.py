@@ -15,26 +15,28 @@ class APPLE:
         self.street2 = address_details.get("street2")
 
         self.session = requests.Session()
+        self.DL = self.dl()
+        self.retry_status =''
 
-    # def dl(self):
-    #     dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
-    #     while True:
-    #         response = requests.get(dl_url)
-    #         if response.status_code == 200:
-    #             proxy_str = response.text.strip()
-    #             ip, port = proxy_str.split(":")
-    #             proxy = {"https": f"http://{ip}:{port}"}
-    #             try:
-    #                 test_response = requests.get(
-    #                     "http://www.baidu.com", proxies=proxy
-    #                 )
-    #                 if test_response.status_code == 200:
-    #                     print(proxy)
-    #                     return proxy
-    #             except Exception as e:
-    #                 print(f"代理IP {proxy} 无效: {e}")
-    #         else:
-    #             print("获取代理IP失败，重试中...")    
+    def dl(self):
+        dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
+        while True:
+            response = self.session.get(dl_url)
+            if response.status_code == 200:
+                proxy_str = response.text.strip()
+                ip, port = proxy_str.split(":")
+                proxy = {"https": f"http://{ip}:{port}"}
+                try:
+                    test_response = self.session.get(
+                        "http://www.baidu.com", proxies=proxy
+                    )
+                    if test_response.status_code == 200:
+                        print(proxy)
+                        return proxy
+                except Exception as e:
+                    print(f"代理IP {proxy} 无效: {e}")
+            else:
+                print("获取代理IP失败,重试中...")    
 
     def t0(self):
         max_retries = 5
@@ -373,7 +375,7 @@ class APPLE:
                 print(f"t4_4 重试 {attempt + 1} 次，错误：{e}")
                 if attempt + 1 == max_retries:
                     print(f"账号异常，无法获取必要的信息")
-                    self.stast = "账号异常，无法获取必要的信息。"
+                    self.retry_status = "失败"
                     return self.stast
 
     def t5(self):
@@ -573,8 +575,12 @@ class APPLE:
                 return self.t8()
             except Exception as e:
                 # self.DL = self.dl()
-                attempt + 1
-                print(f"t7重试 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    print(f"t7重试 ，错误：{e}")
 
     def t8(self):
         max_retries = 5
@@ -815,8 +821,8 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "elijahv2msi@outlook.com",
-        "pwd": "iuSa15*18",
+        "name": "buroidude@hotmail.com",
+        "pwd": "Aa147369",
         "url":"https://www.apple.com/xc/us/vieworder/W1047001362/elijahv2msi@outlook.com",
         "city": "Albany",#1
         "state": "CH",#2
