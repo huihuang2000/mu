@@ -711,14 +711,14 @@ class APPLE:
                 }
 
                 data = {
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.city': 'AUSTIN',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.state': 'TX',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.lastName': 'TAYLOR',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.firstName': 'MILES',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.companyName': '',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.street': '3144  Gladwell Street',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.postalCode': '78727',
-                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.street2': '',
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.city': self.city,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.state': self.state,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.lastName': self.lastName,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.firstName': self.firstName,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.companyName': self.companyName,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.street': self.street,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.postalCode': self.postalCode,
+                    'orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.edit-shipping-address.street2': self.street2,
                 }
 
                 response = requests.post(
@@ -821,16 +821,16 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "buroidude@hotmail.com",
-        "pwd": "Aa147369",
+        "name": "elijahv2msi@outlook.com",
+        "pwd": "iuSa15*18",
         "url":"https://www.apple.com/xc/us/vieworder/W1047001362/elijahv2msi@outlook.com",
-        "city": "Albany",#1
-        "state": "CH",#2
-        "lastName": "lllll3333",#3
-        "firstName": "hhhjjj11166666",#4
-        "companyName": "122332",#5
-        "street": "777776667777",#6
-        "postalCode": "11111-1111",#7
-        "street2": "212231312",#8
+        "city": "AUSTIN",#1
+        "state": "TX",#2
+        "lastName": "TAYLOR",#3
+        "firstName": "MILES",#4
+        "companyName": "",#5
+        "street": "3144  Gladwell Street",#6
+        "postalCode": "78727",#7
+        "street2": "",#8
     }
     main_instance = main(**params)
