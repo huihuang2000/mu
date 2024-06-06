@@ -30,7 +30,7 @@ class APPLE:
                 print(proxy)
                 return proxy
             else:
-                print("获取代理IP失败,重试中...")    
+                print("获取代理IP失败,重试中")    
 
     def t0(self):
         max_retries = 5
@@ -69,9 +69,13 @@ class APPLE:
                 print(f"T0" + ("-" * 40))
                 return self.t1()
             except Exception as e:
-                attempt + 1
-                self.DL = self.dl()
-                print(f"t0重试{e}")
+                if attempt == max_retries - 1:
+                    print("t0已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t0重试 ，错误：{e}")
 
     def t1(self):
         max_retries = 5
@@ -127,9 +131,14 @@ class APPLE:
                 print(f"T1" + ("-" * 40))
                 return self.t2()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t1重试{e}")
+                if attempt == max_retries - 1:
+                    print("t1已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t1重试 ，错误：{e}")
+
 
     def t2(self):
         max_retries = 5
@@ -183,9 +192,14 @@ class APPLE:
                 print(f"T2" + ("-" * 40))
                 return self.t3()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t2重试{e}")
+                if attempt == max_retries - 1:
+                    print("t2已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t2重试 ，错误：{e}")
+
 
     def t3(self):
         max_retries = 5
@@ -240,9 +254,14 @@ class APPLE:
                 print(f"T3" + ("-" * 40))
                 return self.t4_1()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"T3{e}")
+                if attempt == max_retries - 1:
+                    print("t3已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t3重试 ，错误：{e}")
+
 
     def t4_1(self):
         max_retries = 5
@@ -258,9 +277,13 @@ class APPLE:
                 print("加密_1" + ("-" * 40))
                 return self.t4_2()
             except Exception as e:
-                # self.DL = self.dl()
-                attempt + 1
-                print(f"t4_1 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t4_1已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    print(f"t4_1重试 ，错误：{e}")
+
 
     def t4_2(self):
         max_retries = 5
@@ -292,9 +315,13 @@ class APPLE:
                 print(f"加密_2" + ("-" * 40))
                 return self.t4_3()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t4_2 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t4_2已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t4_2重试 ，错误：{e}")
 
     def t4_3(self):
         max_retries = 5
@@ -318,8 +345,12 @@ class APPLE:
                 print(f"加密_3" + ("-" * 40))
                 return self.t4_4()
             except Exception as e:
-                attempt + 1
-                print(f"t4_3 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t4_3已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    print(f"t4_3重试 ，错误：{e}")
 
     def t4_4(self):
         max_retries = 5
@@ -374,12 +405,13 @@ class APPLE:
                 print(f"T4_" + ("-" * 40))
                 return self.t5()
             except Exception as e:
-                self.DL = self.dl()
-                print(f"t4_4 重试 {attempt + 1} 次，错误：{e}")
-                if attempt + 1 == max_retries:
-                    print(f"账号异常，无法获取必要的信息")
+                if attempt == max_retries - 1:
+                    print("t4_4已达到最大重试次数。")
                     self.retry_status = "失败"
-                    return self.stast
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t4_4重试 ，错误：{e}")
 
     def t5(self):
             max_retries = 5
@@ -425,9 +457,13 @@ class APPLE:
                     print(f"T5" + ("-" * 40))
                     return self.t6()
                 except Exception as e:
-                    self.DL = self.dl()
-                    attempt + 1
-                    print(f"t5重试 ，错误：{e}")
+                    if attempt == max_retries - 1:
+                        print("t5已达到最大重试次数。")
+                        self.retry_status = "失败"
+                    else:
+                        attempt + 1
+                        self.DL = self.dl()
+                        print(f"t5重试 ，错误：{e}")
 
     def t6(self):
         max_retries = 5
@@ -535,9 +571,13 @@ class APPLE:
                 print(f"t6" + ("-" * 40))
                 return self.t7()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t6重试 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t6已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t6重试 ，错误：{e}")
 
     def t7(self):
         max_retries = 5
@@ -600,12 +640,12 @@ class APPLE:
                 print(f"T7" + ("-" * 40))
                 return self.t8()
             except Exception as e:
-                self.DL = self.dl()
                 if attempt == max_retries - 1:
-                    print("已达到最大重试次数。")
+                    print("t7已达到最大重试次数。")
                     self.retry_status = "失败"
                 else:
                     attempt + 1
+                    self.DL = self.dl()
                     print(f"t7重试 ，错误：{e}")
 
     def t8(self):
@@ -679,9 +719,13 @@ class APPLE:
                 print(f"T8" + ("-" * 40))
                 return self.t9()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t8重试 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t8已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t8重试 ，错误：{e}")
 
     def t9(self):
         max_retries = 5
@@ -765,9 +809,13 @@ class APPLE:
                 print(f"T9" + ("-" * 40))
                 return self.t10()
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t9重试 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t9已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t9重试 ，错误：{e}")
 
     def t10(self):
         max_retries = 5
@@ -841,9 +889,13 @@ class APPLE:
                 print(f"T10" + ("-" * 40))
                 return response.headers
             except Exception as e:
-                self.DL = self.dl()
-                attempt + 1
-                print(f"t10重试 ，错误：{e}")
+                if attempt == max_retries - 1:
+                    print("t10已达到最大重试次数。")
+                    self.retry_status = "失败"
+                else:
+                    attempt + 1
+                    self.DL = self.dl()
+                    print(f"t10重试 ，错误：{e}")
 
 
 def main(**kwargs):
