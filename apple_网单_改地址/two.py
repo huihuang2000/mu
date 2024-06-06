@@ -15,26 +15,20 @@ class APPLE:
         self.street2 = address_details.get("street2")
 
         self.session = requests.Session()
-        # self.DL = self.dl()
+        self.DL = self.dl()
+        self.time = 3
         self.retry_status =''
 
     def dl(self):
-        dl_url = "http://api.xiequ.cn/VAD/GetIp.aspx?act=getturn51&uid=94212&vkey=58FC7BD5FB1EBED2F07615D3C8F74D51&num=1&time=6&plat=1&re=0&type=7&so=1&group=51&ow=1&spl=1&addr=&db=1"
+        dl_url = "https://api.docip.net/v1/get_openproxy?api_key=FiteoCtMhK8kRvODeUpi86561b8e9&country_type=1&quchong=1800&format=txt&num=1"
         while True:
             response = self.session.get(dl_url)
             if response.status_code == 200:
                 proxy_str = response.text.strip()
                 ip, port = proxy_str.split(":")
-                proxy = {"https": f"http://{ip}:{port}"}
-                try:
-                    test_response = self.session.get(
-                        "http://www.baidu.com", proxies=proxy
-                    )
-                    if test_response.status_code == 200:
-                        print(proxy)
-                        return proxy
-                except Exception as e:
-                    print(f"代理IP {proxy} 无效: {e}")
+                proxy = {"http": f"http://{ip}:{port}"}
+                print(proxy)
+                return proxy
             else:
                 print("获取代理IP失败,重试中...")    
 
@@ -59,21 +53,24 @@ class APPLE:
                     'sec-ch-ua-mobile': '?0',
                     'sec-ch-ua-platform': '"Windows"',
                 }
-                response = self.session.get(self.url, headers=headers,allow_redirects=False,)
+                response = self.session.get(self.url, headers=headers,allow_redirects=False,proxies=self.DL,timeout=self.time)
                 CK = response.headers.get("Set-Cookie")
                 dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
                 as_pcts_match = re.search(r"as_pcts=([^;]+);", CK)
+                as_dc = re.search(r"as_dc=([^;]+);", CK)
                 self.dssid2 = dssid2_match.group(1)
                 self.as_pcts_1 = as_pcts_match.group(1)
                 self.ssi_1 = response.headers["Location"]
+                self.as_dc = as_dc.group(1)
                 print(self.dssid2)
                 print(self.as_pcts_1)
                 print(self.ssi_1)
+                print(self.as_dc)
                 print(f"T0" + ("-" * 40))
                 return self.t1()
             except Exception as e:
                 attempt + 1
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 print(f"t0重试{e}")
 
     def t1(self):
@@ -84,7 +81,7 @@ class APPLE:
                     'dssid2': self.dssid2,
                     'dssf': '1',
                     'as_pcts': self.as_pcts_1,
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                 }
 
                 headers = {
@@ -115,6 +112,8 @@ class APPLE:
                     cookies=cookies,
                     headers=headers,
                     allow_redirects=False,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 CK = response.headers.get("Set-Cookie")
                 dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
@@ -128,7 +127,7 @@ class APPLE:
                 print(f"T1" + ("-" * 40))
                 return self.t2()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t1重试{e}")
 
@@ -139,7 +138,7 @@ class APPLE:
                 cookies = {
                     'dssid2': self.dssid2,
                     'dssf': '1',
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     'as_pcts': self.as_pcts_2,
                 }
                 headers = {
@@ -168,6 +167,8 @@ class APPLE:
                     params=params,
                     cookies=cookies,
                     headers=headers,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 CK = response.headers.get("Set-Cookie")
                 dssid2_match = re.search(r"dssid2=([a-z0-9\-]+);", CK)
@@ -182,7 +183,7 @@ class APPLE:
                 print(f"T2" + ("-" * 40))
                 return self.t3()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t2重试{e}")
 
@@ -193,7 +194,7 @@ class APPLE:
                 cookies = {
                     'dssid2': self.dssid2,
                     'dssf': '1',
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     'as_pcts': self.as_pcts_2,
                     'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                     'geo': 'CN',
@@ -225,6 +226,8 @@ class APPLE:
                     'https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-08rphyzr-8q7y-c93f-2f4k-xdoua0mf&language=en_US&skVersion=7&iframeId=auth-08rphyzr-8q7y-c93f-2f4k-xdoua0mf&client_id=a797929d224abb1cc663bb187bbcd02f7172ca3a84df470380522a7c6092118b&redirect_uri=https://secure8.store.apple.com&response_type=code&response_mode=web_message&state=auth-08rphyzr-8q7y-c93f-2f4k-xdoua0mf&authVersion=latest',
                     cookies=cookies,
                     headers=headers,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 CK = response.headers.get("Set-Cookie")
                 self.aasp = re.search(r"aasp=([a-zA-Z0-9\-]+);", CK)
@@ -237,7 +240,7 @@ class APPLE:
                 print(f"T3" + ("-" * 40))
                 return self.t4_1()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"T3{e}")
 
@@ -282,14 +285,14 @@ class APPLE:
                     url="https://idmsa.apple.com/appleauth/auth/signin/init",
                     headers=combined_headers_and_cookies,
                     json=json_data,
-                    # proxies=self.DL,
-                    # timeout=self.times,
+                    proxies=self.DL,
+                    timeout=self.time
                 ).json()
                 print(self.Key)
                 print(f"加密_2" + ("-" * 40))
                 return self.t4_3()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t4_2 ，错误：{e}")
 
@@ -315,7 +318,6 @@ class APPLE:
                 print(f"加密_3" + ("-" * 40))
                 return self.t4_4()
             except Exception as e:
-                # self.DL = self.dl()
                 attempt + 1
                 print(f"t4_3 ，错误：{e}")
 
@@ -328,7 +330,7 @@ class APPLE:
                     "dssid2": self.dssid2,
                     "dssf": "1",
                     "as_pcts": self.as_pcts_2,
-                    "as_dc": "ucp3",
+                    "as_dc": self.as_dc,
                     "as_sfa": "Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE",
                     "geo": "CN",
                     "pxro": "1",
@@ -361,8 +363,8 @@ class APPLE:
                     headers=headers,
                     json=json_data,
                     cookies=cookies,
-                    # proxies=self.DL,
-                    # timeout=self.times,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 CK = response_4.headers.get("Set-Cookie")
                 myacinfo_pattern = re.compile(r"myacinfo=([^;]+)")
@@ -372,7 +374,7 @@ class APPLE:
                 print(f"T4_" + ("-" * 40))
                 return self.t5()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 print(f"t4_4 重试 {attempt + 1} 次，错误：{e}")
                 if attempt + 1 == max_retries:
                     print(f"账号异常，无法获取必要的信息")
@@ -386,7 +388,7 @@ class APPLE:
                     cookies = {
                         'dssid2': self.dssid2,
                         'dssf': '1',
-                        'as_dc': 'ucp4',
+                        'as_dc': self.as_dc,
                         'as_pcts': self.as_pcts_2,
                         'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                         'geo': 'CN',
@@ -417,13 +419,13 @@ class APPLE:
                         'sec-ch-ua-platform': '"Windows"',
                     }
 
-                    response = requests.get(self.signInURL, cookies=cookies, headers=headers,allow_redirects=False,)
+                    response = requests.get(self.signInURL, cookies=cookies, headers=headers,allow_redirects=False,proxies=self.DL,timeout=self.time)
                     self.ssi_3 = response.headers["Location"]
                     print(self.ssi_3)
                     print(f"T5" + ("-" * 40))
                     return self.t6()
                 except Exception as e:
-                    # self.DL = self.dl()
+                    self.DL = self.dl()
                     attempt + 1
                     print(f"t5重试 ，错误：{e}")
 
@@ -453,7 +455,7 @@ class APPLE:
                 cookies = {
                     'dssid2': self.dssid2,
                     'dssf': '1',
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     'as_pcts': self.as_pcts_2,
                     'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                     'geo': 'CN',
@@ -502,13 +504,15 @@ class APPLE:
                     'deviceID': 'TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;zh-CN;undefined;secure8.store.apple.com;undefined;undefined;undefined;undefined;false;false;1717510093084;8;2005/6/7%2021%3A33%3A44;1920;1080;;;;;;;;-480;-480;2024/6/4%2022%3A08%3A13;24;1920;1032;0;0;;;;;;;;;;;;;;;;;;;25;',
                     'grantCode': '',
                 }
-
+                base_url = self.signInURL.split('/')[0] + '//' + self.signInURL.split('/')[2] + '/'
                 response = requests.post(
-                    'https://secure7.store.apple.com/shop/signIn/idms/authx',
+                    f'{base_url}signIn/idms/authx',
                     params=params,
                     cookies=cookies,
                     headers=headers,
                     data=data,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 set_cookie_header = response.headers.get("Set-Cookie", "")
                 dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
@@ -531,7 +535,7 @@ class APPLE:
                 print(f"t6" + ("-" * 40))
                 return self.t7()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t6重试 ，错误：{e}")
 
@@ -542,7 +546,7 @@ class APPLE:
                 cookies = {
                     'dssid2': self.dssid2,
                     'dssf': '1',
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     'as_pcts': self.as_pcts_2,
                     'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                     'geo': 'CN',
@@ -581,7 +585,7 @@ class APPLE:
                     'sec-ch-ua-platform': '"Windows"',
                 }
 
-                response = requests.get(self.signInURL, cookies=cookies, headers=headers)
+                response = requests.get(self.signInURL, cookies=cookies, headers=headers,proxies=self.DL,timeout=self.time)
                 self.x_aos_stk_value_2 = re.search(r'"x-aos-stk":"([^"]+)"', response.text)
                 self.url_x = re.search(r'"editBillingContact":{"url":"([^"]+)?', response.text)
                 url_x = self.url_x.group(1)
@@ -596,7 +600,7 @@ class APPLE:
                 print(f"T7" + ("-" * 40))
                 return self.t8()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 if attempt == max_retries - 1:
                     print("已达到最大重试次数。")
                     self.retry_status = "失败"
@@ -613,7 +617,7 @@ class APPLE:
                         'dssf': '1',
                         'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                         'pxro': '1',
-                        'as_dc': 'ucp4',
+                        'as_dc': self.as_dc,
                         's_fid': '05BD90C97D09DACB-0E981AE8E5C89EE3',
                         's_vi': '[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]',
                         'as_pcts': self.as_pcts_2,
@@ -665,6 +669,8 @@ class APPLE:
                     params=params,
                     cookies=cookies,
                     headers=headers,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 set_cookie_header = response.headers.get("Set-Cookie", "")
                 as_ltn_us_match_3 = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
@@ -673,7 +679,7 @@ class APPLE:
                 print(f"T8" + ("-" * 40))
                 return self.t9()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t8重试 ，错误：{e}")
 
@@ -693,7 +699,7 @@ class APPLE:
                     'dslang': 'US-EN',
                     'site': 'USA',
                     'as_cn': self.as_cn,
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     's_fid': '1054915DD179A501-0C6D86AF11C440EA',
                     's_vi': '[CS]v1|332FAADE520D0ADC-60000E69A7E27B0D[CE]',
                     'as_disa': self.as_disa,
@@ -749,6 +755,8 @@ class APPLE:
                     cookies=cookies,
                     headers=headers,
                     data=data,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 set_cookie_header = response.headers.get("Set-Cookie", "")
                 as_ltn_us_match_4 = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
@@ -757,7 +765,7 @@ class APPLE:
                 print(f"T9" + ("-" * 40))
                 return self.t10()
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t9重试 ，错误：{e}")
 
@@ -770,7 +778,7 @@ class APPLE:
                     'dssf': '1',
                     'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
                     'pxro': '1',
-                    'as_dc': 'ucp4',
+                    'as_dc': self.as_dc,
                     's_fid': '05BD90C97D09DACB-0E981AE8E5C89EE3',
                     's_vi': '[CS]v1|332FB030F1DF1F6E-40001050081DBF4C[CE]',
                     'as_pcts': self.as_pcts_2,
@@ -826,12 +834,14 @@ class APPLE:
                     cookies=cookies,
                     headers=headers,
                     data=data,
+                    proxies=self.DL,
+                    timeout=self.time
                 )
                 print(response.headers)
                 print(f"T10" + ("-" * 40))
                 return response.headers
             except Exception as e:
-                # self.DL = self.dl()
+                self.DL = self.dl()
                 attempt + 1
                 print(f"t10重试 ，错误：{e}")
 
@@ -843,8 +853,8 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "elijahv2msi@outlook.com",
-        "pwd": "iuSa15*18",
+        "name": "buroidude@hotmail.com",
+        "pwd": "Aa147369",
         "url":"https://www.apple.com/xc/us/vieworder/W1047001362/elijahv2msi@outlook.com",
         "city": "AUSTIN",#1
         "state": "TX",#2

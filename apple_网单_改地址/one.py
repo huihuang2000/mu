@@ -131,7 +131,7 @@ class APPLE:
                 headers = self._build_headers(additional_headers)
                 response = self.session.request(
                     method="get",
-                    url="https://secure5.store.apple.com/shop/account/home",
+                    url="https://secure7.store.apple.com/shop/account/home",
                     headers=headers,
                     allow_redirects=False,
                     proxies=self.DL,
@@ -359,7 +359,7 @@ class APPLE:
         for attempt in range(max_retries):
             try:
                 extracted_part = self.ssi.split("shop/signIn/account?ssi=")[1]
-                url = "https://secure8.store.apple.com/shop/signIn/idms/authx"
+                url = "https://secure7.store.apple.com/shop/signIn/idms/authx"
 
                 querystring = {"ssi": extracted_part}
 
@@ -573,7 +573,7 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "leforza@asahi-net.email.ne.jp",
+        "name": "buroidude@hotmail.com",
         "pwd": "Aa147369",
         "fullDaytimePhone": "111111-2222",
         "street2": "212231312",
