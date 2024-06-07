@@ -1,77 +1,25 @@
-import requests,re
+import json
+import re
+js ='{"head":{"status":200},"body":{"meta":{"l":["/orderDetail"],"h":{"x-aos-model-page":"OrderStatusDetail","modelVersion":"v2","x-aos-stk":"0ea55491e02d55c43304ce80fca2306f4dbc04025bbea35ed7c1ad5a99c1e463","syntax":"graviton"}},"abs":{"Footnotes":{},"OrderHeader":{},"OrderItems":{},"OrderItem":{"b":{"returnItem":{"id":{"op":"ADD","args":[{"get":"d.id"},"-returnItem"]},"events":[{"on":"click","do":"a.returnItem","metric":"t.returnLink"}]},"cancelItem":{"id":{"op":"ADD","args":[{"get":"d.id"},"-cancelItem"]},"events":[{"on":"click","do":"a.cancelItem","metric":"t.cancelLink"}]}},"t":{"returnLink":{"microEvents":[{"key":"eVar21","value":{"get":"d.returnLinkMicroEvent"}}]},"cancelLink":{"microEvents":[{"key":"eVar21","value":{"get":"d.cancelLinkMicroEvent"}}]}}},"OrderItemActions":{},"OrderItemChildren":{},"OrderItemDetails":{},"OrderItemNotifications":{},"OrderItemStatusTracker":{},"ShippingInfo":{"b":{"editShippingAddress":{"id":{"op":"ADD","args":[{"get":"d.id"},"-editShippingAddress"]},"events":[{"on":"click","do":"a.editShippingAddress"}]},"editNotification":{"id":{"op":"ADD","args":[{"get":"d.id"},"-editNotification"]},"events":[{"on":"click","do":"a.editNotification"}]}}},"Olss-pickup-contact":{},"Shipping-address":{},"Shipping-notification":{},"PricingSummary":{}},"orderDetail":{"d":{"signInMicroEvent":"AOS:Order Details| OLSS | Sign In","fullOrderDetailMicroEvent":"| OLSS | full order details","orderDetailMicroEvent":" Order Details","viewOrdersUrl":"https://secure6.store.apple.com/shop/order/list?_a=selected-address-submit&_m=orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses","orderHasIUpWithoutLoanItem":false,"isACDCModel":false,"isUpgradeOrder":false,"isTradeInOrder":false,"hasESimItem":true,"signInURL":"https://secure6.store.apple.com/shop/order/detail/10078/W1001488282?_a=selected-address-submit&_m=orderDetail.orderItems.orderItem-0000101.shippingInfo.editShippingInfo.suggested-shipping-addresses","guestOrder":false,"purchaseOrderTypeEvent":"| member | W1001488282","isCAOrder":false},"b":{"orderDetails":{"id":"orderDetail-info","events":[{"on":"load","delay":1000,"metric":"t.orderDetails"}]},"signIn":{"id":"orderDetail-info","events":[{"on":"load","delay":1000,"metric":"t.signIn"}]},"fullOrderDetail":{"id":"orderDetail-info","events":[{"on":"load","delay":1000,"metric":"t.fullOrderDetail"}]}},"t":{"orderDetails":{"microEvents":[{"key":"eVar21","value":{"get":"d.orderDetailMicroEvent"}},{"key":"prop22","value":{"get":"d.purchaseOrderTypeEvent"}}]},"signIn":{"microEvents":[{"key":"prop37","value":"GuestCheckout:ExistingSignedIn"}]},"fullOrderDetail":{"microEvents":[{"key":"eVar21","value":{"get":"d.fullOrderDetailMicroEvent"}}]}},"c":["billingInfo","footnotes","orderHeader","orderItems","pricingSummary"],"billingInfo":{"d":{"installmentsString":"0","orderInstallmentAmount":null,"giftCardCount":0,"showCardDetailsForCitizenPayment":true,"a11yLabel":"APID","appleBalanceDetails":[{"a11yLabel":"","paymentMethodPaymentTypeName":"APPLE_BALANCE","accountNumber":""}],"isInternationalCC":true,"isSingleCCpayment":true,"cardDetails":[],"splitPayment":false,"billingContactOverlayStatus":false,"canEditBillingContact":true},"b":{"editBillingContact":{"id":"orderDetail-billingInfo-editBillingContact","events":[{"on":"click","do":"a.editBillingContact"}]}},"a":{"editBillingContact":{"url":"https://secure6.store.apple.com/shop/order/detailx/10078/W1001488282?_a=editBillingContact&_m=orderDetail.billingInfo"}},"c":["billing-address","billing-contact-info","invoice-address"],"billing-address":{"d":{"city":"GLADE HILL, ","state":"VA","showLocationConsent":true,"lastName":"ANBRIZ","firstName":"ADRIANA ","companyName":"","mode":"VIEW","street":"3151 Gladwell Street","layout":[{"fields":[[{"name":"firstName","type":"text","label":"First Name"},{"name":"lastName","type":"text","label":"Last Name"}],[{"name":"companyName","type":"text","label":"Company Name (Optional)"}],[{"name":"street","type":"text","label":"Street Address"}],[{"name":"street2","type":"text","label":"Apt, Suite, Building (Optional)","labelA11y":"Apartment, Suite, Building (Optional)"}],[{"name":"city","type":"text","label":"City"},{"name":"state","type":"text","label":"State"},{"name":"postalCode","type":"text","label":"Zip Code"}]]}],"postalCode":"24092","street2":""}},"billing-contact-info":{"d":{"daytimePhone":"••••••••03","mode":"VIEW","layout":[{"fields":[[{"name":"emailAddress","type":"text","label":"Email Address"}],[{"name":"daytimePhone","type":"text","label":"Primary Phone"}]]}],"showLocationConsent":true,"emailAddress":"t••••••••••5@outlook.com"}},"invoice-address":{"d":{"city":"GLADE HILL, ","state":"VA","showLocationConsent":true,"lastName":"ANBRIZ","firstName":"ADRIANA ","companyName":"","mode":"VIEW","street":"3151  Gladwell Street","layout":[{"fields":[[{"name":"firstName","type":"text","label":"First Name"},{"name":"lastName","type":"text","label":"Last Name"}],[{"name":"companyName","type":"text","label":"Company Name (Optional)"}],[{"name":"street","type":"text","label":"Street Address"}],[{"name":"street2","type":"text","label":"Apt, Suite, Building (Optional)","labelA11y":"Apartment, Suite, Building (Optional)"}],[{"name":"city","type":"text","label":"City"},{"name":"state","type":"text","label":"State"},{"name":"postalCode","type":"text","label":"Zip Code"}]]}],"postalCode":"24092","street2":""}}},"footnotes":{"f":{"abstract":"/abs.Footnotes"},"d":{"id":"orderDetail-footnotes"}},"orderHeader":{"f":{"abstract":"/abs.OrderHeader"},"d":{"orderNumber":"W1001488282","isReturnKitOrder":false,"orderPlacedDate":"June 2, 2024","id":"orderDetail-orderHeader","isSMB":false}},"orderItems":{"f":{"abstract":"/abs.OrderItems"},"d":{"id":"orderItems"},"c":["orderItem-0000101"],"orderItem-0000101":{"f":{"abstract":"/abs.OrderItem"},"d":{"cancelInfoLink":false,"cancelLinkMicroEvent":"| OLSS | Cancel item","id":"orderItem-0000101","deliveryType":"HOME","returnEligible":false,"returnLinkMicroEvent":"| Return | Return Item","returnOverlayStatus":false,"cancelEligible":true,"cancelOverlayStatus":false},"a":{"returnItem":{"url":"https://secure6.store.apple.com/shop/order/detailx/10078/W1001488282?_a=returnItem&_m=orderDetail.orderItems.orderItem-0000101"},"cancelItem":{"url":"https://secure6.store.apple.com/shop/order/detailx/10078/W1001488282?_a=cancelItem&_m=orderDetail.orderItems.orderItem-0000101"}},"c":["orderItemActions","orderItemChildren","orderItemDetails","orderItemNotifications","orderItemStatusTracker","shippingInfo"],"orderItemActions":{"f":{"abstract":"/abs.OrderItemActions"},"d":{"id":"orderItem-0000101-orderItemActions"}},"orderItemChildren":{"f":{"abstract":"/abs.OrderItemChildren"},"d":{"id":"orderItem-0000101-orderItemChildren","removedList":[]}},"orderItemDetails":{"f":{"abstract":"/abs.OrderItemDetails"},"d":{"quantity":1,"isIncludeOnlinePersonalSetupLink":false,"deliveryDate":"Arrives Jun 7 - Jun 11","itemShortName":"iPhone 15 Pro Max","totalPrice":"$1,199.00","locale":"en_US","isRolledUp":false,"cid":"trx-ww-sgfo-olss","imageData":{"data-scale-params-2":"wid=1080&hei=1080&align=0%2C-1&fmt=jpeg&qlt=90&fit=constrain&.v=1692893983028","src":"https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-max-blacktitanium-select?wid=540&hei=540&align=0%2C-1&fmt=jpeg&qlt=90&fit=constrain&.v=1692893983028","alt":"","width":540,"height":540},"carrierFinancedPromoItem":false,"period":"","showRecycleFee":false,"id":"orderItem","installmentApr":"0","productName":"iPhone 15 Pro Max 256GB Black Titanium","listPrice":"$1,199.00"}},"orderItemNotifications":{"f":{"abstract":"/abs.OrderItemNotifications"},"d":{"id":"orderItemNotifications","emailAddress":"t••••••••••5@outlook.com"}},"orderItemStatusTracker":{"f":{"abstract":"/abs.OrderItemStatusTracker"},"d":{"statusDescription":"PROCESSING","animateTracker":true,"possibleStatuses":["PLACED","PROCESSING","PREPARED_FOR_SHIPMENT","SHIPPED","DELIVERED"],"id":"orderItem-0000101-orderItemStatusTracker","isFinanced":false,"currentStatus":"PROCESSING"}},"shippingInfo":{"f":{"abstract":"/abs.ShippingInfo"},"d":{"canEditNotification":true,"isIDLItem":false,"isLMFConfig":true,"canEditShippingAddress":true,"id":"orderItem-0000101-shippingInfo","canEditPickupContact":false,"shipmentMethod":"Express Delivery","hasCarrierService":false,"shippingOverlayStatus":false},"a":{"editShippingAddress":{"url":"https://secure6.store.apple.com/shop/order/detailx/10078/W1001488282?_a=editShippingAddress&_m=orderDetail.orderItems.orderItem-0000101.shippingInfo"},"editNotification":{"url":"https://secure6.store.apple.com/shop/order/detailx/10078/W1001488282?_a=editNotification&_m=orderDetail.orderItems.orderItem-0000101.shippingInfo"}},"c":["olss-pickup-contact","shipping-address","shipping-notification"],"olss-pickup-contact":{"f":{"abstract":"/abs.Olss-pickup-contact"},"d":{"lastName":"ANBRIZ","daytimePhone":"••••••••03","mode":"VIEW","layout":[{"fields":[[{"name":"firstName","type":"text","label":"First Name"},{"name":"lastName","type":"text","label":"Last Name"}],[{"name":"daytimePhone","type":"text","label":"Primary Phone"}],[{"name":"emailAddress","type":"text","label":"Email Address"}]]}],"showLocationConsent":true,"emailAddress":"t••••••••••5@outlook.com","firstName":"ADRIANA ","id":"orderItem-0000101-shippingInfo-olss-pickup-contact"}},"shipping-address":{"f":{"abstract":"/abs.Shipping-address"},"d":{"city":"GLADE HILL, ","state":"VA","showLocationConsent":true,"lastName":"ANBRIZ","companyName":"","mode":"VIEW","street":"3151  Gladwell Street","layout":[{"fields":[[{"name":"firstName","type":"text","label":"First Name"},{"name":"lastName","type":"text","label":"Last Name"}],[{"name":"companyName","type":"text","label":"Company Name (Optional)"}],[{"name":"street","type":"text","label":"Street Address"}],[{"name":"street2","type":"text","label":"Apt, Suite, Building (Optional)","labelA11y":"Apartment, Suite, Building (Optional)"}],[{"name":"city","type":"text","label":"City"},{"name":"state","type":"text","label":"State"},{"name":"postalCode","type":"text","label":"Zip Code"}]]}],"postalCode":"24092","street2":"","firstName":"ADRIANA ","id":"orderItem-0000101-shippingInfo-shipping-address"}},"shipping-notification":{"f":{"abstract":"/abs.Shipping-notification"},"d":{"id":"orderItem-0000101-shippingInfo-shipping-notification","mode":"VIEW","layout":[{"fields":[[{"name":"emailAddress","type":"text","label":"Email Address"}]]}],"showLocationConsent":true,"emailAddress":"t••••••••••5@outlook.com"}}}}},"pricingSummary":{"f":{"abstract":"/abs.PricingSummary"},"d":{"isFreeShipping":true,"isUpgradeOrder":false,"taxAmount":"$63.55","id":"orderDetail-pricingSummary","isVatIncluded":false,"isSpanishGeo":false,"subTotal":"$1,199.00","isACDCModel":false,"orderTotal":"$1,262.55","shippingCharge":"$0.00","taxEstimatedHelpMessage":"<h4>Estimated Tax</h4><p>The sales tax listed on the order history page is only an estimate. The final total sales tax will be reflected on your invoice and will include state and local sales taxes, as well as any applicable rebates or fees. In CA and RI sales tax is collected on the unbundled price of the iPhone.</p>"}}}}}'
 
-cookies = {
-    'dssid2': '9f8a1375-fe4a-4dd8-b092-b901b14c70f2',
-    'dssf': '1',
-    'as_dc': 'ucp4',
-    'as_pcts': 'wKzq1VVoj8tWNtdR4pFOA-iroduUOgKwfFNXr+v7r2ZWBatYP-oTbKaQ4orj0fqj1hZ46H+h7z:HVfMT-QgEovuoz4-22pg_Z8_dgt2cvSzWQfGcsF4x7Kn1LZX+6qIk-vrLRLbVw:j4OpDnWIO4yzh+YtnyPy400mW5UnzS6bkV3b-NyJzMB:7O',
-    'as_sfa': 'Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE',
-    'geo': 'CN',
-    's_fid': '5DCB07D277DD9855-0E6BBED71DA9D505',
-    's_cc': 'true',
-    's_vi': '[CS]v1|3330EF22F1DF4A5E-400010501790B29E[CE]',
-    'as_rumid': '9a867f65-f7f0-4d8c-89de-1642443834e4',
-    's_sq': '%5B%5BB%5D%5D',
-    'pxro': '1',
-    'dslang': 'US-EN',
-    'site': 'USA',
-    'myacinfo': 'DAWTKNV323952cf8084a204fb20ab2508441a07d02d3c41be3a700cd5d9a82c64a22b2b567588636af6a52a2927d8848c53ef6cf0a36764bfc76a903adf21188932616f447f8c5adaa22c062d6611da93b9f44dbb1d96d5d1bab69da973044172c35495abb5b4275ccf46f1510a25fa2ffe1b431149c10196893541516a8d170cac09229218157480f190795d04a84ee388dff6e7a5ccf9f6e054101bd2430d9d1a2234848de3942ba741a66aa2df7d4550dc78f41e59fb03278bf668f1d45687e60e5af86a711ff1e1ab6662c8faf61319e923fe25cfd26bdbcbe77493167f1a9635412a8f1491ba18c939dc2d457838dd54ed51a5b084d6491eb9dc03628f41c40625e5ea221bf2661c5df0d34ebe848fe81fefc0d2f38ce2c2a7ec7cbb92418320457cdb2b142c0932d1ae5009ab8c852b7fcead7b2036b784bf8c818b98e2e94223c4ec43ba7df1fde432e17854b9b4b32de0256b27a73ec2ff6d79f4420d79e811d376bbcafdf1533119985e88b2f33009d1b3a9e9ceb9d389c7bc8fc792a65ffb23acb9a5920a7197c33c76ecfec58dac6c2d46c8d8e39a263f1aa8b95be734d8e9f060adb04351439bee3667108e88851fef1fd08783faa6d807f2f8dd5a9fdeaed776da457dceb0a23a59ad604477d6be70b37a4b8ed827e56279e70b389af99ce54f21f25106420112d54aba303d11f6e23585a47V3',
+billing_address_match = re.search(r'"billing-address":\s*{\s*"d":\s*{(.*?)}}', js, re.DOTALL).group(1)
+
+def get_field_value(field_name):
+    pattern = rf'"{field_name}":"([^"]*)"'
+    match = re.search(pattern, billing_address_match)
+    return match.group(1) if match else None
+
+# 使用上面的函数来构建结果字典
+result = {
+    "city": get_field_value("city"),
+    "state": get_field_value("state"),
+    "lastName": get_field_value("lastName"),
+    "firstName": get_field_value("firstName"),
+    "companyName": get_field_value("companyName"),
+    "street": get_field_value("street"),
+    "postalCode": get_field_value("postalCode"),
+    "street2": get_field_value("street2"),
 }
 
-headers = {
-    'accept': '*/*',
-    'accept-language': 'zh-CN,zh;q=0.9',
-    'cache-control': 'no-cache',
-    'content-type': 'application/x-www-form-urlencoded',
-    # 'cookie': 'dssid2=9f8a1375-fe4a-4dd8-b092-b901b14c70f2; dssf=1; as_dc=ucp4; as_pcts=wKzq1VVoj8tWNtdR4pFOA-iroduUOgKwfFNXr+v7r2ZWBatYP-oTbKaQ4orj0fqj1hZ46H+h7z:HVfMT-QgEovuoz4-22pg_Z8_dgt2cvSzWQfGcsF4x7Kn1LZX+6qIk-vrLRLbVw:j4OpDnWIO4yzh+YtnyPy400mW5UnzS6bkV3b-NyJzMB:7O; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; geo=CN; s_fid=5DCB07D277DD9855-0E6BBED71DA9D505; s_cc=true; s_vi=[CS]v1|3330EF22F1DF4A5E-400010501790B29E[CE]; as_rumid=9a867f65-f7f0-4d8c-89de-1642443834e4; s_sq=%5B%5BB%5D%5D; pxro=1; dslang=US-EN; site=USA; myacinfo=DAWTKNV323952cf8084a204fb20ab2508441a07d02d3c41be3a700cd5d9a82c64a22b2b567588636af6a52a2927d8848c53ef6cf0a36764bfc76a903adf21188932616f447f8c5adaa22c062d6611da93b9f44dbb1d96d5d1bab69da973044172c35495abb5b4275ccf46f1510a25fa2ffe1b431149c10196893541516a8d170cac09229218157480f190795d04a84ee388dff6e7a5ccf9f6e054101bd2430d9d1a2234848de3942ba741a66aa2df7d4550dc78f41e59fb03278bf668f1d45687e60e5af86a711ff1e1ab6662c8faf61319e923fe25cfd26bdbcbe77493167f1a9635412a8f1491ba18c939dc2d457838dd54ed51a5b084d6491eb9dc03628f41c40625e5ea221bf2661c5df0d34ebe848fe81fefc0d2f38ce2c2a7ec7cbb92418320457cdb2b142c0932d1ae5009ab8c852b7fcead7b2036b784bf8c818b98e2e94223c4ec43ba7df1fde432e17854b9b4b32de0256b27a73ec2ff6d79f4420d79e811d376bbcafdf1533119985e88b2f33009d1b3a9e9ceb9d389c7bc8fc792a65ffb23acb9a5920a7197c33c76ecfec58dac6c2d46c8d8e39a263f1aa8b95be734d8e9f060adb04351439bee3667108e88851fef1fd08783faa6d807f2f8dd5a9fdeaed776da457dceb0a23a59ad604477d6be70b37a4b8ed827e56279e70b389af99ce54f21f25106420112d54aba303d11f6e23585a47V3',
-    'dnt': '1',
-    'modelversion': 'v2',
-    'origin': 'https://secure7.store.apple.com',
-    'pragma': 'no-cache',
-    'priority': 'u=1, i',
-    'referer': 'https://secure7.store.apple.com/shop/signIn/orders?hgl=t&ssi=1AAABj-5MRQ4gROGHv2Gipb8U59vcQaOMOym98_8vkjiWuqSUsgkXzXsAAABFaHR0cHM6Ly9zZWN1cmU3LnN0b3JlLmFwcGxlLmNvbS9zaG9wL29yZGVyL2RldGFpbC8xMDA3OC9XMTA0NzAwMTM2Mnx8AAIBDK6mh8XdiXTLa0SKsQ1eTJP4dzDnk2rRsyDo6HM1rx0',
-    'sec-ch-ua': '"Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
-    'sec-fetch-dest': 'empty',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-origin',
-    'syntax': 'graviton',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0',
-    'x-aos-model-page': 'olssSignInPage',
-    'x-aos-stk': 'YbPANeULtyMvwiFg13tS58SBaaYozY4fjdN81pJnrXk',
-    'x-requested-with': 'Fetch',
-}
-
-params = {
-    'ssi': '1AAABj-5MRQ4gROGHv2Gipb8U59vcQaOMOym98_8vkjiWuqSUsgkXzXsAAABFaHR0cHM6Ly9zZWN1cmU3LnN0b3JlLmFwcGxlLmNvbS9zaG9wL29yZGVyL2RldGFpbC8xMDA3OC9XMTA0NzAwMTM2Mnx8AAIBDK6mh8XdiXTLa0SKsQ1eTJP4dzDnk2rRsyDo6HM1rx0',
-}
-
-data = {
-    'deviceID': 'TF1;015;;;;;;;;;;;;;;;;;;;;;;Mozilla;Netscape;5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;20030107;undefined;true;;true;Win32;undefined;Mozilla/5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit/537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome/125.0.0.0%20Safari/537.36%20Edg/125.0.0.0;zh-CN;undefined;secure7.store.apple.com;undefined;undefined;undefined;undefined;false;false;1717689939649;8;2005/6/7%2021%3A33%3A44;1920;1080;;;;;;;;-480;-480;2024/6/7%2000%3A05%3A39;24;1920;1032;0;0;;;;;;;;;;;;;;;;;;;25;',
-    'grantCode': '',
-}
-
-response = requests.post(
-    'https://secure7.store.apple.com/shop/signIn/idms/authx',
-    params=params,
-    cookies=cookies,
-    headers=headers,
-    data=data,
-)
-set_cookie_header = response.headers.get("Set-Cookie", "")
-dssid2_match = re.search(r"dssid2=([a-zA-Z0-9\-]+)", set_cookie_header)
-as_cn_match = re.search(r"as_cn=(.+?);", set_cookie_header)
-as_disa_match = re.search(r"as_disa=(.+?);", set_cookie_header)
-as_ltn_us_match = re.search(r"as_ltn_us=(.+?);", set_cookie_header)
-as_rec_match = re.search(r"as_rec=(.+?);", set_cookie_header)
-dssid2 = dssid2_match.group(1) if dssid2_match else None
-as_cn = as_cn_match.group(1) if as_cn_match else None
-as_disa = as_disa_match.group(1) if as_disa_match else None
-as_ltn_us_1 = as_ltn_us_match.group(1) if as_ltn_us_match else None
-as_rec = as_rec_match.group(1) if as_rec_match else None
-print(f"dssid2_2: {dssid2}")
-print(f"as_cn: {as_cn}")
-print(f"as_disa: {as_disa}")
-print(f"as_ltn_us: {as_ltn_us_1}")
-print(f"as_rec: {as_rec}")
+# 打印结果字典
+print(result)

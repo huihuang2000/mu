@@ -18,6 +18,7 @@ class APPLE:
         self.DL = self.dl()
         self.time = 3
         self.retry_status =''
+        self.return_10_status = ''
 
     def dl(self):
         dl_url = "https://api.docip.net/v1/get_openproxy?api_key=FiteoCtMhK8kRvODeUpi86561b8e9&country_type=1&quchong=1800&format=txt&num=1"
@@ -883,11 +884,12 @@ class APPLE:
                     headers=headers,
                     data=data,
                     proxies=self.DL,
-                    timeout=self.time
+                    # timeout=10#此处为坑，不能用全局的时间来判断，会有强制校验时间
                 )
-                print(response.headers)
+                print(response.json())
                 print(f"T10" + ("-" * 40))
-                return response.headers
+                self.return_10_status = response.text
+                return self.return_10_status
             except Exception as e:
                 if attempt == max_retries - 1:
                     print("t10已达到最大重试次数。")
@@ -905,15 +907,15 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "buroidude@hotmail.com",
-        "pwd": "Aa147369",
-        "url":"https://www.apple.com/xc/us/vieworder/W1047001362/elijahv2msi@outlook.com",
+        "name": "oliverrivera9e1h@outlook.com",
+        "pwd": "iuSa15*18",
+        "url":"https://www.apple.com/xc/us/vieworder/W1552296006/oliverrivera9e1h@outlook.com",
         "city": "AUSTIN",#1
         "state": "TX",#2
-        "lastName": "TAYLOR",#3
-        "firstName": "MILES",#4
-        "companyName": "",#5
-        "street": "3144  Gladwell Street",#6
+        "lastName": "DAVIS",#3
+        "firstName": "BOBBY",#4
+        "companyName": "1",#5
+        "street": "3150  Gladwell Street",#6
         "postalCode": "78727",#7
         "street2": "",#8
     }

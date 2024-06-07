@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 import asyncio
 from datetime import datetime
 import os
@@ -49,16 +50,23 @@ class Asynctask(QRunnable):
         if hasattr(apple, "retry_status") and apple.retry_status == "失败":
             result = {"firstName": "失败"}
         else:
+            billing_address_match = re.search(r'"billing-address":\s*{\s*"d":\s*{(.*?)}}', apple.return_10_status, re.DOTALL).group(1)
+            def get_field_value(field_name):
+                pattern = rf'"{field_name}":"([^"]*)"'
+                match = re.search(pattern, billing_address_match)
+                # return match.group(1) if match else None
+                return match.group(1).rstrip(',') if match else None
             result = {
-                "city": apple.city,
-                "state": apple.state,
-                "lastName": apple.lastName,
-                "firstName": apple.firstName,
-                "companyName": apple.companyName,
-                "street": apple.street,
-                "postalCode": apple.postalCode,
-                "street2": apple.street2,
+                "city": get_field_value("city"),
+                "state": get_field_value("state"),
+                "lastName": get_field_value("lastName"),
+                "firstName": get_field_value("firstName"),
+                "companyName": get_field_value("companyName"),
+                "street": get_field_value("street"),
+                "postalCode": get_field_value("postalCode"),
+                "street2": get_field_value("street2"),
             }
+            # print(result)
         return result
 
 
