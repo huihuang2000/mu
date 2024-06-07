@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
     QFileDialog
 )
 
+# Pyinstaller -F -w Change_the_address.py
 
 class Asynctask(QRunnable):
     def __init__(self, row, email, callback, **address_details):
@@ -134,25 +135,39 @@ class MainWindow(QMainWindow):
         form_layout.addWidget(self.comboBox1)
         self.comboBox1.setStyleSheet("""QComboBox {
             border: 1px solid lightgray;
-            background-color: black;
-            padding: 4px; /* 增加内边距 */
-            font-size: 14pt; /* 增加字体大小 */
+            padding: 4px;
+            font-size: 14pt;
+            background-color: white; /* 确保有明确的背景色 */
         }
+
         QComboBox::drop-down {
-            subcontrol-origin: padding;
-            subcontrol-position: right center;
             width: 15px;
             height: 15px;
         }
+
         QComboBox QAbstractItemView {
-            border: 0;
-            background-color: black; /* 下拉列表背景色 */
-            padding: 2px; /* 下拉列表内部的内边距 */
+            background-color: white; /* 下拉列表背景色 */
+            border: 1px solid lightgray; /* 下拉列表边框 */
         }
+
         QComboBox QAbstractItemView::item {
-            border: 0;
-            padding: 4px 2px; /* 增加条目的内边距 */
-            min-height: 24px; /* 设置最小高度 */
+            padding: 4px 2px;
+            min-height: 24px;
+            border-bottom: 5px solid lightgray; /* 项之间的分隔线 */
+        }
+
+        QComboBox QAbstractItemView::item:selected { /* 选中的项 */
+            background-color: lightblue; /* 选中项的背景色 */
+            color: black; /* 选中项的文字颜色 */
+        }
+
+        QComboBox:on { /* 下拉框打开状态 */
+            background-color: lightgray;
+        }
+
+        QComboBox::drop-down {
+            subcontrol-origin: padding;
+            subcontrol-position: right center;
         }
         """)
 
@@ -182,26 +197,61 @@ class MainWindow(QMainWindow):
         self.tableWidget.setItem(row_position, 1, password_item)
         self.tableWidget.setItem(row_position, 2, url_item)
 
+    # def on_click_button2(self):
+    #     for row in range(self.tableWidget.rowCount()):
+    #         if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
+    #             email = self.tableWidget.item(row, 0).text()
+    #             selected_text = self.comboBox1.currentText()
+    #             parts = selected_text.split('----')
+    #             params = {
+    #                 "name":self.tableWidget.item(row, 0).text(),
+    #                 "pwd":self.tableWidget.item(row, 1).text(),
+    #                 "url": self.tableWidget.item(row, 2).text(),
+    #                 "city": parts[2].strip(),#城市
+    #                 "state": parts[3].strip(),#州
+    #                 "lastName": parts[0].strip(),#姓
+    #                 "firstName": parts[1].strip(),#名
+    #                 "companyName": '',#"公司名称"
+    #                 "street": parts[4].strip(),#"街道"
+    #                 "postalCode": parts[6].strip(),#"邮政编码"
+    #                 "street2": parts[5].strip(),#"街道2"
+    #             }
+    #             # params = {**params}
+    #             task = Asynctask(row, email, self.update_table_item, **params)
+    #             self.thread_pool.start(task)
+
     def on_click_button2(self):
+        # 检查comboBox1是否为空
+        selected_text = self.comboBox1.currentText()
+        if not selected_text:
+            QMessageBox.warning(self, "警告", "没有导入地址，请先导入地址再执行修改。")
+            return  # 如果comboBox为空，则不执行下面的代码
+
+        # 标志变量，用于控制循环是否继续
+        continue_loop = True
         for row in range(self.tableWidget.rowCount()):
-            if self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1):
+            # 检查每一行的第一列、第二列和第三列是否有内容
+            if not (self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1) and self.tableWidget.item(row, 2)):
+                QMessageBox.warning(self, "警告", "请确保表格的每一行都有账号、密码和链接信息。")
+                continue_loop = False  # 设置标志变量，退出循环
+                break  # 退出当前循环
+
+            if continue_loop:  # 只有当continue_loop为True时，才继续执行
                 email = self.tableWidget.item(row, 0).text()
-                selected_text = self.comboBox1.currentText()
                 parts = selected_text.split('----')
                 params = {
-                    "name":self.tableWidget.item(row, 0).text(),
-                    "pwd":self.tableWidget.item(row, 1).text(),
-                    "url": self.tableWidget.item(row, 2).text(),
-                    "city": parts[2].strip(),#城市
-                    "state": parts[3].strip(),#州
-                    "lastName": parts[0].strip(),#姓
-                    "firstName": parts[1].strip(),#名
-                    "companyName": '',#"公司名称"
-                    "street": parts[4].strip(),#"街道"
-                    "postalCode": parts[6].strip(),#"邮政编码"
-                    "street2": parts[5].strip(),#"街道2"
+                    "name": self.tableWidget.item(row, 0).text(),
+                    "pwd": self.tableWidget.item(row, 1).text(),
+                    "url": self.tableWidget.item(row, 2).text(),  # 注意：这里应该是索引2，而不是'url'
+                    "city": parts[2].strip(),  # 城市
+                    "state": parts[3].strip(),  # 州
+                    "lastName": parts[0].strip(),  # 姓
+                    "firstName": parts[1].strip(),  # 名
+                    "companyName": '',  # "公司名称"
+                    "street": parts[4].strip(),  # "街道"
+                    "postalCode": parts[6].strip(),  # "邮政编码"
+                    "street2": parts[5].strip(),  # "街道2"
                 }
-                # params = {**params}
                 task = Asynctask(row, email, self.update_table_item, **params)
                 self.thread_pool.start(task)
 
