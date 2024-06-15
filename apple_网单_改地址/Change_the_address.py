@@ -8,7 +8,7 @@ from two import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt,QRunnable, QThreadPool
+from PySide6.QtCore import Qt, QRunnable, QThreadPool
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -21,10 +21,11 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QMessageBox,
     QComboBox,
-    QFileDialog
+    QFileDialog,
 )
 
 # Pyinstaller -F -w Change_the_address.py
+
 
 class Asynctask(QRunnable):
     def __init__(self, row, email, callback, **address_details):
@@ -51,12 +52,18 @@ class Asynctask(QRunnable):
         if hasattr(apple, "retry_status") and apple.retry_status == "失败":
             result = {"firstName": "失败"}
         else:
-            billing_address_match = re.search(r'"billing-address":\s*{\s*"d":\s*{(.*?)}}', apple.return_10_status, re.DOTALL).group(1)
+            billing_address_match = re.search(
+                r'"billing-address":\s*{\s*"d":\s*{(.*?)}}',
+                apple.return_10_status,
+                re.DOTALL,
+            ).group(1)
+
             def get_field_value(field_name):
                 pattern = rf'"{field_name}":"([^"]*)"'
                 match = re.search(pattern, billing_address_match)
                 # return match.group(1) if match else None
-                return match.group(1).rstrip(',') if match else None
+                return match.group(1).rstrip(",") if match else None
+
             result = {
                 "city": get_field_value("city"),
                 "state": get_field_value("state"),
@@ -133,7 +140,8 @@ class MainWindow(QMainWindow):
         self.comboBox1 = QComboBox()
         self.comboBox1.setFixedWidth(1000)
         form_layout.addWidget(self.comboBox1)
-        self.comboBox1.setStyleSheet("""QComboBox {
+        self.comboBox1.setStyleSheet(
+            """QComboBox {
             border: 1px solid lightgray;
             padding: 4px;
             font-size: 14pt;
@@ -169,7 +177,8 @@ class MainWindow(QMainWindow):
             subcontrol-origin: padding;
             subcontrol-position: right center;
         }
-        """)
+        """
+        )
 
         widget = QWidget()
         widget.setLayout(main_layout)
@@ -231,23 +240,31 @@ class MainWindow(QMainWindow):
         continue_loop = True
         for row in range(self.tableWidget.rowCount()):
             # 检查每一行的第一列、第二列和第三列是否有内容
-            if not (self.tableWidget.item(row, 0) and self.tableWidget.item(row, 1) and self.tableWidget.item(row, 2)):
-                QMessageBox.warning(self, "警告", "请确保表格的每一行都有账号、密码和链接信息。")
+            if not (
+                self.tableWidget.item(row, 0)
+                and self.tableWidget.item(row, 1)
+                and self.tableWidget.item(row, 2)
+            ):
+                QMessageBox.warning(
+                    self, "警告", "请确保表格的每一行都有账号、密码和链接信息。"
+                )
                 continue_loop = False  # 设置标志变量，退出循环
                 break  # 退出当前循环
 
             if continue_loop:  # 只有当continue_loop为True时，才继续执行
                 email = self.tableWidget.item(row, 0).text()
-                parts = selected_text.split('----')
+                parts = selected_text.split("----")
                 params = {
                     "name": self.tableWidget.item(row, 0).text(),
                     "pwd": self.tableWidget.item(row, 1).text(),
-                    "url": self.tableWidget.item(row, 2).text(),  # 注意：这里应该是索引2，而不是'url'
+                    "url": self.tableWidget.item(
+                        row, 2
+                    ).text(),  # 注意：这里应该是索引2，而不是'url'
                     "city": parts[2].strip(),  # 城市
                     "state": parts[3].strip(),  # 州
                     "lastName": parts[0].strip(),  # 姓
                     "firstName": parts[1].strip(),  # 名
-                    "companyName": '',  # "公司名称"
+                    "companyName": "",  # "公司名称"
                     "street": parts[4].strip(),  # "街道"
                     "postalCode": parts[6].strip(),  # "邮政编码"
                     "street2": parts[5].strip(),  # "街道2"
@@ -270,8 +287,9 @@ class MainWindow(QMainWindow):
                 "street2": 10,
             }
             for key, col_index in column_mapping.items():
-                self.tableWidget.setItem(row, col_index, QTableWidgetItem(result.get(key, "")))
-               
+                self.tableWidget.setItem(
+                    row, col_index, QTableWidgetItem(result.get(key, ""))
+                )
 
     def on_click_button3(self):
         desktop_path = str(Path.home() / "Desktop")
@@ -316,13 +334,14 @@ class MainWindow(QMainWindow):
                 self,
                 "选择文件",
                 QApplication.instance().applicationDirPath(),
-                "Excel Files (*.xlsx);;All Files (*)"
+                "Excel Files (*.xlsx);;All Files (*)",
             )
             if file_path:
                 try:
-                    df = pd.read_excel(file_path, engine='openpyxl')
+                    dtypes = {"邮编": str}
+                    df = pd.read_excel(file_path, engine="openpyxl", dtype=dtypes)
                     self.comboBox1.clear()
-                    df.fillna('     ', inplace=True)
+                    df.fillna("     ", inplace=True)
                     for index, row in df.iterrows():
                         full_address = (
                             f"{row['姓']}----"
@@ -337,7 +356,7 @@ class MainWindow(QMainWindow):
                 except Exception as e:
                     print(f"读取文件时发生错误: {e}")
         except Exception as e:
-            QMessageBox.critical(self, "错误", f"读取文件时发生错误: {e}")            
+            QMessageBox.critical(self, "错误", f"读取文件时发生错误: {e}")
 
     def on_click_button6(self):
         self.comboBox1.clear()

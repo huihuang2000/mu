@@ -7,7 +7,7 @@ from one import APPLE
 from concurrent.futures import ThreadPoolExecutor
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
-from PySide6.QtCore import Qt,QRunnable, QThreadPool
+from PySide6.QtCore import Qt, QRunnable, QThreadPool
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QMessageBox,
     QComboBox,
-    QFileDialog
+    QFileDialog,
 )
 
 
@@ -136,11 +136,11 @@ class MainWindow(QMainWindow):
         self.comboBox1 = QComboBox()
         self.comboBox1.setFixedWidth(1000)
         form_layout.addWidget(self.comboBox1)
-        self.comboBox1.setStyleSheet("QComboBox { border: 1px solid lightgray; background-color: black; } "
-                             "QComboBox QAbstractItemView { border: 0; } "
-                             "QComboBox QAbstractItemView::item { border-bottom: 1px solid lightgray; }")
-
-
+        self.comboBox1.setStyleSheet(
+            "QComboBox { border: 1px solid lightgray; background-color: black; } "
+            "QComboBox QAbstractItemView { border: 0; } "
+            "QComboBox QAbstractItemView::item { border-bottom: 1px solid lightgray; }"
+        )
 
         self.label2 = QLabel("姓")
         self.label2.setFixedWidth(100)
@@ -195,7 +195,6 @@ class MainWindow(QMainWindow):
         # self.comboBox7.addItem("选项1", "值1")
         # self.comboBox7.addItem("选项2", "值2")
         # form_layout.addWidget(self.comboBox7)
-
 
         self.label8 = QLabel("州")
         self.label8.setFixedWidth(100)
@@ -256,17 +255,17 @@ class MainWindow(QMainWindow):
                 email = self.tableWidget.item(row, 0).text()
                 password = self.tableWidget.item(row, 1).text()
                 address_details = {
-                    "name":email,
-                    "pwd":password,
-                    "fullDaytimePhone": self.comboBox1.currentText(),#7
+                    "name": email,
+                    "pwd": password,
+                    "fullDaytimePhone": self.comboBox1.currentText(),  # 7
                     "street2": self.comboBox2.currentText(),
-                    "lastName": self.comboBox3.currentText(),#1
-                    "firstName": self.comboBox4.currentText(),#2
+                    "lastName": self.comboBox3.currentText(),  # 1
+                    "firstName": self.comboBox4.currentText(),  # 2
                     "companyName": self.comboBox5.currentText(),
-                    "street": self.comboBox6.currentText(),#3
-                    "city": self.comboBox7.currentText(),#5
-                    "state": self.comboBox8.currentText(),#6
-                    "postalCode": self.comboBox9.currentText(),#4
+                    "street": self.comboBox6.currentText(),  # 3
+                    "city": self.comboBox7.currentText(),  # 5
+                    "state": self.comboBox8.currentText(),  # 6
+                    "postalCode": self.comboBox9.currentText(),  # 4
                     "countryCode": self.comboBox10.currentText(),
                 }
                 # params = {
@@ -366,13 +365,13 @@ class MainWindow(QMainWindow):
                 self,
                 "选择文件",
                 QApplication.instance().applicationDirPath(),
-                "Excel Files (*.xlsx);;All Files (*)"
+                "Excel Files (*.xlsx);;All Files (*)",
             )
             if file_path:
                 try:
-                    df = pd.read_excel(file_path, engine='openpyxl')
+                    df = pd.read_excel(file_path, engine="openpyxl")
                     self.comboBox1.clear()
-                    df.fillna('     ', inplace=True)
+                    df.fillna("     ", inplace=True)
                     for index, row in df.iterrows():
                         full_address = (
                             f"{row['姓']}----"
@@ -387,7 +386,7 @@ class MainWindow(QMainWindow):
                 except Exception as e:
                     print(f"读取文件时发生错误: {e}")
         except Exception as e:
-            QMessageBox.critical(self, "错误", f"读取文件时发生错误: {e}")            
+            QMessageBox.critical(self, "错误", f"读取文件时发生错误: {e}")
 
     def on_click_button6(self):
         self.comboBox1.clear()
