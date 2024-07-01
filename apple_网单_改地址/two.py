@@ -920,7 +920,7 @@ class APPLE:
                     proxies=self.DL,
                     # timeout=10#此处为坑，不能用全局的时间来判断，会有强制校验时间
                 )
-                print(response.json())
+                print(response.headers)
                 print(f"T10" + ("-" * 40))
                 self.return_10_status = response.text
                 return self.return_10_status
@@ -941,16 +941,16 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "wyatterba@outlook.com",
+        "name": "aidenreed62q@outlook.com",
         "pwd": "iuSa15*18",
-        "url": "https://www.apple.com/xc/us/vieworder/W1517142836/wyatterba@outlook.com",
-        "city": "Fayette",  # 1
-        "state": "MO",  # 2
-        "lastName": "SUNG CHUL",  # 3
-        "firstName": "KIM",  # 4
+        "url": "https://www.apple.com/xc/us/vieworder/W1312723791/aidenreed62q@outlook.com",
+        "city": "VAN NUYS",  # 1
+        "state": "CA",  # 2
+        "lastName": "Lip",  # 3
+        "firstName": "Fan",  # 4
         "companyName": "1",  # 5
-        "street": "3374  Trymore Road",  # 6
-        "postalCode": "65200",  # 7
+        "street": "6948 MURIETTA AVE",  # 6
+        "postalCode": "91405-4115",  # 7
         "street2": "",  # 8
     }
     main_instance = main(**params)

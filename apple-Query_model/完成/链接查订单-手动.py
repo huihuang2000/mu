@@ -5,7 +5,7 @@ import aiohttp
 import os
 import time
 from itertools import zip_longest
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication,
     QWidget,
     QPushButton,
@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
 )
-from PyQt6.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, Qt
+from PySide6.QtCore import QObject, QRunnable, QThreadPool, Signal, Qt
 from openpyxl import Workbook
 import openpyxl
 
@@ -25,8 +25,8 @@ import openpyxl
 
 
 class AsyncRequest(QObject):
-    finished = pyqtSignal()
-    result = pyqtSignal(int, dict)
+    finished = Signal()  # 正确使用 PySide6 的 Signal
+    result = Signal(int, dict)
 
     def __init__(self, row, url):
         super().__init__()
