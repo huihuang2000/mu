@@ -24,8 +24,8 @@ import openpyxl
 # 添加了重试策略，加入了一行取下面状态的功能
 # Pyinstaller -F -w 链接查订单-手动.py
 #
-pygame.mixer.init()
-sound = pygame.mixer.Sound('apple-Query_model/测试/1.wav')
+# pygame.mixer.init()
+# sound = pygame.mixer.Sound('apple-Query_model/测试/1.wav')
 
 
 class AsyncRequest(QObject):
@@ -245,8 +245,8 @@ class InterFace(QWidget):
             # if result['The_status_of_the_goods'] == "DELIVERED":
             #     winsound.Beep(800, 500)
             # !!!
-            if result['The_status_of_the_goods'] == "DELIVERED":
-                    sound.play() 
+            # if result['The_status_of_the_goods'] == "DELIVERED":
+            #         sound.play()
 
     def Get_link(self):
         clipboard = QApplication.clipboard().text()

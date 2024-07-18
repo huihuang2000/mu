@@ -408,6 +408,7 @@ class APPLE:
                     timeout=self.time,
                 )
                 CK = response_4.headers.get("Set-Cookie")
+                print(response_4.headers)
                 myacinfo_pattern = re.compile(r"myacinfo=([^;]+)")
                 myacinfo_match = myacinfo_pattern.search(CK)
                 self.myacinfo = myacinfo_match.group(1)
@@ -941,16 +942,16 @@ def main(**kwargs):
 
 if __name__ == "__main__":
     params = {
-        "name": "aidenreed62q@outlook.com",
+        "name": "carterfloresdmg@outlook.com",
         "pwd": "iuSa15*18",
-        "url": "https://www.apple.com/xc/us/vieworder/W1312723791/aidenreed62q@outlook.com",
-        "city": "VAN NUYS",  # 1
-        "state": "CA",  # 2
-        "lastName": "Lip",  # 3
-        "firstName": "Fan",  # 4
+        "url": "https://www.apple.com/xc/us/vieworder/W1334260251/carterfloresdmg@outlook.com",
+        "city": "CHICAGO",  # 1
+        "state": "IL",  # 2
+        "lastName": "Tan",  # 3
+        "firstName": "Mao",  # 4
         "companyName": "1",  # 5
-        "street": "6948 MURIETTA AVE",  # 6
-        "postalCode": "91405-4115",  # 7
+        "street": "11389 NEFF RD",  # 6
+        "postalCode": "34567",  # 7
         "street2": "",  # 8
     }
     main_instance = main(**params)

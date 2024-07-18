@@ -14,12 +14,13 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
 )
-from PySide6.QtCore import QObject, QRunnable, QThreadPool, Signal, Qt,QTimer
+from PySide6.QtCore import QObject, QRunnable, QThreadPool, Signal, Qt, QTimer
 
 # Pyinstaller -F -w 链接查订单-自动.py
 
-pygame.mixer.init()
-sound = pygame.mixer.Sound('apple-Query_model/测试/1.wav')
+# pygame.mixer.init()
+# sound = pygame.mixer.Sound('apple-Query_model/测试/1.wav')
+
 
 class AsyncRequest(QObject):
     finished = Signal()
@@ -238,10 +239,10 @@ class InterFace(QWidget):
             self.table_widget.setItem(row, 8, QTableWidgetItem(str(result["Delivers"])))
             self.table_widget.setItem(row, 9, QTableWidgetItem(str(result["Bills_to"])))
             # if result['The_status_of_the_goods'] == "DELIVERED":
-                # winsound.Beep(800, 200)
+            # winsound.Beep(800, 200)
             # !!!
-            if result['The_status_of_the_goods'] == "DELIVERED":
-                    sound.play() 
+            # if result['The_status_of_the_goods'] == "DELIVERED":
+            #         sound.play()
 
     def Get_link(self):
         clipboard = QApplication.clipboard().text()

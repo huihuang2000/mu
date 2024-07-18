@@ -1,4 +1,3 @@
-
 import re
 from telnetlib import PRAGMA_HEARTBEAT
 
@@ -7,23 +6,26 @@ txt = '{"head":{"status":200},"body":{"meta":{"l":["/orderDetail"],"h":{"x-aos-m
 pattern = r'"/abs.Shipping-address"}\s*,\s*"d":\s*\{.*?"postalCode":\s*"\d+".*?"street2":\s*"[^"]+".*?"firstName":\s*"[^"]+".*?"id":\s*"orderItem-\d+-shippingInfo-shipping-address"'
 match = re.search(pattern, txt, re.DOTALL)
 matched_text = match.group(0)
+
+
 def get_field_value(field_name):
-                # 为每个字段创建一个正则表达式模式
-                field_pattern = rf"'{field_name}':\s*'([^']*)'"
-                # 在整个文本中搜索字段
-                match = re.search(field_pattern, matched_text)
-                # 如果找到匹配项，则返回匹配的值，否则返回 None
-                return match.group(1) if match else None
+    # 为每个字段创建一个正则表达式模式
+    field_pattern = rf"'{field_name}':\s*'([^']*)'"
+    # 在整个文本中搜索字段
+    match = re.search(field_pattern, matched_text)
+    # 如果找到匹配项，则返回匹配的值，否则返回 None
+    return match.group(1) if match else None
+
 
 result = {
-                "city": get_field_value("city"),
-                "state": get_field_value("state"),
-                "lastName": get_field_value("lastName"),
-                "firstName": get_field_value("firstName"),
-                "companyName": get_field_value("companyName"),
-                "street": get_field_value("street"),
-                "postalCode": get_field_value("postalCode"),
-                "street2": get_field_value("street2"),
-            }
+    "city": get_field_value("city"),
+    "state": get_field_value("state"),
+    "lastName": get_field_value("lastName"),
+    "firstName": get_field_value("firstName"),
+    "companyName": get_field_value("companyName"),
+    "street": get_field_value("street"),
+    "postalCode": get_field_value("postalCode"),
+    "street2": get_field_value("street2"),
+}
 
 print(result)
