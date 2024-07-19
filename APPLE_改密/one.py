@@ -461,15 +461,14 @@ response = requests.get(
 sstt_8 = response.json()["sstt"]
 x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
 
-question_1 = response.json()['questions'][0]['question']
-question_2 = response.json()['questions'][1]['question']
+question_1 = response.json()["questions"][0]["question"]
+question_2 = response.json()["questions"][1]["question"]
 
-number_1 = response.json()['questions'][0]['number']
-number_2 = response.json()['questions'][1]['number']
+number_1 = response.json()["questions"][0]["number"]
+number_2 = response.json()["questions"][1]["number"]
 
-id_1 = response.json()['questions'][0]['id']
-id_2 = response.json()['questions'][1]['id']
-
+id_1 = response.json()["questions"][0]["id"]
+id_2 = response.json()["questions"][1]["id"]
 
 
 print(response.json())
@@ -508,16 +507,16 @@ headers = {
 json_data = {
     "questions": [
         {
-            "question": "你少年时代最好的朋友叫什么名字？",
+            "question": question_1,
             "answer": "py1234",
-            "number": 1,
-            "id": 130,
+            "number": number_1,
+            "id": id_1,
         },
         {
-            "question": "你的理想工作是什么？",
+            "question": question_2,
             "answer": "gz1234",
-            "number": 2,
-            "id": 136,
+            "number": number_2,
+            "id": id_2,
         },
     ],
 }
@@ -652,7 +651,7 @@ headers = {
 }
 
 json_data = {
-    "password": "Aa1473691",
+    "password": "Aa1473692",
 }
 
 response = requests.post(

@@ -1,4 +1,3 @@
-from typing import Self
 import requests, re, ddddocr
 from urllib.parse import unquote, quote
 
@@ -10,13 +9,18 @@ ocr = ddddocr.DdddOcr(
     charsets_path="APPLE_改密/charsets (1).json",
 )
 
-class APPLE():
+
+class APPLE:
     def __init__(self) -> None:
         self.password = "Aa1473691"
-        self.username = 'aidenchabhn@outlook.com'
+        self.username = "aidenchabhn@outlook.com"
+
         self.monthOfYear = "05"
         self.dayOfMonth = "25"
         self.year = "1993"
+
+        self.answer_1 = "py1234"
+        self.answer_2 = "gz1234"
 
     def Get_sstt(self):
         headers = {
@@ -43,6 +47,7 @@ class APPLE():
         self.sstt = re.search(r'"sstt":"([^"]+)"', response.text).group(1)
         self.x_apple_i_web_token = response.cookies.get("X-Apple-I-Web-Token")
         self.ifssp = response.cookies.get("ifssp")
+        return self
 
     def get_verification_code(self):
         headers = {
@@ -75,59 +80,71 @@ class APPLE():
         self.x_apple_i_web_token_2 = response.cookies.get("X-Apple-I-Web-Token")
         self.Token = response.json()["token"]
         self.Id = response.json()["id"]
+        return self
 
     def Identification_codes(self):
         self.res = ocr.classification(self.captcha)
+        return self
 
     def Submit_302_1(self):
-        cookies = {
-            "idclient": "web",
-            "dslang": "CN-ZH",
-            "site": "CHN",
-            "geo": "CN",
-            "ifssp": self.ifssp,
-            "X-Apple-I-Web-Token": self.x_apple_i_web_token_2,
-        }
-
-        headers = {
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-            "Content-Type": "application/json",
-            "Origin": "https://iforgot.apple.com",
-            "Pragma": "no-cache",
-            "Referer": "https://iforgot.apple.com/",
-            "Sec-Fetch-Dest": "empty",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Site": "same-origin",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9cedFWv9AqururJhBR.uMp4UdHz13NlejV2pNk0ug9WJ3uJsjMm_UWujme5BNlY5CGWY5BOgkLT0XxU..0ch"}',
-            "X-Requested-With": "XMLHttpRequest",
-            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": '"Windows"',
-            "sstt": quote(self.sstt),
-        }
-
-        json_data = {
-            "id": self.username,
-            "captcha": {
-                "id": self.Id,
-                "answer": self.res,
-                "token": self.Token,
-            },
-        }
-
-        response = requests.post(
-            "https://iforgot.apple.com/password/verify/appleid",
-            cookies=cookies,
-            headers=headers,
-            json=json_data,
-            allow_redirects=False,
-        )
-        self.sstt_2 = unquote(response.headers["Sstt"])
-        self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
+        max_retries = 3  # 设置最大重试次数
+        retries = 0  # 初始化重试计数器
+        while retries < max_retries:
+            try:
+                cookies = {
+                    "idclient": "web",
+                    "dslang": "CN-ZH",
+                    "site": "CHN",
+                    "geo": "CN",
+                    "ifssp": self.ifssp,
+                    "X-Apple-I-Web-Token": self.x_apple_i_web_token_2,
+                }
+                headers = {
+                    "Accept": "application/json, text/javascript, */*; q=0.01",
+                    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+                    "Cache-Control": "no-cache",
+                    "Connection": "keep-alive",
+                    "Content-Type": "application/json",
+                    "Origin": "https://iforgot.apple.com",
+                    "Pragma": "no-cache",
+                    "Referer": "https://iforgot.apple.com/",
+                    "Sec-Fetch-Dest": "empty",
+                    "Sec-Fetch-Mode": "cors",
+                    "Sec-Fetch-Site": "same-origin",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+                    "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9cedFWv9AqururJhBR.uMp4UdHz13NlejV2pNk0ug9WJ3uJsjMm_UWujme5BNlY5CGWY5BOgkLT0XxU..0ch"}',
+                    "X-Requested-With": "XMLHttpRequest",
+                    "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": '"Windows"',
+                    "sstt": quote(self.sstt),
+                }
+                json_data = {
+                    "id": self.username,
+                    "captcha": {
+                        "id": self.Id,
+                        "answer": self.res,
+                        "token": self.Token,
+                    },
+                }
+                response = requests.post(
+                    "https://iforgot.apple.com/password/verify/appleid",
+                    cookies=cookies,
+                    headers=headers,
+                    json=json_data,
+                    allow_redirects=False,
+                )
+                self.sstt_2 = unquote(response.headers["Sstt"])
+                self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
+                return self
+            except Exception :
+                retries += 1
+                if retries < max_retries:
+                    self.get_verification_code()
+                    self.Identification_codes()
+                    print("Submit_302_1 failed.")
+                else:
+                    print("Max retries reached. Submit_302_1 failed.")
 
     def Change_password(self):
         cookies = {
@@ -170,6 +187,7 @@ class APPLE():
         )
         self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_3 = response.json()["sstt"]
+        return self
 
     def Convert(self):
         cookies = {
@@ -202,9 +220,12 @@ class APPLE():
         }
 
         response = requests.get(
-            "https://iforgot.apple.com/recovery/options", cookies=cookies, headers=headers
+            "https://iforgot.apple.com/recovery/options",
+            cookies=cookies,
+            headers=headers,
         )
         self.x_apple_i_web_token_5 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def Passed_302_2(self):
         headers = {
@@ -238,6 +259,7 @@ class APPLE():
         )
         self.x_apple_i_web_token_6 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_4 = unquote(response.headers["sstt"])
+        return self
 
     def Show_brief_information(self):
         cookies = {
@@ -280,6 +302,7 @@ class APPLE():
         )
         self.sstt_5 = response.json()["sstt"]
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def passed_302_3(self):
         cookies = {
@@ -325,6 +348,7 @@ class APPLE():
         )
         self.sstt_5 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_8 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def Detailed_year_month_day(self):
         cookies = {
@@ -367,6 +391,7 @@ class APPLE():
         )
         self.sstt_6 = response.json()["sstt"]
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def passed_302_4(self):
         cookies = {
@@ -414,6 +439,7 @@ class APPLE():
         )
         self.sstt_7 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def Confidential_judgment_information(self):
         cookies = {
@@ -456,8 +482,14 @@ class APPLE():
         )
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
-        
-# !!!!
+        self.question_1 = response.json()["questions"][0]["question"]
+        self.question_2 = response.json()["questions"][1]["question"]
+        self.number_1 = response.json()["questions"][0]["number"]
+        self.number_2 = response.json()["questions"][1]["number"]
+        self.id_1 = response.json()["questions"][0]["id"]
+        self.id_2 = response.json()["questions"][1]["id"]
+        return self
+
     def Please_password_detail(self):
         cookies = {
             "idclient": "web",
@@ -492,16 +524,16 @@ class APPLE():
         json_data = {
             "questions": [
                 {
-                    "question": "你少年时代最好的朋友叫什么名字？",
-                    "answer": "py1234",
-                    "number": 1,
-                    "id": 130,
+                    "question": self.question_1,
+                    "answer": self.answer_1,
+                    "number": self.number_1,
+                    "id": self.id_1,
                 },
                 {
-                    "question": "你的理想工作是什么？",
-                    "answer": "gz1234",
-                    "number": 2,
-                    "id": 136,
+                    "question": self.question_2,
+                    "answer": self.answer_2,
+                    "number": self.number_2,
+                    "id": self.id_2,
                 },
             ],
         }
@@ -515,6 +547,7 @@ class APPLE():
         )
         self.sstt_9 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_12 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def passed_302_5(self):
         cookies = {
@@ -558,6 +591,7 @@ class APPLE():
         )
         self.sstt_10 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_13 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
     def Check_password(self):
         cookies = {
@@ -600,8 +634,9 @@ class APPLE():
         )
         self.sstt_11 = response.json()["sstt"]
         self.x_apple_i_web_token_14 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
 
-    def Change_password(self):
+    def Change_password_2(self):
         cookies = {
             "idclient": "web",
             "dslang": "CN-ZH",
@@ -644,3 +679,7 @@ class APPLE():
         )
         print(response.text)
 
+
+if __name__ == "__main__":
+    apple = APPLE()
+    apple.Get_sstt().get_verification_code().get_verification_code().Identification_codes().Submit_302_1().Change_password().Convert().Passed_302_2().Show_brief_information().passed_302_3().Detailed_year_month_day().passed_302_4().Confidential_judgment_information().Please_password_detail().passed_302_5().Check_password().Change_password_2()
