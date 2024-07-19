@@ -1,6 +1,77 @@
 import requests, re, ddddocr
+from PySide6.QtWidgets import QApplication, QWidget,QDialog,QVBoxLayout,QTextEdit,QDialogButtonBox,QMessageBox,QTableWidgetItem,QHeaderView
+from Ui_untitled import Ui_Form
 from urllib.parse import unquote, quote
 from retrying import retry
+
+
+class APPLE_UI(QWidget,Ui_Form):
+    def __init__(self) -> None:
+        super().__init__()
+        self.setupUi(self)
+
+        header = self.tableWidget.horizontalHeader()
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+
+
+        self.import_2.clicked.connect(self.show_input_dialog)
+        self.clean.clicked.connect(self.clear_table)
+
+    
+    def clear_table(self):
+        self.tableWidget.clearContents()
+        self.tableWidget.setRowCount(0)
+
+    def show_input_dialog(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Import Accounts")
+
+        layout = QVBoxLayout()
+
+        # 创建一个多行文本编辑框
+        account_input = QTextEdit()
+        account_input.setPlaceholderText("Paste your accounts here (one account per line)")
+        layout.addWidget(account_input)
+
+        # 创建按钮
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+
+        # 连接按钮信号
+        buttons.accepted.connect(lambda: self.add_accounts(account_input.toPlainText(), dialog))
+        buttons.rejected.connect(dialog.reject)
+
+        layout.addWidget(buttons)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec() == QDialog.Accepted:
+            QMessageBox.information(self, "Success", "Accounts imported successfully!")
+
+    def add_accounts(self, accounts_text, dialog):
+        accounts = accounts_text.strip().split('\n')
+        success = True
+        for account in accounts:
+            if account:  # 确保不导入空行
+                try:
+                    username, password = account.split(' ', 1)  # 假设账号和密码以空格分隔
+                except ValueError:
+                    success = False
+                    break  # 终止导入
+
+                # 添加新行到 tableWidget
+                new_row = self.tableWidget.rowCount()
+                self.tableWidget.insertRow(new_row)
+
+                # 创建并设置 QTableWidgetItem
+                username_item = QTableWidgetItem(username.strip())
+                password_item = QTableWidgetItem(password.strip())
+
+                # 将 QTableWidgetItem 添加到 tableWidget
+                self.tableWidget.setItem(new_row, 0, username_item)
+                self.tableWidget.setItem(new_row, 1, password_item)
+        if success:
+            dialog.accept()  # 关闭对话框
+
 
 ocr = ddddocr.DdddOcr(
     det=False,
@@ -698,5 +769,12 @@ class APPLE:
 
 
 if __name__ == "__main__":
-    apple = APPLE()
-    apple.Get_sstt().get_verification_code().get_verification_code().Identification_codes().Submit_302_1().Change_password().Convert().Passed_302_2().Show_brief_information().passed_302_3().Detailed_year_month_day().passed_302_4().Confidential_judgment_information().Please_password_detail().passed_302_5().Check_password().Change_password_2()
+    app = QApplication([])
+    window = APPLE_UI()
+    window.show()
+    app.exec()
+
+    # apple = APPLE()
+    # apple.Get_sstt().get_verification_code().get_verification_code().Identification_codes().Submit_302_1().Change_password().Convert().Passed_302_2().Show_brief_information().passed_302_3().Detailed_year_month_day().passed_302_4().Confidential_judgment_information().Please_password_detail().passed_302_5().Check_password().Change_password_2()
+
+
