@@ -1,5 +1,6 @@
 import requests, re, ddddocr
 from urllib.parse import unquote, quote
+from retrying import retry
 
 ocr = ddddocr.DdddOcr(
     det=False,
@@ -12,8 +13,8 @@ ocr = ddddocr.DdddOcr(
 
 class APPLE:
     def __init__(self) -> None:
-        self.password = "Aa1473691"
-        self.username = "aidenchabhn@outlook.com"
+        self.password = "Aa147369"
+        self.username = "nesmythe@gmail.com"
 
         self.monthOfYear = "05"
         self.dayOfMonth = "25"
@@ -21,6 +22,7 @@ class APPLE:
 
         self.answer_1 = "py1234"
         self.answer_2 = "gz1234"
+        self.answer_3 = "fm1234"
 
     def Get_sstt(self):
         headers = {
@@ -48,7 +50,8 @@ class APPLE:
         self.x_apple_i_web_token = response.cookies.get("X-Apple-I-Web-Token")
         self.ifssp = response.cookies.get("ifssp")
         return self
-
+    
+    @retry(stop_max_attempt_number=3)
     def get_verification_code(self):
         headers = {
             "Host": "iforgot.apple.com",
@@ -521,17 +524,31 @@ class APPLE:
             "sstt": quote(self.sstt_8),
         }
 
+        if self.question_1 == '你少年时代最好的朋友叫什么名字？':
+            answer_1 = self.answer_1
+        elif self.question_1 == '你的理想工作是什么？':
+            answer_1 = self.answer_2
+        elif self.question_1 == '你的父母是在哪里认识的？':
+            answer_1 = self.answer_3
+
+        if self.question_2 == '你少年时代最好的朋友叫什么名字？':
+            answer_2 = self.answer_1
+        elif self.question_2 == '你的理想工作是什么？':
+            answer_2 = self.answer_2
+        elif self.question_2 == '你的父母是在哪里认识的？':
+            answer_2 = self.answer_3
+            
         json_data = {
             "questions": [
                 {
                     "question": self.question_1,
-                    "answer": self.answer_1,
+                    "answer": answer_1,
                     "number": self.number_1,
                     "id": self.id_1,
                 },
                 {
                     "question": self.question_2,
-                    "answer": self.answer_2,
+                    "answer": answer_2,
                     "number": self.number_2,
                     "id": self.id_2,
                 },
