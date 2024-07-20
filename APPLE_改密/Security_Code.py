@@ -20,7 +20,7 @@ class APPLE:
         self.dayOfMonth = "25"
         self.year = "1993"
 
-        self.answer_1 = 'py1234'
+        self.answer_1 = "py1234"
         self.answer_2 = "gz1234"
 
     def Get_sstt(self):
@@ -138,7 +138,7 @@ class APPLE:
                 self.sstt_2 = unquote(response.headers["Sstt"])
                 self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
                 return self
-            except Exception :
+            except Exception:
                 retries += 1
                 if retries < max_retries:
                     self.get_verification_code()
@@ -264,153 +264,175 @@ class APPLE:
 
     def Show_brief_information(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_6,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_6,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHe_W74jpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1KyL3NlY5BNp55BNlan0Os5Apw.D96"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_3),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHe_W74jpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1KyL3NlY5BNp55BNlan0Os5Apw.D96"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_3),
         }
 
         params = {
-            'sstt': self.sstt_4,
+            "sstt": self.sstt_4,
         }
 
-        response = requests.get('https://iforgot.apple.com/questions/verify/password', params=params, cookies=cookies, headers=headers)
+        response = requests.get(
+            "https://iforgot.apple.com/questions/verify/password",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+        )
         self.sstt_5 = response.json()["sstt"]
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
     def passed_302_3(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_7,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_7,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/json',
-            'Origin': 'https://iforgot.apple.com',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_5),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_5),
         }
 
         json_data = {
-            'password': self.password,
+            "password": self.password,
         }
 
-        response = requests.post('https://iforgot.apple.com/questions/verify/password', cookies=cookies, headers=headers, json=json_data,allow_redirects=False,)
+        response = requests.post(
+            "https://iforgot.apple.com/questions/verify/password",
+            cookies=cookies,
+            headers=headers,
+            json=json_data,
+            allow_redirects=False,
+        )
         self.sstt_6 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_8 = response.cookies.get("X-Apple-I-Web-Token")
         return self
-    
+
     def passed_302_4(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_8,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_8,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_5),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_5),
         }
 
         params = {
-            'sstt': self.sstt_6,
+            "sstt": self.sstt_6,
         }
-        response = requests.get('https://iforgot.apple.com/questions/reset/options', params=params, cookies=cookies, headers=headers,allow_redirects=False,)
+        response = requests.get(
+            "https://iforgot.apple.com/questions/reset/options",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+            allow_redirects=False,
+        )
         self.sstt_7 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
         return self
-    
+
     def three_factor_authentication(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_9,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_9,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_5),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHeudv9CUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxj94y3fxHGY5BNlYJNNlY5QB4bVNjMk.01e"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_5),
         }
 
         params = {
-            'sstt': self.sstt_7,
+            "sstt": self.sstt_7,
         }
 
-        response = requests.get('https://iforgot.apple.com/questions/verify/questions', params=params, cookies=cookies, headers=headers)
+        response = requests.get(
+            "https://iforgot.apple.com/questions/verify/questions",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+        )
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
         print(response.text)
@@ -418,148 +440,161 @@ class APPLE:
 
     def passed_302_5(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_10,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_10,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/json',
-            'Origin': 'https://iforgot.apple.com',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHd750qjpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1Ky3clY5BNleBBNlYCa1nkBMfs.76k"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_8),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHd750qjpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1Ky3clY5BNleBBNlYCa1nkBMfs.76k"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_8),
         }
 
         json_data = {
-            'questions': [
+            "questions": [
                 {
-                    'question': '你少年时代最好的朋友叫什么名字？',
-                    'answer': self.answer_1,
-                    'id': 130,
-                    'number': 1,
+                    "question": "你少年时代最好的朋友叫什么名字？",
+                    "answer": self.answer_1,
+                    "id": 130,
+                    "number": 1,
                 },
             ],
         }
 
-        response = requests.post('https://iforgot.apple.com/questions/verify/questions', cookies=cookies, headers=headers, json=json_data)
-        self.sstt_9 =  unquote(response.headers["sstt"])
+        response = requests.post(
+            "https://iforgot.apple.com/questions/verify/questions",
+            cookies=cookies,
+            headers=headers,
+            json=json_data,
+        )
+        self.sstt_9 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
     def all_security_information(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_11,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_11,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHd750qjpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1Ky3clY5BNleBBNlYCa1nkBMfs.76k"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_8),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceOHd750qjpidPNs0oje9zH_y37lYKU.6elV2pNK1c8odlTr_1z1Ky3clY5BNleBBNlYCa1nkBMfs.76k"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_8),
         }
 
         params = {
-            'sstt':self.sstt_9,
+            "sstt": self.sstt_9,
         }
 
-        response = requests.get('https://iforgot.apple.com/questions/reset', params=params, cookies=cookies, headers=headers)
+        response = requests.get(
+            "https://iforgot.apple.com/questions/reset",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+        )
         self.sstt_10 = response.json()["sstt"]
         self.x_apple_i_web_token_12 = response.cookies.get("X-Apple-I-Web-Token")
         print(response.text)
         return self
 
-
     def change_security_settings(self):
         cookies = {
-            'idclient': 'web',
-            'dslang': 'CN-ZH',
-            'site': 'CHN',
-            'geo': 'CN',
-            'ifssp': self.ifssp,
-            'X-Apple-I-Web-Token': self.x_apple_i_web_token_12,
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_12,
         }
 
         headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/json',
-            'Origin': 'https://iforgot.apple.com',
-            'Pragma': 'no-cache',
-            'Referer': 'https://iforgot.apple.com/',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceTdHW9JWUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxjA9zJOy3clY5BNleBBNlYCa1nkBMfs.ChB"}',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sstt': quote(self.sstt_10),
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9ceTdHW9JWUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIXxjA9zJOy3clY5BNleBBNlYCa1nkBMfs.ChB"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_10),
         }
 
         json_data = {
-            'selectedQuestions': [
+            "selectedQuestions": [
                 {
-                    'id': '130',
-                    'question': '你少年时代最好的朋友叫什么名字？',
-                    'answer': 'py12345',
-                    'number': 1,
+                    "id": "130",
+                    "question": "你少年时代最好的朋友叫什么名字？",
+                    "answer": "py12345",
+                    "number": 1,
                 },
                 {
-                    'id': '136',
-                    'question': '你的理想工作是什么？',
-                    'answer': 'gz12345',
-                    'number': 2,
+                    "id": "136",
+                    "question": "你的理想工作是什么？",
+                    "answer": "gz12345",
+                    "number": 2,
                 },
                 {
-                    'id': '142',
-                    'question': '你的父母是在哪里认识的？',
-                    'answer': 'fm12345',
-                    'number': 3,
+                    "id": "142",
+                    "question": "你的父母是在哪里认识的？",
+                    "answer": "fm12345",
+                    "number": 3,
                 },
             ],
         }
 
-        response = requests.post('https://iforgot.apple.com/questions/reset', cookies=cookies, headers=headers, json=json_data)
+        response = requests.post(
+            "https://iforgot.apple.com/questions/reset",
+            cookies=cookies,
+            headers=headers,
+            json=json_data,
+        )
         print(response.text)
-
 
 
 if __name__ == "__main__":
