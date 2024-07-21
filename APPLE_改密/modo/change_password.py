@@ -7,11 +7,11 @@ ocr = ddddocr.DdddOcr(
     show_ad=False,
     ocr=False,
     import_onnx_path="APPLE_改密/modo/A1.onnx",
-    charsets_path="APPLE_改密/modo/change_password.py",
+    charsets_path="APPLE_改密/modo/charsets.json",
 )
 
 
-class APPLE:
+class APPLE():
 
     def __init__(
         self,

@@ -20,8 +20,8 @@ class APPLE_UI(QWidget, Ui_Form):
         super().__init__()
         self.setupUi(self)
 
-        header = self.tableWidget.horizontalHeader()
-        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        self.header = self.tableWidget.horizontalHeader()
+        self.header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
         self.import_2.clicked.connect(self.show_input_dialog)
         self.clean.clicked.connect(self.clear_table)
@@ -37,9 +37,16 @@ class APPLE_UI(QWidget, Ui_Form):
             year_item = self.lineEdit_2.text()
             monthOfYear_item = self.lineEdit_3.text()
             dayOfMonth_item = self.lineEdit_4.text()
-            answer_1_item = self.lineEdit_5.text()
-            answer_2_item = self.lineEdit_6.text()
-            answer_3_item = self.lineEdit_7.text()
+
+            Question_one = self.tableWidget.item(row, 2).text()
+            Answer_one = self.tableWidget.item(row, 3).text()
+
+            Question_two = self.tableWidget.item(row, 4).text()
+            Answer_two = self.tableWidget.item(row, 5).text()
+
+            Question_three = self.tableWidget.item(row, 6).text()
+            Answer_three = self.tableWidget.item(row, 7).text()
+
             thread = APPLEThread(
                 self,
                 username,
@@ -47,9 +54,12 @@ class APPLE_UI(QWidget, Ui_Form):
                 year_item,
                 monthOfYear_item,
                 dayOfMonth_item,
-                answer_1_item,
-                answer_2_item,
-                answer_3_item,
+                Question_one,
+                Answer_one,
+                Question_two,
+                Answer_two,
+                Question_three,
+                Answer_three,
                 row,
             )
             thread.progress_signal.connect(self.update_progress)
@@ -94,10 +104,14 @@ class APPLE_UI(QWidget, Ui_Form):
         for account in accounts:
             if account:  # 确保不导入空行
                 try:
-                    username, password = account.split(
-                        " ", 1
-                    )  # 假设账号和密码以空格分隔
-                except ValueError:
+                    # 假设账号和密码以及其他信息以 "----" 分隔
+                    fields = account.split("----")
+                    if len(fields) != 8:
+                        raise ValueError("每行必须有8个字段")
+
+                    username, password, field3, field4, field5, field6, field7, field8 = fields
+                except ValueError as e:
+                    QMessageBox.critical(dialog, "导入错误", str(e))
                     continue  # 终止导入
 
                 # 添加新行到 tableWidget
@@ -107,12 +121,25 @@ class APPLE_UI(QWidget, Ui_Form):
                 # 创建并设置 QTableWidgetItem
                 username_item = QTableWidgetItem(username.strip())
                 password_item = QTableWidgetItem(password.strip())
+                field3_item = QTableWidgetItem(field3.strip())
+                field4_item = QTableWidgetItem(field4.strip())
+                field5_item = QTableWidgetItem(field5.strip())
+                field6_item = QTableWidgetItem(field6.strip())
+                field7_item = QTableWidgetItem(field7.strip())
+                field8_item = QTableWidgetItem(field8.strip())
 
                 # 将 QTableWidgetItem 添加到 tableWidget
                 self.tableWidget.setItem(new_row, 0, username_item)
                 self.tableWidget.setItem(new_row, 1, password_item)
+                self.tableWidget.setItem(new_row, 2, field3_item)
+                self.tableWidget.setItem(new_row, 3, field4_item)
+                self.tableWidget.setItem(new_row, 4, field5_item)
+                self.tableWidget.setItem(new_row, 5, field6_item)
+                self.tableWidget.setItem(new_row, 6, field7_item)
+                self.tableWidget.setItem(new_row, 7, field8_item)
 
-        dialog.accept()  # 关闭对话框
+            dialog.accept() 
+
 
     def update_progress(self, message, row):
         # 更新指定行的第三列
@@ -124,30 +151,20 @@ class APPLEThread(QThread):
     progress_signal = Signal(str, int)
 
     def __init__(
-        self,
-        parent,
-        username,
-        password,
-        year_item,
-        monthOfYear_item,
-        dayOfMonth_item,
-        answer_1_item,
-        answer_2_item,
-        answer_3_item,
-        row,
+        self, **kwargs
     ):
-        super().__init__(parent)
+        super().__init__(**kwargs)
 
-        self.username = username
-        self.password = password
-        self.year_item = year_item
-        self.monthOfYear_item = monthOfYear_item
-        self.dayOfMonth_item = dayOfMonth_item
-        self.answer_1_item = answer_1_item
-        self.answer_2_item = answer_2_item
-        self.answer_3_item = answer_3_item
+        # self.username = username
+        # self.password = password
+        # self.year_item = year_item
+        # self.monthOfYear_item = monthOfYear_item
+        # self.dayOfMonth_item = dayOfMonth_item
+        # self.answer_1_item = answer_1_item
+        # self.answer_2_item = answer_2_item
+        # self.answer_3_item = answer_3_item
 
-        self.row = row
+        # self.row = row
 
     def run(self):
         self.apple = APPLE(

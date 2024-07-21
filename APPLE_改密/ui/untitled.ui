@@ -6,16 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1370</width>
-    <height>582</height>
+    <width>1377</width>
+    <height>620</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="minimumSize">
+      <size>
+       <width>1352</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -27,8 +48,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>10</width>
-       <height>10</height>
+       <width>1</width>
+       <height>1</height>
       </size>
      </property>
      <widget class="QWidget" name="tab">
@@ -133,7 +154,37 @@
          </column>
          <column>
           <property name="text">
-           <string>status</string>
+           <string>密保问题一</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>答案一</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>密保问题二</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>答案二</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>密保问题三</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>答案三</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>状态</string>
           </property>
          </column>
         </widget>
