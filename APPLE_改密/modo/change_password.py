@@ -14,34 +14,20 @@ ocr = ddddocr.DdddOcr(
 class APPLE():
 
     def __init__(
-        self,
-        username,
-        password,
-        year_item,
-        monthOfYear_item,
-        dayOfMonth_item,
-        answer_1_item,
-        answer_2_item,
-        answer_3_item,
+        self, **kwargs
     ) -> None:
-        self.username = username
-        self.password = password
-        self.year = year_item
-        self.monthOfYear = monthOfYear_item
-        self.dayOfMonth = dayOfMonth_item
-        self.answer_1 = answer_1_item
-        self.answer_2 = answer_2_item
-        self.answer_3 = answer_3_item
-        print(
-            self.username,
-            self.password,
-            self.year,
-            self.monthOfYear,
-            self.dayOfMonth,
-            self.answer_1,
-            self.answer_2,
-            self.answer_3,
-        )
+        self.username = kwargs.get('username')
+        self.password = kwargs.get('password')
+        self.year = kwargs.get('year_item')
+        self.monthOfYear = kwargs.get('monthOfYear_item')
+        self.dayOfMonth = kwargs.get('dayOfMonth_item')
+        self.question_one = kwargs.get('Question_one')
+        self.answer_one = kwargs.get('Answer_one')
+        self.question_two = kwargs.get('Question_two')
+        self.answer_two = kwargs.get('Answer_two')
+        self.question_three = kwargs.get('Question_three')
+        self.answer_three = kwargs.get('Answer_three')
+ 
         self.DL = {
             "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
             "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -761,3 +747,55 @@ class APPLE():
         )
         print(response.text)
         return response.json()
+
+
+if __name__ == "__main__":
+
+    def start_process(username, password, year_item, monthOfYear_item, dayOfMonth_item, question_one, answer_one, question_two, answer_two, question_three, answer_three):
+        apple = APPLE(
+            username=username,
+            password=password,
+            year_item=year_item,
+            monthOfYear_item=monthOfYear_item,
+            dayOfMonth_item=dayOfMonth_item,
+            Question_one=question_one,
+            Answer_one=answer_one,
+            Question_two=question_two,
+            Answer_two=answer_two,
+            Question_three=question_three,
+            Answer_three=answer_three
+        )
+
+        apple.Get_sstt()
+        apple.get_verification_code()
+        apple.Identification_codes()
+        apple.Submit_302_1()
+        apple.Change_password()
+        apple.Convert()
+        apple.Passed_302_2()
+        apple.Show_brief_information()
+        apple.passed_302_3()
+        apple.Detailed_year_month_day()
+        apple.passed_302_4()
+        apple.Confidential_judgment_information()
+        apple.Please_password_detail()
+        apple.passed_302_5()
+        apple.Check_password()
+        result = apple.Change_password_2()
+        return result
+
+    # 使用示例
+    result = start_process(
+        username="takakoy0901@gmail.com",
+        password="Aa147369",
+        year_item="1993",
+        monthOfYear_item="05",
+        dayOfMonth_item="25",
+        question_one="你少年时代最好的朋友叫什么名字？",
+        answer_one="py1234",
+        question_two="你的理想工作是什么？",
+        answer_two="gz1234",
+        question_three="你的父母是在哪里认识的？",
+        answer_three="fm1324"
+    )
+    print(result)

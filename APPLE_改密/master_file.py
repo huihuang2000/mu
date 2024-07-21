@@ -47,21 +47,21 @@ class APPLE_UI(QWidget, Ui_Form):
             Question_three = self.tableWidget.item(row, 6).text()
             Answer_three = self.tableWidget.item(row, 7).text()
 
-            thread = APPLEThread(
-                self,
-                username,
-                password,
-                year_item,
-                monthOfYear_item,
-                dayOfMonth_item,
-                Question_one,
-                Answer_one,
-                Question_two,
-                Answer_two,
-                Question_three,
-                Answer_three,
-                row,
-            )
+            kwargs = {
+                "username": username,
+                "password": password,
+                "year_item": year_item,
+                "monthOfYear_item": monthOfYear_item,
+                "dayOfMonth_item": dayOfMonth_item,
+                "Question_one": Question_one,
+                "Answer_one": Answer_one,
+                "Question_two": Question_two,
+                "Answer_two": Answer_two,
+                "Question_three": Question_three,
+                "Answer_three": Answer_three,
+                "row": row,
+            }
+            thread = APPLEThread(self, **kwargs)
             thread.progress_signal.connect(self.update_progress)
             self.threads.append(thread)
             thread.start()
@@ -150,22 +150,21 @@ class APPLE_UI(QWidget, Ui_Form):
 class APPLEThread(QThread):
     progress_signal = Signal(str, int)
 
-    def __init__(
-        self, **kwargs
-    ):
-        super().__init__(**kwargs)
-
-        # self.username = username
-        # self.password = password
-        # self.year_item = year_item
-        # self.monthOfYear_item = monthOfYear_item
-        # self.dayOfMonth_item = dayOfMonth_item
-        # self.answer_1_item = answer_1_item
-        # self.answer_2_item = answer_2_item
-        # self.answer_3_item = answer_3_item
-
-        # self.row = row
-
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent)
+        self.username = kwargs.get('username')
+        self.password = kwargs.get('password')
+        self.year_item = kwargs.get('year_item')
+        self.monthOfYear_item = kwargs.get('monthOfYear_item')
+        self.dayOfMonth_item = kwargs.get('dayOfMonth_item')
+        self.question_one = kwargs.get('Question_one')
+        self.answer_one = kwargs.get('Answer_one')
+        self.question_two = kwargs.get('Question_two')
+        self.answer_two = kwargs.get('Answer_two')
+        self.question_three = kwargs.get('Question_three')
+        self.answer_three = kwargs.get('Answer_three')
+        self.row = kwargs.get('row')
+        # print(self.username,self.password,self.year_item,self.monthOfYear_item,self.dayOfMonth_item,self.question_one,self.answer_one,self.question_two,self.answer_two,self.question_three,self.answer_three,self.row )
     def run(self):
         self.apple = APPLE(
             self.username,
@@ -173,10 +172,13 @@ class APPLEThread(QThread):
             self.year_item,
             self.monthOfYear_item,
             self.dayOfMonth_item,
-            self.answer_1_item,
-            self.answer_2_item,
-            self.answer_3_item,
-        )
+            self.question_one,
+            self.answer_one,
+            self.question_two,
+            self.answer_two,
+            self.question_three,
+            self.answer_three,
+             )
 
         result_get_sstt = self.apple.Get_sstt()
         self.emit_progress("获取SSTT", self.row)
