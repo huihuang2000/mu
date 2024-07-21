@@ -47,6 +47,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QSizePolicy,
+    QTabWidget,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -58,65 +59,74 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName("Form")
-        Form.resize(1372, 604)
+        Form.resize(1370, 582)
         self.verticalLayout = QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.tabWidget = QTabWidget(Form)
+        self.tabWidget.setObjectName("tabWidget")
+        self.tabWidget.setTabPosition(QTabWidget.North)
+        self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.tabWidget.setIconSize(QSize(10, 10))
+        self.tab = QWidget()
+        self.tab.setObjectName("tab")
+        self.verticalLayout_2 = QVBoxLayout(self.tab)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.import_2 = QPushButton(Form)
+        self.import_2 = QPushButton(self.tab)
         self.import_2.setObjectName("import_2")
 
         self.horizontalLayout.addWidget(self.import_2)
 
-        self.start = QPushButton(Form)
+        self.start = QPushButton(self.tab)
         self.start.setObjectName("start")
 
         self.horizontalLayout.addWidget(self.start)
 
-        self.clean = QPushButton(Form)
+        self.clean = QPushButton(self.tab)
         self.clean.setObjectName("clean")
 
         self.horizontalLayout.addWidget(self.clean)
 
-        self.lineEdit = QLineEdit(Form)
+        self.lineEdit = QLineEdit(self.tab)
         self.lineEdit.setObjectName("lineEdit")
 
         self.horizontalLayout.addWidget(self.lineEdit)
 
-        self.lineEdit_2 = QLineEdit(Form)
+        self.lineEdit_2 = QLineEdit(self.tab)
         self.lineEdit_2.setObjectName("lineEdit_2")
 
         self.horizontalLayout.addWidget(self.lineEdit_2)
 
-        self.lineEdit_3 = QLineEdit(Form)
+        self.lineEdit_3 = QLineEdit(self.tab)
         self.lineEdit_3.setObjectName("lineEdit_3")
 
         self.horizontalLayout.addWidget(self.lineEdit_3)
 
-        self.lineEdit_4 = QLineEdit(Form)
+        self.lineEdit_4 = QLineEdit(self.tab)
         self.lineEdit_4.setObjectName("lineEdit_4")
 
         self.horizontalLayout.addWidget(self.lineEdit_4)
 
-        self.lineEdit_5 = QLineEdit(Form)
+        self.lineEdit_5 = QLineEdit(self.tab)
         self.lineEdit_5.setObjectName("lineEdit_5")
         self.lineEdit_5.setReadOnly(False)
 
         self.horizontalLayout.addWidget(self.lineEdit_5)
 
-        self.lineEdit_6 = QLineEdit(Form)
+        self.lineEdit_6 = QLineEdit(self.tab)
         self.lineEdit_6.setObjectName("lineEdit_6")
 
         self.horizontalLayout.addWidget(self.lineEdit_6)
 
-        self.lineEdit_7 = QLineEdit(Form)
+        self.lineEdit_7 = QLineEdit(self.tab)
         self.lineEdit_7.setObjectName("lineEdit_7")
 
         self.horizontalLayout.addWidget(self.lineEdit_7)
 
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
-        self.tableWidget = QTableWidget(Form)
+        self.tableWidget = QTableWidget(self.tab)
         if self.tableWidget.columnCount() < 3:
             self.tableWidget.setColumnCount(3)
         __qtablewidgetitem = QTableWidgetItem()
@@ -127,9 +137,18 @@ class Ui_Form(object):
         self.tableWidget.setHorizontalHeaderItem(2, __qtablewidgetitem2)
         self.tableWidget.setObjectName("tableWidget")
 
-        self.verticalLayout.addWidget(self.tableWidget)
+        self.verticalLayout_2.addWidget(self.tableWidget)
+
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName("tab_2")
+        self.tabWidget.addTab(self.tab_2, "")
+
+        self.verticalLayout.addWidget(self.tabWidget)
 
         self.retranslateUi(Form)
+
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -177,5 +196,13 @@ class Ui_Form(object):
         )
         ___qtablewidgetitem2 = self.tableWidget.horizontalHeaderItem(2)
         ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", "status", None))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab),
+            QCoreApplication.translate("Form", "\u4e3b\u9875", None),
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_2),
+            QCoreApplication.translate("Form", "\u914d\u7f6e", None),
+        )
 
     # retranslateUi
