@@ -524,6 +524,7 @@ class APPLE():
         )
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
+        self.question = response.json()["questions"]
         self.question_1 = response.json()["questions"][0]["question"]
         self.question_2 = response.json()["questions"][1]["question"]
         self.number_1 = response.json()["questions"][0]["number"]
@@ -564,35 +565,35 @@ class APPLE():
             "sstt": quote(self.sstt_8),
         }
 
-        if self.question_1 == "你少年时代最好的朋友叫什么名字？":
-            answer_1 = self.answer_1
-        elif self.question_1 == "你的理想工作是什么？":
-            answer_1 = self.answer_2
-        elif self.question_1 == "你的父母是在哪里认识的？":
-            answer_1 = self.answer_3
 
-        if self.question_2 == "你少年时代最好的朋友叫什么名字？":
-            answer_2 = self.answer_1
-        elif self.question_2 == "你的理想工作是什么？":
-            answer_2 = self.answer_2
-        elif self.question_2 == "你的父母是在哪里认识的？":
-            answer_2 = self.answer_3
+        questions_answers = {
+                self.question_one: self.answer_one,
+                self.question_two: self.answer_two,
+                self.question_three: self.answer_three,
+            }
+
+        answers = []
+        questions = self.question
+        for question in questions:
+            if question["question"] == self.question_one:
+                answer = questions_answers.get(self.question_one)
+            elif question["question"] == self.question_two:
+                answer = questions_answers.get(self.question_two)
+            elif question["question"] == self.question_three:
+                answer = questions_answers.get(self.question_three)
+            else:
+                answer = ""
+
+            answers.append({
+                "question": question["question"],
+                "answer": answer,
+                "number": question["number"],
+                "id": question["id"],
+            })
+
 
         json_data = {
-            "questions": [
-                {
-                    "question": self.question_1,
-                    "answer": answer_1,
-                    "number": self.number_1,
-                    "id": self.id_1,
-                },
-                {
-                    "question": self.question_2,
-                    "answer": answer_2,
-                    "number": self.number_2,
-                    "id": self.id_2,
-                },
-            ],
+            "questions": answers,
         }
 
         response = requests.post(
@@ -787,7 +788,7 @@ if __name__ == "__main__":
     # 使用示例
     result = start_process(
         username="takakoy0901@gmail.com",
-        password="Aa147369",
+        password="Aa1473633229",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
