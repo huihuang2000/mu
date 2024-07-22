@@ -1,4 +1,3 @@
-from zlib import DEF_BUF_SIZE
 import requests, re, ddddocr
 from urllib.parse import unquote, quote
 
@@ -6,22 +5,27 @@ ocr = ddddocr.DdddOcr(
     det=False,
     show_ad=False,
     ocr=False,
-    import_onnx_path="APPLE_改密/A1.onnx",
-    charsets_path="APPLE_改密/charsets.json",
+    import_onnx_path="APPLE_改密/modo/A1.onnx",
+    charsets_path="APPLE_改密/modo/charsets.json",
 )
 
 
 class APPLE:
     def __init__(self) -> None:
         self.password = "Aa147369"
-        self.username = "nesmythe@gmail.com"
+        self.username = "danielburnsgy17@outlook.com"
+        self.year_item="1993",
+        self.monthOfYear_item="05",
+        self.dayOfMonth_item="25",
+        self.question_one="你少年时代最好的朋友叫什么名字？",
+        self.answer_one="py1234",
+        self.question_two="你的理想工作是什么？",
+        self.answer_two="gz1234",
+        self.question_three="你的父母是在哪里认识的？",
+        self.answer_three="fm1324"
 
-        self.monthOfYear = "05"
-        self.dayOfMonth = "25"
-        self.year = "1993"
 
-        self.answer_1 = "py1234"
-        self.answer_2 = "gz1234"
+
 
     def Get_sstt(self):
         headers = {
@@ -435,6 +439,7 @@ class APPLE:
         )
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
+        self.three_times = response.json()
         print(response.text)
         return self
 
@@ -469,22 +474,39 @@ class APPLE:
             "sstt": quote(self.sstt_8),
         }
 
-        json_data = {
-            "questions": [
-                {
-                    "question": "你少年时代最好的朋友叫什么名字？",
-                    "answer": self.answer_1,
-                    "id": 130,
-                    "number": 1,
-                },
-            ],
-        }
 
+        questions_answers = {
+                self.question_one: self.answer_one,
+                self.question_two: self.answer_two,
+                self.question_three: self.answer_three,
+            }
+
+        answers = []
+        questions = self.three_times['questions']
+        for question in questions:
+            if question["question"] == self.question_one[0]:
+                answer = questions_answers.get(self.question_one)[0]
+            elif question["question"] == self.question_two[0]:
+                answer = questions_answers.get(self.question_two)[0]
+            elif question["question"] == self.question_three[0]:
+                answer = questions_answers.get(self.question_three)[0]
+            else:
+                answer = ""
+            answers.append({
+                "question": question["question"],
+                "answer": answer,
+                "id": question["id"],
+                "number": question["number"],
+            })
+    
+        json_data = {"questions":[answers[0]]}
+        # json_data = {"questions":[{"question":"你少年时代最好的朋友叫什么名字？","answer":"py1234","id":130,"number":1}]}
         response = requests.post(
             "https://iforgot.apple.com/questions/verify/questions",
             cookies=cookies,
             headers=headers,
             json=json_data,
+            allow_redirects=False,
         )
         self.sstt_9 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")

@@ -788,15 +788,15 @@ if __name__ == "__main__":
     # 使用示例
     result = start_process(
         username="takakoy0901@gmail.com",
-        password="Aa1473633229",
+        password="Aa14755471",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py1234",
+        answer_one="py12345",
         question_two="你的理想工作是什么？",
-        answer_two="gz1234",
+        answer_two="gz12345",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm1324"
+        answer_three="fm13245"
     )
     print(result)
