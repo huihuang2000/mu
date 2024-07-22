@@ -142,9 +142,8 @@ class APPLE_UI(QWidget, Ui_Form):
 
 
     def update_progress(self, message, row):
-        # 更新指定行的第三列
         status_item = QTableWidgetItem(message)
-        self.tableWidget.setItem(row, 2, status_item)
+        self.tableWidget.setItem(row, 8, status_item)
 
 
 class APPLEThread(QThread):
@@ -152,32 +151,39 @@ class APPLEThread(QThread):
 
     def __init__(self, parent, **kwargs):
         super().__init__(parent)
-        self.username = kwargs.get('username')
-        self.password = kwargs.get('password')
-        self.year_item = kwargs.get('year_item')
-        self.monthOfYear_item = kwargs.get('monthOfYear_item')
-        self.dayOfMonth_item = kwargs.get('dayOfMonth_item')
-        self.question_one = kwargs.get('Question_one')
-        self.answer_one = kwargs.get('Answer_one')
-        self.question_two = kwargs.get('Question_two')
-        self.answer_two = kwargs.get('Answer_two')
-        self.question_three = kwargs.get('Question_three')
-        self.answer_three = kwargs.get('Answer_three')
+        self.kwargs = {
+                "username": kwargs.get('username'),
+                "password":  kwargs.get('password'),
+                "year_item":kwargs.get('year_item'),
+                "monthOfYear_item": kwargs.get('monthOfYear_item'),
+                "dayOfMonth_item": kwargs.get('dayOfMonth_item'),
+                "Question_one": kwargs.get('Question_one'),
+                "Answer_one": kwargs.get('Answer_one'),
+                "Question_two": kwargs.get('Question_two'),
+                "Answer_two": kwargs.get('Answer_two'),
+                "Question_three": kwargs.get('Question_three'),
+                "Answer_three":kwargs.get('Answer_three'),
+            }
+
         self.row = kwargs.get('row')
+
+
+        # self.username = kwargs.get('username')
+        # self.password = kwargs.get('password')
+        # self.year_item = kwargs.get('year_item')
+        # self.monthOfYear_item = kwargs.get('monthOfYear_item')
+        # self.dayOfMonth_item = kwargs.get('dayOfMonth_item')
+        # self.question_one = kwargs.get('Question_one')
+        # self.answer_one = kwargs.get('Answer_one')
+        # self.question_two = kwargs.get('Question_two')
+        # self.answer_two = kwargs.get('Answer_two')
+        # self.question_three = kwargs.get('Question_three')
+        # self.answer_three = kwargs.get('Answer_three')
+        # self.row = kwargs.get('row')
         # print(self.username,self.password,self.year_item,self.monthOfYear_item,self.dayOfMonth_item,self.question_one,self.answer_one,self.question_two,self.answer_two,self.question_three,self.answer_three,self.row )
     def run(self):
         self.apple = APPLE(
-            self.username,
-            self.password,
-            self.year_item,
-            self.monthOfYear_item,
-            self.dayOfMonth_item,
-            self.question_one,
-            self.answer_one,
-            self.question_two,
-            self.answer_two,
-            self.question_three,
-            self.answer_three,
+                    **self.kwargs
              )
 
         result_get_sstt = self.apple.Get_sstt()
