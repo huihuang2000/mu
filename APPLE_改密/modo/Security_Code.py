@@ -14,18 +14,15 @@ class APPLE:
     def __init__(self) -> None:
         self.password = "Aa147369"
         self.username = "danielburnsgy17@outlook.com"
-        self.year_item="1993",
-        self.monthOfYear_item="05",
-        self.dayOfMonth_item="25",
-        self.question_one="你少年时代最好的朋友叫什么名字？",
-        self.answer_one="py1234",
-        self.question_two="你的理想工作是什么？",
-        self.answer_two="gz1234",
-        self.question_three="你的父母是在哪里认识的？",
-        self.answer_three="fm1324"
-
-
-
+        self.year_item = ("1993",)
+        self.monthOfYear_item = ("05",)
+        self.dayOfMonth_item = ("25",)
+        self.question_one = ("你少年时代最好的朋友叫什么名字？",)
+        self.answer_one = ("py1234",)
+        self.question_two = ("你的理想工作是什么？",)
+        self.answer_two = ("gz1234",)
+        self.question_three = ("你的父母是在哪里认识的？",)
+        self.answer_three = "fm1324"
 
     def Get_sstt(self):
         headers = {
@@ -474,15 +471,14 @@ class APPLE:
             "sstt": quote(self.sstt_8),
         }
 
-
         questions_answers = {
-                self.question_one: self.answer_one,
-                self.question_two: self.answer_two,
-                self.question_three: self.answer_three,
-            }
+            self.question_one: self.answer_one,
+            self.question_two: self.answer_two,
+            self.question_three: self.answer_three,
+        }
 
         answers = []
-        questions = self.three_times['questions']
+        questions = self.three_times["questions"]
         for question in questions:
             if question["question"] == self.question_one[0]:
                 answer = questions_answers.get(self.question_one)[0]
@@ -492,14 +488,16 @@ class APPLE:
                 answer = questions_answers.get(self.question_three)[0]
             else:
                 answer = ""
-            answers.append({
-                "question": question["question"],
-                "answer": answer,
-                "id": question["id"],
-                "number": question["number"],
-            })
-    
-        json_data = {"questions":[answers[0]]}
+            answers.append(
+                {
+                    "question": question["question"],
+                    "answer": answer,
+                    "id": question["id"],
+                    "number": question["number"],
+                }
+            )
+
+        json_data = {"questions": [answers[0]]}
         # json_data = {"questions":[{"question":"你少年时代最好的朋友叫什么名字？","answer":"py1234","id":130,"number":1}]}
         response = requests.post(
             "https://iforgot.apple.com/questions/verify/questions",

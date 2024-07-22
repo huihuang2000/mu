@@ -109,7 +109,16 @@ class APPLE_UI(QWidget, Ui_Form):
                     if len(fields) != 8:
                         raise ValueError("每行必须有8个字段")
 
-                    username, password, field3, field4, field5, field6, field7, field8 = fields
+                    (
+                        username,
+                        password,
+                        field3,
+                        field4,
+                        field5,
+                        field6,
+                        field7,
+                        field8,
+                    ) = fields
                 except ValueError as e:
                     QMessageBox.critical(dialog, "导入错误", str(e))
                     continue  # 终止导入
@@ -138,8 +147,7 @@ class APPLE_UI(QWidget, Ui_Form):
                 self.tableWidget.setItem(new_row, 6, field7_item)
                 self.tableWidget.setItem(new_row, 7, field8_item)
 
-            dialog.accept() 
-
+            dialog.accept()
 
     def update_progress(self, message, row):
         status_item = QTableWidgetItem(message)
@@ -152,21 +160,20 @@ class APPLEThread(QThread):
     def __init__(self, parent, **kwargs):
         super().__init__(parent)
         self.kwargs = {
-                "username": kwargs.get('username'),
-                "password":  kwargs.get('password'),
-                "year_item":kwargs.get('year_item'),
-                "monthOfYear_item": kwargs.get('monthOfYear_item'),
-                "dayOfMonth_item": kwargs.get('dayOfMonth_item'),
-                "Question_one": kwargs.get('Question_one'),
-                "Answer_one": kwargs.get('Answer_one'),
-                "Question_two": kwargs.get('Question_two'),
-                "Answer_two": kwargs.get('Answer_two'),
-                "Question_three": kwargs.get('Question_three'),
-                "Answer_three":kwargs.get('Answer_three'),
-            }
+            "username": kwargs.get("username"),
+            "password": kwargs.get("password"),
+            "year_item": kwargs.get("year_item"),
+            "monthOfYear_item": kwargs.get("monthOfYear_item"),
+            "dayOfMonth_item": kwargs.get("dayOfMonth_item"),
+            "Question_one": kwargs.get("Question_one"),
+            "Answer_one": kwargs.get("Answer_one"),
+            "Question_two": kwargs.get("Question_two"),
+            "Answer_two": kwargs.get("Answer_two"),
+            "Question_three": kwargs.get("Question_three"),
+            "Answer_three": kwargs.get("Answer_three"),
+        }
 
-        self.row = kwargs.get('row')
-
+        self.row = kwargs.get("row")
 
         # self.username = kwargs.get('username')
         # self.password = kwargs.get('password')
@@ -181,10 +188,9 @@ class APPLEThread(QThread):
         # self.answer_three = kwargs.get('Answer_three')
         # self.row = kwargs.get('row')
         # print(self.username,self.password,self.year_item,self.monthOfYear_item,self.dayOfMonth_item,self.question_one,self.answer_one,self.question_two,self.answer_two,self.question_three,self.answer_three,self.row )
+
     def run(self):
-        self.apple = APPLE(
-                    **self.kwargs
-             )
+        self.apple = APPLE(**self.kwargs)
 
         result_get_sstt = self.apple.Get_sstt()
         self.emit_progress("获取SSTT", self.row)

@@ -11,23 +11,21 @@ ocr = ddddocr.DdddOcr(
 )
 
 
-class APPLE():
+class APPLE:
 
-    def __init__(
-        self, **kwargs
-    ) -> None:
-        self.username = kwargs.get('username')
-        self.password = kwargs.get('password')
-        self.year = kwargs.get('year_item')
-        self.monthOfYear = kwargs.get('monthOfYear_item')
-        self.dayOfMonth = kwargs.get('dayOfMonth_item')
-        self.question_one = kwargs.get('Question_one')
-        self.answer_one = kwargs.get('Answer_one')
-        self.question_two = kwargs.get('Question_two')
-        self.answer_two = kwargs.get('Answer_two')
-        self.question_three = kwargs.get('Question_three')
-        self.answer_three = kwargs.get('Answer_three')
- 
+    def __init__(self, **kwargs) -> None:
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.year = kwargs.get("year_item")
+        self.monthOfYear = kwargs.get("monthOfYear_item")
+        self.dayOfMonth = kwargs.get("dayOfMonth_item")
+        self.question_one = kwargs.get("Question_one")
+        self.answer_one = kwargs.get("Answer_one")
+        self.question_two = kwargs.get("Question_two")
+        self.answer_two = kwargs.get("Answer_two")
+        self.question_three = kwargs.get("Question_three")
+        self.answer_three = kwargs.get("Answer_three")
+
         self.DL = {
             "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
             "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -565,12 +563,11 @@ class APPLE():
             "sstt": quote(self.sstt_8),
         }
 
-
         questions_answers = {
-                self.question_one: self.answer_one,
-                self.question_two: self.answer_two,
-                self.question_three: self.answer_three,
-            }
+            self.question_one: self.answer_one,
+            self.question_two: self.answer_two,
+            self.question_three: self.answer_three,
+        }
 
         answers = []
         questions = self.question
@@ -584,13 +581,14 @@ class APPLE():
             else:
                 answer = ""
 
-            answers.append({
-                "question": question["question"],
-                "answer": answer,
-                "number": question["number"],
-                "id": question["id"],
-            })
-
+            answers.append(
+                {
+                    "question": question["question"],
+                    "answer": answer,
+                    "number": question["number"],
+                    "id": question["id"],
+                }
+            )
 
         json_data = {
             "questions": answers,
@@ -752,7 +750,19 @@ class APPLE():
 
 if __name__ == "__main__":
 
-    def start_process(username, password, year_item, monthOfYear_item, dayOfMonth_item, question_one, answer_one, question_two, answer_two, question_three, answer_three):
+    def start_process(
+        username,
+        password,
+        year_item,
+        monthOfYear_item,
+        dayOfMonth_item,
+        question_one,
+        answer_one,
+        question_two,
+        answer_two,
+        question_three,
+        answer_three,
+    ):
         apple = APPLE(
             username=username,
             password=password,
@@ -764,7 +774,7 @@ if __name__ == "__main__":
             Question_two=question_two,
             Answer_two=answer_two,
             Question_three=question_three,
-            Answer_three=answer_three
+            Answer_three=answer_three,
         )
 
         apple.Get_sstt()
@@ -797,6 +807,6 @@ if __name__ == "__main__":
         question_two="你的理想工作是什么？",
         answer_two="gz12345",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm13245"
+        answer_three="fm13245",
     )
     print(result)
