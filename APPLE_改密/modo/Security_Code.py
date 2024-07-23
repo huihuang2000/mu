@@ -13,16 +13,19 @@ ocr = ddddocr.DdddOcr(
 class APPLE:
     def __init__(self) -> None:
         self.password = "Aa147369"
-        self.username = "danielburnsgy17@outlook.com"
-        self.year_item = ("1993",)
-        self.monthOfYear_item = ("05",)
-        self.dayOfMonth_item = ("25",)
-        self.question_one = ("你少年时代最好的朋友叫什么名字？",)
-        self.answer_one = ("py1234",)
-        self.question_two = ("你的理想工作是什么？",)
-        self.answer_two = ("gz1234",)
-        self.question_three = ("你的父母是在哪里认识的？",)
-        self.answer_three = "fm1324"
+        self.username = "maverickke05y@outlook.com"
+        self.year_item = "1993"
+        self.monthOfYear_item = "05"
+        self.dayOfMonth_item = "25"
+        self.question_one = "你少年时代最好的朋友叫什么名字？"
+        self.answer_one = "py123456"
+        self.question_two = "你的理想工作是什么？"
+        self.answer_two = "gz123456"
+        self.question_three = "你的父母是在哪里认识的？"
+        self.answer_three = "fm132456"
+        self.pass_1 = "py123456"
+        self.pass_2 = "gz123456"
+        self.pass_3 = "fm123456"
 
     def Get_sstt(self):
         headers = {
@@ -480,12 +483,12 @@ class APPLE:
         answers = []
         questions = self.three_times["questions"]
         for question in questions:
-            if question["question"] == self.question_one[0]:
-                answer = questions_answers.get(self.question_one)[0]
-            elif question["question"] == self.question_two[0]:
-                answer = questions_answers.get(self.question_two)[0]
-            elif question["question"] == self.question_three[0]:
-                answer = questions_answers.get(self.question_three)[0]
+            if question["question"] == self.question_one:
+                answer = questions_answers.get(self.question_one)
+            elif question["question"] == self.question_two:
+                answer = questions_answers.get(self.question_two)
+            elif question["question"] == self.question_three:
+                answer = questions_answers.get(self.question_three)
             else:
                 answer = ""
             answers.append(
@@ -551,7 +554,7 @@ class APPLE:
         )
         self.sstt_10 = response.json()["sstt"]
         self.x_apple_i_web_token_12 = response.cookies.get("X-Apple-I-Web-Token")
-        print(response.text)
+        self.available = response.json()
         return self
 
     def change_security_settings(self):
@@ -585,28 +588,33 @@ class APPLE:
             "sstt": quote(self.sstt_10),
         }
 
-        json_data = {
-            "selectedQuestions": [
-                {
-                    "id": "130",
-                    "question": "你少年时代最好的朋友叫什么名字？",
-                    "answer": "py12345",
-                    "number": 1,
-                },
-                {
-                    "id": "136",
-                    "question": "你的理想工作是什么？",
-                    "answer": "gz12345",
-                    "number": 2,
-                },
-                {
-                    "id": "142",
-                    "question": "你的父母是在哪里认识的？",
-                    "answer": "fm12345",
-                    "number": 3,
-                },
-            ],
+        selected_questions = []
+        answers = [self.pass_1, self.pass_2, self.pass_3]
+        question_number = 1
+
+        question_texts = [
+            question["question"] for question in self.three_times["questions"]
+        ]
+        available_question_ids = {
+            question["question"]: question["id"]
+            for group in self.available["availableQuestions"]
+            for question in group
         }
+
+        for question_text in question_texts:
+            question_id = available_question_ids[question_text]
+            answer = answers.pop(0)
+            selected_questions.append(
+                {
+                    "id": str(question_id),
+                    "question": question_text,
+                    "answer": answer,
+                    "number": question_number,
+                }
+            )
+            question_number += 1
+
+        json_data = {"selectedQuestions": selected_questions}
 
         response = requests.post(
             "https://iforgot.apple.com/questions/reset",
