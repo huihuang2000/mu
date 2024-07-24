@@ -25,9 +25,10 @@ class APPLE_UI(QWidget, Ui_Form):
 
         self.import_2.clicked.connect(self.show_input_dialog)
         self.clean.clicked.connect(self.clear_table)
+        
         self.start.clicked.connect(self.start_process)
 
-        self.threads = []  # 用于存储所有线程
+        self.threads = []  
 
     def start_process(self):
         self.threads = []
@@ -175,20 +176,6 @@ class APPLEThread(QThread):
 
         self.row = kwargs.get("row")
 
-        # self.username = kwargs.get('username')
-        # self.password = kwargs.get('password')
-        # self.year_item = kwargs.get('year_item')
-        # self.monthOfYear_item = kwargs.get('monthOfYear_item')
-        # self.dayOfMonth_item = kwargs.get('dayOfMonth_item')
-        # self.question_one = kwargs.get('Question_one')
-        # self.answer_one = kwargs.get('Answer_one')
-        # self.question_two = kwargs.get('Question_two')
-        # self.answer_two = kwargs.get('Answer_two')
-        # self.question_three = kwargs.get('Question_three')
-        # self.answer_three = kwargs.get('Answer_three')
-        # self.row = kwargs.get('row')
-        # print(self.username,self.password,self.year_item,self.monthOfYear_item,self.dayOfMonth_item,self.question_one,self.answer_one,self.question_two,self.answer_two,self.question_three,self.answer_three,self.row )
-
     def run(self):
         self.apple = APPLE(**self.kwargs)
 
@@ -257,6 +244,11 @@ class APPLEThread(QThread):
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)
+
+
+
+
+
 
 
 if __name__ == "__main__":

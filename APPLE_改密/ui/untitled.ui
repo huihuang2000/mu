@@ -81,6 +81,20 @@
           </widget>
          </item>
          <item>
+          <widget class="QComboBox" name="comboBox">
+           <item>
+            <property name="text">
+             <string>改密码</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>改密保</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
           <widget class="QLineEdit" name="lineEdit">
            <property name="statusTip">
             <string/>
