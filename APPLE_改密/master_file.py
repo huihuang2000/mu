@@ -28,20 +28,19 @@ class APPLE_UI(QWidget, Ui_Form):
         self.import_2.clicked.connect(self.show_input_dialog)
         self.clean.clicked.connect(self.clear_table)
         self.comboBox.currentIndexChanged.connect(self.on_comboBox_changed)
-        
+        self.start.clicked.connect(self.start_process)
 
-        self.threads = []  
+        self.threads = []
 
     def on_comboBox_changed(self):
+
         current = self.comboBox.currentText()
         if current == "改密码":
-            if not self.start.clicked.connect(self.start_process):
-                self.start.clicked.disconnect()
-                self.start.clicked.connect(self.start_process)
+            self.start.clicked.disconnect()
+            self.start.clicked.connect(self.start_process)
         elif current == "改密保":
-            if not self.start.clicked.connect(self.start_process_2):
-                self.start.clicked.disconnect()
-                self.start.clicked.connect(self.start_process_2)
+            self.start.clicked.disconnect()
+            self.start.clicked.connect(self.start_process_2)
         else:
             QMessageBox.information(self, "提示", "你选择了其他选项")
 
@@ -116,9 +115,9 @@ class APPLE_UI(QWidget, Ui_Form):
                 "Answer_two": Answer_two,
                 "Question_three": Question_three,
                 "Answer_three": Answer_three,
-                "pass_1":pass_1,
-                "pass_2":pass_2,
-                "pass_3":pass_3,
+                "pass_1": pass_1,
+                "pass_2": pass_2,
+                "pass_3": pass_3,
                 "row": row,
             }
             thread = APPLEThread_2(self, **kwargs)
@@ -236,6 +235,7 @@ class APPLEThread(QThread):
         self.row = kwargs.get("row")
 
     def run(self):
+        self.emit_progress("开始", self.row)
         self.apple = APPLE(**self.kwargs)
 
         result_get_sstt = self.apple.Get_sstt()
@@ -304,6 +304,7 @@ class APPLEThread(QThread):
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)
 
+
 class APPLEThread_2(QThread):
     progress_signal = Signal(str, int)
 
@@ -360,7 +361,9 @@ class APPLEThread_2(QThread):
         result_passed_302_4 = self.apple.passed_302_4()
         self.emit_progress("过302第四次", self.row)
 
-        result_confidential_judgment_information = self.apple.three_factor_authentication()
+        result_confidential_judgment_information = (
+            self.apple.three_factor_authentication()
+        )
         self.emit_progress("判断原生密保信息", self.row)
 
         result_passed_302_5 = self.apple.passed_302_5()
@@ -387,11 +390,6 @@ class APPLEThread_2(QThread):
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)
-
-
-
-
-
 
 
 if __name__ == "__main__":
