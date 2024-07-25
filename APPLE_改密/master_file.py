@@ -1,3 +1,4 @@
+from ast import Import
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -12,6 +13,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import QThread, Signal
 from ui.Ui_untitled import Ui_Form
 from modo.change_password import APPLE
+from modo.Security_Code import APPLE_2
 
 
 class APPLE_UI(QWidget, Ui_Form):
@@ -25,10 +27,23 @@ class APPLE_UI(QWidget, Ui_Form):
 
         self.import_2.clicked.connect(self.show_input_dialog)
         self.clean.clicked.connect(self.clear_table)
+        self.comboBox.currentIndexChanged.connect(self.on_comboBox_changed)
         
-        self.start.clicked.connect(self.start_process)
 
         self.threads = []  
+
+    def on_comboBox_changed(self):
+        current = self.comboBox.currentText()
+        if current == "改密码":
+            if not self.start.clicked.connect(self.start_process):
+                self.start.clicked.disconnect()
+                self.start.clicked.connect(self.start_process)
+        elif current == "改密保":
+            if not self.start.clicked.connect(self.start_process_2):
+                self.start.clicked.disconnect()
+                self.start.clicked.connect(self.start_process_2)
+        else:
+            QMessageBox.information(self, "提示", "你选择了其他选项")
 
     def start_process(self):
         self.threads = []
@@ -63,6 +78,50 @@ class APPLE_UI(QWidget, Ui_Form):
                 "row": row,
             }
             thread = APPLEThread(self, **kwargs)
+            thread.progress_signal.connect(self.update_progress)
+            self.threads.append(thread)
+            thread.start()
+
+    def start_process_2(self):
+        self.threads = []
+        for row in range(self.tableWidget.rowCount()):
+            username = self.tableWidget.item(row, 0).text()
+            password = self.lineEdit.text()
+            year_item = self.lineEdit_2.text()
+            monthOfYear_item = self.lineEdit_3.text()
+            dayOfMonth_item = self.lineEdit_4.text()
+
+            Question_one = self.tableWidget.item(row, 2).text()
+            Answer_one = self.tableWidget.item(row, 3).text()
+
+            Question_two = self.tableWidget.item(row, 4).text()
+            Answer_two = self.tableWidget.item(row, 5).text()
+
+            Question_three = self.tableWidget.item(row, 6).text()
+            Answer_three = self.tableWidget.item(row, 7).text()
+
+            pass_1 = self.lineEdit_5.text()
+            pass_2 = self.lineEdit_6.text()
+            pass_3 = self.lineEdit_7.text()
+
+            kwargs = {
+                "username": username,
+                "password": password,
+                "year_item": year_item,
+                "monthOfYear_item": monthOfYear_item,
+                "dayOfMonth_item": dayOfMonth_item,
+                "Question_one": Question_one,
+                "Answer_one": Answer_one,
+                "Question_two": Question_two,
+                "Answer_two": Answer_two,
+                "Question_three": Question_three,
+                "Answer_three": Answer_three,
+                "pass_1":pass_1,
+                "pass_2":pass_2,
+                "pass_3":pass_3,
+                "row": row,
+            }
+            thread = APPLEThread_2(self, **kwargs)
             thread.progress_signal.connect(self.update_progress)
             self.threads.append(thread)
             thread.start()
@@ -241,6 +300,90 @@ class APPLEThread(QThread):
         else:
             result = None
             self.emit_progress(result, self.row)
+
+    def emit_progress(self, message, row):
+        self.progress_signal.emit(message, row)
+
+class APPLEThread_2(QThread):
+    progress_signal = Signal(str, int)
+
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent)
+        self.kwargs = {
+            "username": kwargs.get("username"),
+            "password": kwargs.get("password"),
+            "year_item": kwargs.get("year_item"),
+            "monthOfYear_item": kwargs.get("monthOfYear_item"),
+            "dayOfMonth_item": kwargs.get("dayOfMonth_item"),
+            "Question_one": kwargs.get("Question_one"),
+            "Answer_one": kwargs.get("Answer_one"),
+            "Question_two": kwargs.get("Question_two"),
+            "Answer_two": kwargs.get("Answer_two"),
+            "Question_three": kwargs.get("Question_three"),
+            "Answer_three": kwargs.get("Answer_three"),
+            "pass_1": kwargs.get("pass_1"),
+            "pass_2": kwargs.get("pass_2"),
+            "pass_3": kwargs.get("pass_3"),
+        }
+        self.row = kwargs.get("row")
+
+    def run(self):
+        self.apple = APPLE_2(**self.kwargs)
+
+        result_get_sstt = self.apple.Get_sstt()
+        self.emit_progress("获取SSTT", self.row)
+
+        result_get_verification_code = self.apple.get_verification_code()
+        self.emit_progress("获取验证码", self.row)
+
+        result_identification_codes = self.apple.Identification_codes()
+        self.emit_progress("识别验证码", self.row)
+
+        result_submit_302_1 = self.apple.Submit_302_1()
+        self.emit_progress("带验证码过302第一次", self.row)
+
+        result_change_password = self.apple.Change_password()
+        self.emit_progress("选择模式", self.row)
+
+        result_convert = self.apple.Convert()
+        self.emit_progress("转换", self.row)
+
+        result_passed_302_2 = self.apple.Passed_302_2()
+        self.emit_progress("选择密保模式", self.row)
+
+        result_show_brief_information = self.apple.Show_brief_information()
+        self.emit_progress("过简介信息", self.row)
+
+        result_passed_302_3 = self.apple.passed_302_3()
+        self.emit_progress("带密码过302第三次", self.row)
+
+        result_passed_302_4 = self.apple.passed_302_4()
+        self.emit_progress("过302第四次", self.row)
+
+        result_confidential_judgment_information = self.apple.three_factor_authentication()
+        self.emit_progress("判断原生密保信息", self.row)
+
+        result_passed_302_5 = self.apple.passed_302_5()
+        self.emit_progress("三选一过密保校验", self.row)
+
+        result_all_security_information = self.apple.all_security_information()
+        self.emit_progress("出所有密保信息", self.row)
+
+        result_change_security_settings = self.apple.change_security_settings()
+        self.emit_progress("更改密保", self.row)
+
+        # if "resetCompleted" in result_change_security_settings:
+        #     result = str(result_change_security_settings["resetCompleted"])
+        #     self.emit_progress(result, self.row)
+        # elif (
+        #     "service_errors" in result_change_security_settings
+        #     and result_change_security_settings["service_errors"]
+        # ):
+        #     result = result_change_security_settings["service_errors"][0]["message"]
+        #     self.emit_progress(result, self.row)
+        # else:
+        #     result = None
+        #     self.emit_progress(result, self.row)
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)

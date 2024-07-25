@@ -10,22 +10,37 @@ ocr = ddddocr.DdddOcr(
 )
 
 
-class APPLE:
-    def __init__(self) -> None:
-        self.password = "Aa147369"
-        self.username = "maverickke05y@outlook.com"
-        self.year_item = "1993"
-        self.monthOfYear_item = "05"
-        self.dayOfMonth_item = "25"
-        self.question_one = "你少年时代最好的朋友叫什么名字？"
-        self.answer_one = "py123456"
-        self.question_two = "你的理想工作是什么？"
-        self.answer_two = "gz123456"
-        self.question_three = "你的父母是在哪里认识的？"
-        self.answer_three = "fm132456"
-        self.pass_1 = "py123456"
-        self.pass_2 = "gz123456"
-        self.pass_3 = "fm123456"
+class APPLE_2:
+    def __init__(self, **kwargs) -> None:
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.year_item = kwargs.get("year_item")
+        self.monthOfYear_item = kwargs.get("monthOfYear_item")
+        self.dayOfMonth_item = kwargs.get("dayOfMonth_item")
+        self.question_one = kwargs.get("Question_one")
+        self.answer_one = kwargs.get("Answer_one")
+        self.question_two = kwargs.get("Question_two")
+        self.answer_two = kwargs.get("Answer_two")
+        self.question_three = kwargs.get("Question_three")
+        self.answer_three = kwargs.get("Answer_three")
+        self.pass_1 = kwargs.get("pass_1")
+        self.pass_2 = kwargs.get("pass_2")
+        self.pass_3 = kwargs.get("pass_3")
+
+        # print(f"Username: {self.username}")
+        # print(f"Password: {self.password}")
+        # print(f"Year: {self.year_item}")
+        # print(f"Month: {self.monthOfYear_item}")
+        # print(f"Day: {self.dayOfMonth_item}")
+        # print(f"Question 1: {self.question_one}")
+        # print(f"Answer 1: {self.answer_one}")
+        # print(f"Question 2: {self.question_two}")
+        # print(f"Answer 2: {self.answer_two}")
+        # print(f"Question 3: {self.question_three}")
+        # print(f"Answer 3: {self.answer_three}")
+        # print(f"New Password 1: {self.pass_1}")
+        # print(f"New Password 2: {self.pass_2}")
+        # print(f"New Password 3: {self.pass_3}")
 
     def Get_sstt(self):
         headers = {
@@ -440,7 +455,7 @@ class APPLE:
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
         self.three_times = response.json()
-        print(response.text)
+        # print(response.text)
         return self
 
     def passed_302_5(self):
@@ -501,7 +516,7 @@ class APPLE:
             )
 
         json_data = {"questions": [answers[0]]}
-        # json_data = {"questions":[{"question":"你少年时代最好的朋友叫什么名字？","answer":"py1234","id":130,"number":1}]}
+        # json_data = {"questions":[{"question":"你少年时代最好的朋友叫什么名字？","answer":"py12345","id":130,"number":1}]}
         response = requests.post(
             "https://iforgot.apple.com/questions/verify/questions",
             cookies=cookies,
@@ -622,9 +637,38 @@ class APPLE:
             headers=headers,
             json=json_data,
         )
-        print(response.text)
+        print(response.json())
 
 
 if __name__ == "__main__":
-    apple = APPLE()
-    apple.Get_sstt().get_verification_code().Identification_codes().Submit_302_1().Change_password().Convert().Passed_302_2().Show_brief_information().passed_302_3().passed_302_4().three_factor_authentication().passed_302_5().all_security_information().change_security_settings()
+    apple = APPLE_2(
+        username="asheral35@outlook.com",
+        password="Aa147369",
+        year_item="1993",
+        monthOfYear_item="05",
+        dayOfMonth_item="25",
+        question_one="你少年时代最好的朋友叫什么名字？",
+        answer_one="py1234",
+        question_two="你的理想工作是什么？",
+        answer_two="gz1234",
+        question_three="你的父母是在哪里认识的？",
+        answer_three="fm1234",
+        pass_1="py1234",
+        pass_2="gz1234",
+        pass_3="fm1234"
+    )
+
+    apple.Get_sstt()
+    apple.get_verification_code()
+    apple.Identification_codes()
+    apple.Submit_302_1()
+    apple.Change_password()
+    apple.Convert()
+    apple.Passed_302_2()
+    apple.Show_brief_information()
+    apple.passed_302_3()
+    apple.passed_302_4()
+    apple.three_factor_authentication()
+    apple.passed_302_5()
+    apple.all_security_information()
+    apple.change_security_settings()
