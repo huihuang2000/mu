@@ -1,5 +1,6 @@
 import requests, re, ddddocr
 from urllib.parse import unquote, quote
+from retry import retry
 
 ocr = ddddocr.DdddOcr(
     det=False,
@@ -11,6 +12,7 @@ ocr = ddddocr.DdddOcr(
 
 
 class APPLE_2:
+
     def __init__(self, **kwargs) -> None:
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
@@ -27,21 +29,13 @@ class APPLE_2:
         self.pass_2 = kwargs.get("pass_2")
         self.pass_3 = kwargs.get("pass_3")
 
-        # print(f"Username: {self.username}")
-        # print(f"Password: {self.password}")
-        # print(f"Year: {self.year_item}")
-        # print(f"Month: {self.monthOfYear_item}")
-        # print(f"Day: {self.dayOfMonth_item}")
-        # print(f"Question 1: {self.question_one}")
-        # print(f"Answer 1: {self.answer_one}")
-        # print(f"Question 2: {self.question_two}")
-        # print(f"Answer 2: {self.answer_two}")
-        # print(f"Question 3: {self.question_three}")
-        # print(f"Answer 3: {self.answer_three}")
-        # print(f"New Password 1: {self.pass_1}")
-        # print(f"New Password 2: {self.pass_2}")
-        # print(f"New Password 3: {self.pass_3}")
+        self.DL = {
+            "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+            "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+        }
+        self.time = (3, 5)
 
+    @retry(tries=20)
     def Get_sstt(self):
         headers = {
             "Host": "iforgot.apple.com",
@@ -69,6 +63,7 @@ class APPLE_2:
         self.ifssp = response.cookies.get("ifssp")
         return self
 
+    @retry(tries=20)
     def get_verification_code(self):
         headers = {
             "Host": "iforgot.apple.com",
@@ -102,10 +97,12 @@ class APPLE_2:
         self.Id = response.json()["id"]
         return self
 
+    @retry(tries=20)
     def Identification_codes(self):
         self.res = ocr.classification(self.captcha)
         return self
 
+    @retry(tries=20)
     def Submit_302_1(self):
         max_retries = 10  # 设置最大重试次数
         retries = 0  # 初始化重试计数器
@@ -153,6 +150,8 @@ class APPLE_2:
                     headers=headers,
                     json=json_data,
                     allow_redirects=False,
+                    proxies=self.DL,
+                    timeout=self.time,
                 )
                 self.sstt_2 = unquote(response.headers["Sstt"])
                 self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
@@ -166,6 +165,7 @@ class APPLE_2:
                 else:
                     print("Max retries reached. Submit_302_1 failed.")
 
+    @retry(tries=20)
     def Change_password(self):
         cookies = {
             "idclient": "web",
@@ -204,11 +204,14 @@ class APPLE_2:
             params=params,
             cookies=cookies,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_3 = response.json()["sstt"]
         return self
 
+    @retry(tries=20)
     def Convert(self):
         cookies = {
             "idclient": "web",
@@ -243,10 +246,13 @@ class APPLE_2:
             "https://iforgot.apple.com/recovery/options",
             cookies=cookies,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_5 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
+    @retry(tries=20)
     def Passed_302_2(self):
         headers = {
             "Host": "iforgot.apple.com",
@@ -276,11 +282,14 @@ class APPLE_2:
             headers=headers,
             json=json_data,
             allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_6 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_4 = unquote(response.headers["sstt"])
         return self
 
+    @retry(tries=20)
     def Show_brief_information(self):
         cookies = {
             "idclient": "web",
@@ -319,11 +328,14 @@ class APPLE_2:
             params=params,
             cookies=cookies,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_5 = response.json()["sstt"]
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
+    @retry(tries=20)
     def passed_302_3(self):
         cookies = {
             "idclient": "web",
@@ -365,11 +377,14 @@ class APPLE_2:
             headers=headers,
             json=json_data,
             allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_6 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_8 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
+    @retry(tries=20)
     def passed_302_4(self):
         cookies = {
             "idclient": "web",
@@ -408,11 +423,14 @@ class APPLE_2:
             cookies=cookies,
             headers=headers,
             allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_7 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
+    @retry(tries=20)
     def three_factor_authentication(self):
         cookies = {
             "idclient": "web",
@@ -451,6 +469,8 @@ class APPLE_2:
             params=params,
             cookies=cookies,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
@@ -458,6 +478,7 @@ class APPLE_2:
         # print(response.text)
         return self
 
+    @retry(tries=20)
     def passed_302_5(self):
         cookies = {
             "idclient": "web",
@@ -523,11 +544,14 @@ class APPLE_2:
             headers=headers,
             json=json_data,
             allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_9 = unquote(response.headers["sstt"])
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
+    @retry(tries=20)
     def all_security_information(self):
         cookies = {
             "idclient": "web",
@@ -566,12 +590,15 @@ class APPLE_2:
             params=params,
             cookies=cookies,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt_10 = response.json()["sstt"]
         self.x_apple_i_web_token_12 = response.cookies.get("X-Apple-I-Web-Token")
         self.available = response.json()
         return self
 
+    @retry(tries=20)
     def change_security_settings(self):
         cookies = {
             "idclient": "web",
@@ -636,8 +663,11 @@ class APPLE_2:
             cookies=cookies,
             headers=headers,
             json=json_data,
+            proxies=self.DL,
+            timeout=self.time,
         )
         print(response.json())
+        return response.json()
 
 
 if __name__ == "__main__":
