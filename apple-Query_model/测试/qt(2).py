@@ -39,10 +39,11 @@ class AsyncRequest(QObject):
         for attempt in range(max_retries):
             try:
                 async with aiohttp.ClientSession() as session:
+                    print(self.url)
                     response = await session.get(self.url, timeout=5)
                     response.raise_for_status()
                     response_text = await response.text()
-
+                    print(response_text)
                     # 正则表达式匹配逻辑
                     if '"Track shipment” link' in response_text:
                         Track_shipment = "Track shipment"
@@ -112,7 +113,8 @@ class AsyncRequest(QObject):
 
             except Exception as e:
                 if attempt < max_retries:
-                    print(attempt)
+                    error_message = {"error": f"Error: {e}"}
+                    print(error_message)
                     # await asyncio.sleep(2)
                     pass
                 else:
@@ -183,6 +185,8 @@ class InterFace(QWidget):
         self.table_widget.setColumnWidth(8, 70)
         self.table_widget.setColumnWidth(9, 70)
 
+        self.table_widget.setSelectionMode(QTableWidget.SelectionMode.MultiSelection)  # 允许多选
+
         v_layout = QVBoxLayout()
         v_layout.addLayout(h_layout_buttons)
         v_layout.addWidget(self.table_widget)
@@ -209,16 +213,16 @@ class InterFace(QWidget):
                 worker = AsyncRequestWorker(async_request)
                 self.threadpool.start(worker)
 
-    def on_single_query_clicked(self, row):
-        for col in range(1, 10):
-            self.table_widget.setItem(row, col, QTableWidgetItem(""))  # 清空列数据
-
-        url_item = self.table_widget.item(row, 0)
-        if url_item and url_item.text():
-            async_request = AsyncRequest(row, url_item.text())
-            async_request.result.connect(self.update_table)
-            worker = AsyncRequestWorker(async_request)
-            self.threadpool.start(worker)
+    # def on_single_query_clicked(self, row):
+    #     for col in range(1, 10):
+    #         self.table_widget.setItem(row, col, QTableWidgetItem(""))  # 清空列数据
+    #
+    #     url_item = self.table_widget.item(row, 0)
+    #     if url_item and url_item.text():
+    #         async_request = AsyncRequest(row, url_item.text())
+    #         async_request.result.connect(self.update_table)
+    #         worker = AsyncRequestWorker(async_request)
+    #         self.threadpool.start(worker)
 
     def update_table(self, row, result):
         if "error" in result:
@@ -374,13 +378,39 @@ class InterFace(QWidget):
 
     def show_context_menu(self, pos):
         context_menu = QMenu(self)
-
-        single_query_action = context_menu.addAction("单独查询")
+        single_query_action = context_menu.addAction("执行查询")
+        copy_action = context_menu.addAction("复制选中内容")
         action = context_menu.exec(self.mapToGlobal(pos))
         if action == single_query_action:
-            row = self.table_widget.indexAt(pos).row()
-            self.on_single_query_clicked(row)
+            selected_rows = list(set(index.row() for index in self.table_widget.selectedIndexes()))
+            self.on_single_query_clicked(selected_rows)
+        elif action == copy_action:
+            self.copy_selected_items()
 
+    def on_single_query_clicked(self, rows):
+        for row in rows:
+            for col in range(1, 10):
+                self.table_widget.setItem(row, col, QTableWidgetItem(""))  # 清空列数据
+
+            url_item = self.table_widget.item(row, 0)
+            if url_item and url_item.text():
+                async_request = AsyncRequest(row, url_item.text())
+                async_request.result.connect(self.update_table)
+                worker = AsyncRequestWorker(async_request)
+                self.threadpool.start(worker)
+
+    def copy_selected_items(self):
+        selected_rows = list(set(index.row() for index in self.table_widget.selectedIndexes()))
+        if selected_rows:
+            clipboard = QApplication.clipboard()
+            copy_text = ""
+            for row in selected_rows:
+                row_data = []
+                for col in range(self.table_widget.columnCount()):
+                    item = self.table_widget.item(row, col)
+                    row_data.append(item.text() if item else "")
+                copy_text += "\t".join(row_data) + "\n"
+            clipboard.setText(copy_text)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
