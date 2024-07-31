@@ -1,5 +1,7 @@
 import requests,re,logging
 
+from yarl import URL
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,7 +37,9 @@ headers = {
 
 response_1 = requests.get('https://appleid.apple.com/', cookies=cookies, headers=headers)
 aidsp_1 = response_1.cookies.get('aidsp')
+scnt_7 = response_1.headers["scnt"]
 logging.info(f'aidsp_1----{aidsp_1}')
+logging.info(f'scnt_7----{scnt_7}')
 
 
 
@@ -358,6 +362,521 @@ scnt_3 = response.headers["scnt"]
 X_Apple_Auth_Attributes = response.headers["X-Apple-Auth-Attributes"]
 logging.info(f'scnt_3----{scnt_3}')
 logging.info(f'X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}')
-logging.info(f'X_Apple_Auth_Attributes----{response.text}')
+# logging.info(f'X_Apple_Auth_Attributes----{response.text}')
 
 
+
+
+url = 'https://idmsa.apple.com/appleauth/jslog'
+headers = {
+    "Host": "idmsa.apple.com",
+    "Connection": "keep-alive",
+    "Content-Length": "518",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_2,
+    "x-csrf-token": "",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-type": "application/json",
+    "Accept": "application/json",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Origin": "https://idmsa.apple.com",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://idmsa.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={aasp}; aa={aa}"
+}
+data = {"type":"INFO","title":"AppleAuthFFPerf-2","message":"APPLE ID : {\"data\":{\"showPasswordField\":{\"federatedCalled\":{\"duration\":361},\"duration\":1101},\"init\":{\"initData\":{\"duration\":17.699999999953434},\"initCalled\":{\"duration\":284.5}},\"complete\":{\"completeData\":{\"duration\":24}},\"authFirstFactor\":{\"errorPasswordCalled\":{\"duration\":336.5999999999767}}},\"order\":[\"showPasswordField\"]}","iframeId":"auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57","details":"{\"pageVisibilityState\":\"visible\"}"}
+response = requests.post(url, headers=headers,data=data)
+aa_2 = response.cookies.get('aa')
+logging.info(f'aa_2----{aa_2}')
+
+
+url = 'https://idmsa.apple.com/appleauth/jslog'
+headers = {
+    "Host": "idmsa.apple.com",
+    "Connection": "keep-alive",
+    "Content-Length": "218",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_3,
+    "x-csrf-token": "",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-type": "application/json",
+    "Accept": "application/json",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Origin": "https://idmsa.apple.com",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://idmsa.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={aasp}; aa={aa_2}"
+}
+data = {"type":"INFO","title":"Second Factor setup","message":"APPLE ID : Will start second factor setup for sa auth type.","iframeId":"auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57","details":"{\"pageVisibilityState\":\"visible\"}"}
+response = requests.post(url, headers=headers,data=data)
+aa_3 = response.cookies.get('aa')
+logging.info(f'aa_3----{aa_3}')
+
+
+url = 'https://idmsa.apple.com/appleauth/auth/verify/questions'
+headers = {
+    "Host": "idmsa.apple.com",
+    "Connection": "keep-alive",
+    "Content-Length": "201",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_3,
+    "X-Apple-Widget-Key": serviceKey,
+    "X-Apple-Frame-Id": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqueBKKyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.UeJBNlY5BPY25BNnOVgw24uy.CkO\"}",
+    "X-Apple-OAuth-Redirect-URI": "https://appleid.apple.com",
+    "X-Apple-OAuth-Client-Id": serviceKey,
+    "X-Apple-OAuth-Client-Type": "firstPartyAuth",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "X-Apple-App-Id": serviceKey,
+    "X-Apple-ID-Session-Id": aasp,
+    "X-Apple-Auth-Attributes": X_Apple_Auth_Attributes,
+    "sec-ch-ua-mobile": "?0",
+    "X-Apple-OAuth-Response-Type": "code",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "X-Apple-OAuth-Response-Mode": "web_message",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-Domain-Id": "1",
+    "X-Apple-OAuth-State": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
+    "Origin": "https://idmsa.apple.com",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://idmsa.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={aasp}; aa={aa_3}"
+}
+data = {"questions":[{"question":"你的理想工作是什么？","answer":"gz1234","id":136,"number":2},{"question":"你少年时代最好的朋友叫什么名字？","answer":"py1234","id":130,"number":1}]}
+response = requests.post(url, headers=headers,json=data)
+scnt_4 = response.headers["scnt"]
+X_Apple_Repair_Session_Token = response.headers["X-Apple-Repair-Session-Token"]
+X_Apple_OAuth_Context = response.headers["X-Apple-OAuth-Context"]
+Location = response.headers["Location"]
+logging.info(f'scnt_4----{scnt_4}')
+logging.info(f'X_Apple_Repair_Session_Token----{X_Apple_Repair_Session_Token}')
+logging.info(f'X_Apple_OAuth_Context----{X_Apple_OAuth_Context}')
+logging.info(f'Location----{Location}')
+
+
+
+url = 'https://appleid.apple.com/widget/account/repair?widgetKey=af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3&rv=1&language=zh_CN_CHN'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "Sec-Fetch-Site": "same-site",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-User": "?1",
+    "Sec-Fetch-Dest": "iframe",
+    "Referer": "https://idmsa.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aid_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+scnt_5 = response.headers["scnt"]
+logging.info(f'scnt_5----{scnt_5}')
+
+
+url = 'https://appleid.apple.com/account/manage/repair/options'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "X-Apple-ID-Session-Id": aidsp_1,
+    "scnt": scnt_5,
+    "X-Apple-Widget-Key": serviceKey,
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquW9dCyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.Ue1BNlY5BPY25BNnOVgw24uy.AOX\"}",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Apple-OAuth-Context": X_Apple_OAuth_Context,
+    "X-Requested-With": "XMLHttpRequest",
+    "X-Apple-Session-Token": X_Apple_Repair_Session_Token,
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Skip-Repair-Attributes": "[]",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aid_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+scnt_6 = response.headers["scnt"]
+X_Apple_Session_Token = response.headers["X-Apple-Session-Token"]
+logging.info(f'scnt_6----{scnt_6}')
+logging.info(f'X_Apple_Session_Token----{X_Apple_Session_Token}')
+
+
+
+
+url = 'https://appleid.apple.com/account/security/upgrade'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "X-Apple-ID-Session-Id": aidsp_1,
+    "scnt": scnt_6,
+    "X-Apple-Widget-Key": serviceKey,
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquW9dCyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.Ue1BNlY5BPY25BNnOVgw24uy.AOX\"}",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Apple-OAuth-Context": X_Apple_OAuth_Context,
+    "X-Requested-With": "XMLHttpRequest",
+    "X-Apple-Session-Token": X_Apple_Session_Token,
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Skip-Repair-Attributes": "[]",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aid_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+X_Apple_Session_Token_2 = response.headers["X-Apple-Session-Token"]
+logging.info(f'X_Apple_Session_Token_2----{X_Apple_Session_Token_2}')
+# logging.info(f'response----{response.text}')
+
+
+url = 'https://appleid.apple.com/account/security/upgrade/setuplater'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "X-Apple-ID-Session-Id": aidsp_1,
+    "scnt": scnt_6,
+    "X-Apple-Widget-Key": serviceKey,
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquW9dCyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.Ue1BNlY5BPY25BNnOVgw24uy.AOX\"}",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Apple-OAuth-Context": X_Apple_OAuth_Context,
+    "X-Requested-With": "XMLHttpRequest",
+    "X-Apple-Session-Token": X_Apple_Session_Token_2,
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Skip-Repair-Attributes": "[]",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aid_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+X_Apple_Session_Token_3 = response.headers["X-Apple-Session-Token"]
+logging.info(f'X_Apple_Session_Token_3----{X_Apple_Session_Token_3}')
+
+
+url = 'https://appleid.apple.com/account/manage/repair/options'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "X-Apple-ID-Session-Id": aidsp_1,
+    "scnt": scnt_6,
+    "X-Apple-Widget-Key": serviceKey,
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquW9dCyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.Ue1BNlY5BPY25BNnOVgw24uy.AOX\"}",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "X-Apple-OAuth-Context": X_Apple_OAuth_Context,
+    "X-Requested-With": "XMLHttpRequest",
+    "X-Apple-Session-Token": X_Apple_Session_Token_3,
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Skip-Repair-Attributes": "[\"hsa2_enrollment\"]",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aid_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+X_Apple_Session_Token_4 = response.headers["X-Apple-Session-Token"]
+logging.info(f'X_Apple_Session_Token_4----{X_Apple_Session_Token_4}')
+
+
+url  = 'https://idmsa.apple.com/appleauth/auth/repair/complete'
+headers = {
+    "Host": "idmsa.apple.com",
+    "Connection": "keep-alive",
+    "Content-Length": "0",
+    "X-Apple-Repair-Session-Token": X_Apple_Session_Token_4,
+    "scnt": scnt_2,
+    "X-Apple-Widget-Key":serviceKey,
+    "X-Apple-Frame-Id": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquxTmdQxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1S9Ra6mVUe.zKp5BNlY5CGWY5BOgkLT0XxU..Bco\"}",
+    "X-Apple-OAuth-Redirect-URI": "https://appleid.apple.com",
+    "X-Apple-OAuth-Client-Id": serviceKey,
+    "X-Apple-OAuth-Client-Type": "firstPartyAuth",
+    "X-Requested-With": "XMLHttpRequest",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "X-Apple-ID-Session-Id": aasp,
+    "X-Apple-Auth-Attributes": X_Apple_Auth_Attributes,
+    "sec-ch-ua-mobile": "?0",
+    "X-Apple-OAuth-Response-Type": "code",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "X-Apple-OAuth-Response-Mode": "web_message",
+    "Content-Type": "application/json",
+    "Accept": "application/json;charset=utf-8",
+    "X-Apple-Domain-Id": "1",
+    "X-Apple-OAuth-State": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
+    "Origin": "https://idmsa.apple.com",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://idmsa.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={aasp}; aa={aa_3}"
+}
+data = ''
+response = requests.post(url, headers=headers,data=data)
+myacinfo = response.cookies.get('myacinfo')
+logging.info(f'myacinfo----{myacinfo}')
+
+
+
+url = 'https://appleid.apple.com/account/manage/gs/ws/token'
+headers ={
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_7,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquxZkxfxQeLaD.SAuXjodUW1BNpMk0ugN.xL4Fe1S9Ra6mVUe.zKq5BNlY5CGWY5BOgkLT0XxU...m1\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={aidsp_1}; geo=CN; aid={aa_3}; myacinfo={myacinfo}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+X_Apple_I_Request_ID = response.headers['X-Apple-I-Request-ID']
+scnt_8 = response.headers["scnt"]
+awat = response.cookies.get('awat')
+caw = response.cookies.get('caw')
+caw_at = response.cookies.get('caw-at')
+aidsp_2 = response.cookies.get('aidsp')
+logging.info(f'X_Apple_I_Request_ID----{X_Apple_I_Request_ID}')
+logging.info(f'scnt_8----{scnt_8}')
+logging.info(f'awat----{awat}')
+logging.info(f'caw----{caw}')
+logging.info(f'caw_at----{caw_at}')
+logging.info(f'aidsp_2----{aidsp_2}')
+
+
+
+url = 'https://appleid.apple.com/account/manage/profile/avatar'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_8,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquxdTmQxQeLaD.SAuXjodUW1BNmrk0ugN.xL4Fe1S9Ra6mVUe.zKq5BNlY5CGWY5BOgkLT0XxU..BXr\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={aa_3}; myacinfo={myacinfo}; awat={awat}; caw={caw}; caw-at={caw_at}; aidsp={aidsp_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+caw_at_2 = response.cookies.get('caw-at')
+logging.info(f'caw_at_2----{caw_at_2}')
+
+
+url = 'https://appleid.apple.com/account/manage'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_8,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAquxdTlfxQeLaD.SAuXjodUW1BNmrk0ugN.xL4Fe1S9Ra6mVUe.zKq5BNlY5CGWY5BOgkLT0XxU..4Cc\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={aa_3}; myacinfo={myacinfo}; awat={awat}; caw={caw}; caw-at={caw_at}; aidsp={aidsp_2}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+scnt_9 = response.headers["scnt"]
+awat_2 = response.cookies.get('awat')
+dat = response.cookies.get('dat')
+logging.info(f'scnt_9----{scnt_9}')
+logging.info(f'awat_2----{awat_2}')
+logging.info(f'dat----{dat}')
+
+
+
+url = 'https://appleid.apple.com/account/manage/profile/avatar'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_8,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqv49ZCyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0D_DI2tFEp.Ud9BNlY5BPY25BNnOVgw24uy.6v5\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",#可能有问题
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={aa_3}; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; caw-at={caw_at}; awat={awat_2}; dat={dat}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+scnt_10 = response.headers["scnt"]
+caw_at_3 = response.cookies.get('caw-at')
+logging.info(f'scnt_10----{scnt_10}')
+logging.info(f'caw_at_3----{caw_at_3}')
+
+
+url = 'https://appleid.apple.com/account/manage/payment'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_8,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqv49Z4yhpAI6.D_xGMuJjkW5BOQs.xLB.Tf1cK0D_DI2tFEp.Ud9BNlY5BPY25BNnOVgw24uy.7iu\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={aa_3}; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; caw-at={caw_at}; awat={awat_2}; dat={dat}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+
+
+url = 'https://appleid.apple.com/account/manage/security/devices'
+headers = {
+    "Host": "appleid.apple.com",
+    "Connection": "keep-alive",
+    "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+    "scnt": scnt_8,
+    "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqv49bfUfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIdIZkyJ2xF6uHY5BNlY5cklY5BqNAE.lTjV.4_O\"}",
+    "X-Apple-I-Request-Context": "ca",
+    "sec-ch-ua-mobile": "?0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "X-Apple-I-TimeZone": "Asia/Shanghai",
+    "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Dest": "empty",
+    "Referer": "https://appleid.apple.com/",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={aa_3}; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; caw-at={caw_at}; awat={awat_2}; dat={dat}"
+}
+response =  requests.get(
+    url=url,
+    headers=headers,
+)
+logging.info(f'response----{response.json()}')
