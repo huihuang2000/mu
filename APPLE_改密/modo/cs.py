@@ -1,42 +1,10 @@
-import requests
 
-cookies = {
-    "idclient": "web",
-    "dslang": "CN-ZH",
-    "site": "CHN",
-    "geo": "CN",
-    "aidsp": "2ECCF84913400F6309347F3B78ABAD4FA7DE42279161CF3938E8C5A3CBC5F6B8DF5DA633448FB314177994C1A927E1AAC8179C03FD869B1985DD79D0E316B32850CC953A38A3B7F2DC381393448B40CD69217FCACF30BE37A763581AB8621446D2FE8D9E3C0DBA4798969234E9A6E1F4C8642C569FBA828A",
-    "aid": "6A1E9F93106C686906D3BDB90F8A7D38",
-}
 
-headers = {
-    "Accept": "application/json, text/javascript, */*; q=0.01",
-    # 'Accept-Language': 'zh-CN,zh;q=0.9',
-    # 'Connection': 'keep-alive',
-    # 'Content-Type': 'application/json',
-    # 'Cookie': 'idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aidsp=2ECCF84913400F6309347F3B78ABAD4FA7DE42279161CF3938E8C5A3CBC5F6B8DF5DA633448FB314177994C1A927E1AAC8179C03FD869B1985DD79D0E316B32850CC953A38A3B7F2DC381393448B40CD69217FCACF30BE37A763581AB8621446D2FE8D9E3C0DBA4798969234E9A6E1F4C8642C569FBA828A; aid=6A1E9F93106C686906D3BDB90F8A7D38',
-    # 'Referer': 'https://appleid.apple.com/',
-    # 'Sec-Fetch-Dest': 'empty',
-    # 'Sec-Fetch-Mode': 'cors',
-    # 'Sec-Fetch-Site': 'same-origin',
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-    # 'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":".la44j1e3NlY5BNlY5BSmHACVZXnNA9dGOKHWWJ_YfSHolk2dUJKy_Aw7GY55y.EKY.6eke4FIdI_SUJKyMgzLY5BNlY5cklY5BqNAE.lTjV.2fy"}',
-    # 'X-Apple-I-TimeZone': 'Asia/Shanghai',
-    # 'X-Apple-ID-Session-Id': '2ECCF84913400F6309347F3B78ABAD4FA7DE42279161CF3938E8C5A3CBC5F6B8DF5DA633448FB314177994C1A927E1AAC8179C03FD869B1985DD79D0E316B32850CC953A38A3B7F2DC381393448B40CD69217FCACF30BE37A763581AB8621446D2FE8D9E3C0DBA4798969234E9A6E1F4C8642C569FBA828A',
-    # 'X-Apple-OAuth-Context': '7gaLGsgCqR56o0YIJxmdQl1ZAwnx7Hr+oELmF8e6+GSQzO/TEAxDEyi1bWrm8tOO5ULEik4UDMKLPRmumbYDRW/jVyJ5c4cVr18Lu9aHmvOP7whRjAbvqx+3EFcv5G+m7/k6F+ZfvpKI4piyOGfOnFbMEoNm6IYGVLpum4bxlU2prGQU1y9CMghs52UaMGm4MKSwxdZXzX+Q8cA31SmWVFJDACMy53vbiPs=',
-    "X-Apple-Session-Token": "12ZAaTlhPvB9hoBpwvTFXdci+NEGi3Kf0DlyRuE6N2MQYb91rU3SISnPMpthG51AsOfH9jXCwaMDk8/Z8ZUg+OHGUJetwhpHGJlTuev7uHqNR0xlHL8i/YBqshmq7VHBlyZ2DNkaRFGB6Uvm5375TVzsG8cKYf7hDuoiTfQqPcKGp8dW5bOj/M5klC4zz28Us3NRkWygvZg39IoCFWS3dwRQ4kNBtRNMVlBjxF7uzlhfkszK0GJv3zOgvW64agqc8tQxMJGC350X2zaFZC1TdjcdpsBVF38j7MBodQOkggqynwic33Txs6NudpHqbbcOCGJN8ft+/p1iG/PfFbHrKDa0ZzCYgxawcBJksJm1yEY2+nwb+dZXTQWtKFKRvlSRQwVTl0uWniQgpz4yFZq5a+suqgET+MkCYyAXbszFTU4xAlnKfS8kuQDgv7SngJWWOTneDZB1jZU/n/kcwH4bwGru8XxABkeffY8YKTc71M/ky6Y+uvW0WedE0nOJpCNzIJvjtrwAHkpUFK3g95PerZLet2pgoNkKANlUexCuvOVuVw+tBtnjVFalRAMHEZR7uNnqpRFNRYayAXUrJbyuNb/Sh0AtK8OqnnxCzyNn+vuH4Y2BT3y7UgC6zmHfVIJQcO5bvx0wn2DWGkxG1N3Yho266yQ12modiZNcbBsucwqnGLuaCkANp8nea9XNe6C+19Z9J7ihRSqKWxa+6Hjhv6b89OwMG4xOHyAyiIpxeb5O9pLy4oqU2MS9jbXAPz526ClyLWiM9z9ZK8AixDE7PcIGar5lAJ8KFO5rpalHdotoAm+jX08uYFEKJX+liVoRw67sVTzxdre0TkzHHLc/JhDxr1KdmmtUbRPepQqwKJ0wg6wr8172HpsGCz2hUCu5exops/8bAS3/PiDF0DDBbjBxuHROdn6eMS2HHLzHPJm8p24g2MAxigjfqWcs9NmOJ+0AIzLne9nH7Q==",
-    # 'X-Apple-Skip-Repair-Attributes': '[]',
-    "X-Apple-Widget-Key": "af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3",
-    # 'X-Requested-With': 'XMLHttpRequest',
-    # 'scnt': 'AAAA-jJFQ0NGODQ5MTM0MDBGNjMwOTM0N0YzQjc4QUJBRDRGQTdERTQyMjc5MTYxQ0YzOTM4RThDNUEzQ0JDNUY2QjhERjVEQTYzMzQ0OEZCMzE0MTc3OTk0QzFBOTI3RTFBQUM4MTc5QzAzRkQ4NjlCMTk4NURENzlEMEUzMTZCMzI4NTBDQzk1M0EzOEEzQjdGMkRDMzgxMzkzNDQ4QjQwQ0Q2OTIxN0ZDQUNGMzBCRTM3QTc2MzU4MUFCODYyMTQ0NkQyRkU4RDlFM0MwREJBNDc5ODk2OTIzNEU5QTZFMUY0Qzg2NDJDNTY5RkJBODI4QXw0AAABkPmMcpWZcWsskEf72t73zpARczQ333za7WarfhXQuLScIqRfnVsIB1NxI7f7AD3foCKLu1l_ZrOzIPu4mnHrkKsSk_4aTF0eCh5Yk7G2WUi6Lv4ExA',
-    # 'sec-ch-ua': '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-    # 'sec-ch-ua-mobile': '?0',
-    # 'sec-ch-ua-platform': '"Windows"',
-}
+A = {'devices': [{'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/1256c06f282f35b63fb673f4a32b4940', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': '1256c06f282f35b63fb673f4a32b4940'}, {'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/fdc812c98ac4fb96deef24d48b473f81', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': 'fdc812c98ac4fb96deef24d48b473f81'}], 'hsa2SignedInDevicesLink': 'https://support.apple.com/HT205064', 'suppressChangePasswordLink': False}
+# A = {'devices': [{'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/1256c06f282f35b63fb673f4a32b4940', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': '1256c06f282f35b63fb673f4a32b4940'}, {'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/fdc812c98ac4fb96deef24d48b473f81', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': 'fdc812c98ac4fb96deef24d48b473f81'}], 'hsa2SignedInDevicesLink': 'https://support.apple.com/HT205064', 'suppressChangePasswordLink': False}
 
-response = requests.get(
-    "https://appleid.apple.com/account/manage/repair/options",
-    cookies=cookies,
-    headers=headers,
-)
-print(response.text)
+
+
+id_list = [device['id'] for device in A['devices']]
+
+print(id_list)

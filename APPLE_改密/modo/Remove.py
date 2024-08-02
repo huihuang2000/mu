@@ -1,6 +1,4 @@
-import requests, re, logging
-
-from yarl import URL
+import requests, re, logging, json
 
 logging.basicConfig(
     level=logging.INFO,
@@ -9,15 +7,20 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-name = "my_hero.hero@softbank.ne.jp"
+name = "antbpibailey@hotmail.com"
 passs = "Aa147369"
 
+question_one = "你少年时代最好的朋友叫什么名字？"
+answer_one = "py1234"
+question_two = "你的理想工作是什么？"
+answer_two = "gz1234"
+question_three = "你的父母是在哪里认识的？"
+answer_three = "fm1234"
 # ------------------------------------------------------------------------------------------------------------------------------------
 cookies = {
     "dssid2": "c71e8b00-8802-4176-aec7-02d1e369f1d3",
     "dssf": "1",
 }
-
 headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -35,7 +38,6 @@ headers = {
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": '"Windows"',
 }
-
 response_1 = requests.get(
     "https://appleid.apple.com/", cookies=cookies, headers=headers
 )
@@ -43,7 +45,6 @@ aidsp_1 = response_1.cookies.get("aidsp")
 scnt_7 = response_1.headers["scnt"]
 logging.info(f"aidsp_1----{aidsp_1}")
 logging.info(f"scnt_7----{scnt_7}")
-
 
 headers = {
     "Accept": "application/json, text/plain, */*",
@@ -70,7 +71,6 @@ aidsp_2 = response_2.cookies.get("aidsp")  # 没用上
 serviceKey = response_2.json()["serviceKey"]  # 用上了
 logging.info(f"aidsp_2----{aidsp_2}")
 logging.info(f"serviceKey----{serviceKey}")
-
 
 # 用aidsp_1,
 headers = {
@@ -100,7 +100,6 @@ scnt = response.headers["scnt"]
 X_Apple_I_Request_ID = response.headers["X-Apple-I-Request-ID"]
 logging.info(f"scnt----{scnt}")
 logging.info(f"X_Apple_I_Request_ID----{X_Apple_I_Request_ID}")
-
 
 url = "https://appleid.apple.com/jslog"
 headers = {
@@ -135,7 +134,6 @@ data = {
 response = requests.post(url, headers=headers, data=data)
 aid_1 = response.cookies.get("aid")
 logging.info(f"aid_1----{aid_1}")
-
 
 # X-Apple-ID-Session-Id和aid_2同一个
 url = "https://appleid.apple.com/jslog"
@@ -173,7 +171,6 @@ response = requests.post(url, headers=headers, data=data)
 aid_2 = response.cookies.get("aid")
 logging.info(f"aid_2----{aid_2}")
 
-
 # 他也会返回scnt，但是没用到
 url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
 headers = {
@@ -201,7 +198,6 @@ aasp = response.cookies.get("aasp")
 logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
 logging.info(f"X_Apple_HC_Challenge----{X_Apple_HC_Challenge}")
 logging.info(f"aasp----{aasp}")
-
 
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
@@ -235,11 +231,9 @@ response = requests.post(url, headers=headers, data=data)
 aa = response.cookies.get("aa")
 logging.info(f"aa----{aa}")
 
-
 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
 payload = {f"email": {name}}
 Key = requests.post(url=url, data=payload).json()
-
 
 combined_headers_and_cookies = {
     "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -261,7 +255,6 @@ response_2 = requests.post(
 scnt_1 = response_2.headers["scnt"]
 logging.info(f"scnt_1----{scnt_1}")
 
-
 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
 payload = {
     "email": name,
@@ -274,7 +267,6 @@ payload = {
     "publicHexValue": Key["publicHexValue"],
 }
 response_3 = requests.post(url=url, json=payload).json()
-
 
 headers = {
     "Host": "idmsa.apple.com",
@@ -331,7 +323,6 @@ logging.info(f"scnt_2----{scnt_2}")
 logging.info(f"X_Apple_ID_Session_Id----{X_Apple_ID_Session_Id}")
 logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
 
-
 url = "https://idmsa.apple.com/appleauth/auth"
 headers = {
     "Host": "idmsa.apple.com",
@@ -370,10 +361,53 @@ response = requests.get(
 )
 scnt_3 = response.headers["scnt"]
 X_Apple_Auth_Attributes = response.headers["X-Apple-Auth-Attributes"]
+
+regex_pattern = r'"securityQuestions":\s*(\{(?:[^{}]|\{(?:[^{}]|\{.*?\})*\})*\})'
+match = re.search(regex_pattern, response.text, re.DOTALL)
+if match:
+    json_str = match.group(1)
+    try:
+        security_questions_data = json.loads(json_str)
+        print("Security Questions Data:", security_questions_data)
+        # questions_answers = {
+        #     self.question_one: self.answer_one,
+        #     self.question_two: self.answer_two,
+        #     self.question_three: self.answer_three,
+        # }
+        questions_answers = {
+            question_one: answer_one,
+            question_two: answer_two,
+            question_three: answer_three,
+        }
+        answers = []
+        questions = security_questions_data["questions"]
+        for question in questions:
+            if question["question"] == question_one:
+                answer = questions_answers.get(question_one)
+            elif question["question"] == question_two:
+                answer = questions_answers.get(question_two)
+            elif question["question"] == question_three:
+                answer = questions_answers.get(question_three)
+            else:
+                answer = ""
+
+            answers.append(
+                {
+                    "question": question["question"],
+                    "answer": answer,
+                    "number": question["number"],
+                    "id": question["id"],
+                }
+            )
+
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+else:
+    print("No securityQuestions data found.")
+
 logging.info(f"scnt_3----{scnt_3}")
 logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
-# logging.info(f'X_Apple_Auth_Attributes----{response.text}')
-
+logging.info(f"X_Apple_Auth_Attributes----{response.text}")
 
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
@@ -408,7 +442,6 @@ response = requests.post(url, headers=headers, data=data)
 aa_2 = response.cookies.get("aa")
 logging.info(f"aa_2----{aa_2}")
 
-
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
     "Host": "idmsa.apple.com",
@@ -441,7 +474,6 @@ data = {
 response = requests.post(url, headers=headers, data=data)
 aa_3 = response.cookies.get("aa")
 logging.info(f"aa_3----{aa_3}")
-
 
 url = "https://idmsa.apple.com/appleauth/auth/verify/questions"
 headers = {
@@ -477,22 +509,7 @@ headers = {
     "Accept-Language": "zh-CN,zh;q=0.9",
     "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={aasp}; aa={aa_3}",
 }
-data = {
-    "questions": [
-        {
-            "question": "你的理想工作是什么？",
-            "answer": "gz1234",
-            "id": 136,
-            "number": 2,
-        },
-        {
-            "question": "你少年时代最好的朋友叫什么名字？",
-            "answer": "py1234",
-            "id": 130,
-            "number": 1,
-        },
-    ]
-}
+data = {"questions": answers}
 response = requests.post(url, headers=headers, json=data)
 scnt_4 = response.headers["scnt"]
 X_Apple_Repair_Session_Token = response.headers["X-Apple-Repair-Session-Token"]
@@ -502,7 +519,6 @@ logging.info(f"scnt_4----{scnt_4}")
 logging.info(f"X_Apple_Repair_Session_Token----{X_Apple_Repair_Session_Token}")
 logging.info(f"X_Apple_OAuth_Context----{X_Apple_OAuth_Context}")
 logging.info(f"Location----{Location}")
-
 
 url = "https://appleid.apple.com/widget/account/repair?widgetKey=af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3&rv=1&language=zh_CN_CHN"
 headers = {
@@ -529,7 +545,6 @@ response = requests.get(
 )
 scnt_5 = response.headers["scnt"]
 logging.info(f"scnt_5----{scnt_5}")
-
 
 url = "https://appleid.apple.com/account/manage/repair/options"
 headers = {
@@ -567,7 +582,6 @@ X_Apple_Session_Token = response.headers["X-Apple-Session-Token"]
 logging.info(f"scnt_6----{scnt_6}")
 logging.info(f"X_Apple_Session_Token----{X_Apple_Session_Token}")
 
-
 url = "https://appleid.apple.com/account/security/upgrade"
 headers = {
     "Host": "appleid.apple.com",
@@ -603,7 +617,6 @@ X_Apple_Session_Token_2 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_2----{X_Apple_Session_Token_2}")
 # logging.info(f'response----{response.text}')
 
-
 url = "https://appleid.apple.com/account/security/upgrade/setuplater"
 headers = {
     "Host": "appleid.apple.com",
@@ -638,7 +651,6 @@ response = requests.get(
 X_Apple_Session_Token_3 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_3----{X_Apple_Session_Token_3}")
 
-
 url = "https://appleid.apple.com/account/manage/repair/options"
 headers = {
     "Host": "appleid.apple.com",
@@ -672,7 +684,6 @@ response = requests.get(
 )
 X_Apple_Session_Token_4 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_4----{X_Apple_Session_Token_4}")
-
 
 url = "https://idmsa.apple.com/appleauth/auth/repair/complete"
 headers = {
@@ -714,7 +725,6 @@ response = requests.post(url, headers=headers, data=data)
 myacinfo = response.cookies.get("myacinfo")
 logging.info(f"myacinfo----{myacinfo}")
 
-
 url = "https://appleid.apple.com/account/manage/gs/ws/token"
 headers = {
     "Host": "appleid.apple.com",
@@ -754,7 +764,6 @@ logging.info(f"caw----{caw}")
 logging.info(f"caw_at----{caw_at}")
 logging.info(f"aidsp_2----{aidsp_2}")
 
-
 url = "https://appleid.apple.com/account/manage/profile/avatar"
 headers = {
     "Host": "appleid.apple.com",
@@ -783,7 +792,6 @@ response = requests.get(
 )
 caw_at_2 = response.cookies.get("caw-at")
 logging.info(f"caw_at_2----{caw_at_2}")
-
 
 url = "https://appleid.apple.com/account/manage"
 headers = {
@@ -817,7 +825,6 @@ dat = response.cookies.get("dat")
 logging.info(f"scnt_9----{scnt_9}")
 logging.info(f"awat_2----{awat_2}")
 logging.info(f"dat----{dat}")
-
 
 url = "https://appleid.apple.com/account/manage/profile/avatar"
 headers = {
@@ -853,7 +860,6 @@ logging.info(f"scnt_10----{scnt_10}")
 logging.info(f"caw_at_3----{caw_at_3}")
 logging.info(f"awat_5----{awat_5}")
 
-
 url = "https://appleid.apple.com/account/manage/payment"
 headers = {
     "Host": "appleid.apple.com",
@@ -884,7 +890,7 @@ response = requests.get(
 awat_7 = response.cookies.get("awat")
 logging.info(f"awat_7----{awat_7}")
 
-# 显示所有设备
+# 显示所有设备!!!
 url = "https://appleid.apple.com/account/manage/security/devices"
 headers = {
     "Host": "appleid.apple.com",
@@ -914,10 +920,11 @@ response = requests.get(
 )
 scnt_11 = response.headers["scnt"]
 awat_6 = response.cookies.get("awat")
+id_list = [device["id"] for device in response.json()["devices"]]
+logging.info(f"devices----{id_list}")
 logging.info(f"response----{response.json()}")
 logging.info(f"scnt_11----{scnt_11}")
 logging.info(f"awat_6----{awat_6}")
-
 
 url = "https://appleid.apple.com/jslog"
 headers = {
@@ -952,7 +959,6 @@ data = {
     "details": "{}",
 }
 response = requests.post(url, headers=headers, json=data)
-
 
 url = "https://appleid.apple.com/jslog"
 headers = {
@@ -990,7 +996,6 @@ response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
 # logging.info(f'scnt_11----{response.status_code}')
 
-
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1027,7 +1032,6 @@ response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
 # logging.info(f'scnt_11----{response.status_code}')
 
-
 url = "https://familyws.icloud.apple.com/api/i18n"
 headers = {
     "Host": "familyws.icloud.apple.com",
@@ -1051,7 +1055,6 @@ response = requests.get(
 )
 # logging.info(f'scnt_11----{response.text}')
 
-
 url = "https://familyws.icloud.apple.com/api/member-photos"
 Header = {
     "Host": "familyws.icloud.apple.com",
@@ -1074,7 +1077,6 @@ response = requests.get(
     headers=headers,
 )
 # logging.info(f'scnt_11----{response.text}')
-
 
 url = "https://appleid.apple.com/jslog"
 headers = {
@@ -1110,7 +1112,6 @@ data = {
 }
 response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
-
 
 url = "https://appleid.apple.com/jslog"
 headers = {
@@ -1150,7 +1151,6 @@ X_Apple_ID_Session_Id = response.headers["X-Apple-ID-Session-Id"]
 logging.info(f"aid_3----{aid_3}")
 logging.info(f"X_Apple_ID_Session_Id----{X_Apple_ID_Session_Id}")
 
-
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1187,68 +1187,68 @@ response = requests.post(url, headers=headers, json=data)
 aid_4 = response.cookies.get("aid")
 X_Apple_ID_Session_Id_3 = response.headers["X-Apple-ID-Session-Id"]
 
+ids = ["1256c06f282f35b63fb673f4a32b4941", "fdc812c98ac4fb96deef24d48b473f82"]
+for device_id in ids[:]:
+    url = f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+    headers = {
+        "Host": "appleid.apple.com",
+        "Connection": "keep-alive",
+        "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+        "scnt": scnt_8,
+        "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":".la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTodcJa_NurJhBR.uMp4UdHz13NldjV2pNk0ug9WJ3veRMmaUd9z1ZNlY5BNp55BNlan0Os5Apw.BGt"}',
+        "X-Apple-I-Request-Context": "ca",
+        "sec-ch-ua-mobile": "?0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/plain, */*",
+        "X-Apple-I-TimeZone": "Asia/Shanghai",
+        "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
+        "sec-ch-ua-platform": '"Windows"',
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+        "Referer": "https://appleid.apple.com/",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+        "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; dat={dat}; itspod=16; caw-at={caw_at}; awat={awat_7}; aid={aid_4}",
+    }
+    response = requests.get(
+        url=url,
+        headers=headers,
+    )
+    caw_at_4 = response.cookies.get("caw-at")
+    awat_8 = response.cookies.get("awat")
+    scnt_12 = response.headers["scnt"]
+    logging.info(f"caw_at_4----{caw_at_4}")
+    logging.info(f"awat_8----{awat_8}")
+    logging.info(f"scnt_12----{scnt_12}")
 
-# 此处的连接为设备的id
-url = "https://appleid.apple.com/account/manage/security/devices/684ae5d650c591684b3e98519e898075"
-headers = {
-    "Host": "appleid.apple.com",
-    "Connection": "keep-alive",
-    "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-    "scnt": scnt_8,
-    "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":".la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTodcJa_NurJhBR.uMp4UdHz13NldjV2pNk0ug9WJ3veRMmaUd9z1ZNlY5BNp55BNlan0Os5Apw.BGt"}',
-    "X-Apple-I-Request-Context": "ca",
-    "sec-ch-ua-mobile": "?0",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-    "Content-Type": "application/json",
-    "Accept": "application/json, text/plain, */*",
-    "X-Apple-I-TimeZone": "Asia/Shanghai",
-    "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-    "sec-ch-ua-platform": '"Windows"',
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-    "Referer": "https://appleid.apple.com/",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-    "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; dat={dat}; itspod=16; caw-at={caw_at}; awat={awat_7}; aid={aid_4}",
-}
-response = requests.get(
-    url=url,
-    headers=headers,
-)
-caw_at_4 = response.cookies.get("caw-at")
-awat_8 = response.cookies.get("awat")
-scnt_12 = response.headers["scnt"]
-logging.info(f"caw_at_4----{caw_at_4}")
-logging.info(f"awat_8----{awat_8}")
-logging.info(f"scnt_12----{scnt_12}")
-
-
-headers = {
-    "Host": "appleid.apple.com",
-    "Connection": "keep-alive",
-    "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-    "scnt": scnt_8,
-    "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTodcTeVSfxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1SpDAtIEo_UWuY5BNlY5cklY5BqNAE.lTjV.8Ez"}',
-    "X-Apple-I-Request-Context": "ca",
-    "sec-ch-ua-mobile": "?0",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-    "Content-Type": "application/json",
-    "Accept": "application/json, text/plain, */*",
-    "X-Apple-I-TimeZone": "Asia/Shanghai",
-    "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-    "sec-ch-ua-platform": '"Windows"',
-    "Origin": "https://appleid.apple.com",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Dest": "empty",
-    "Referer": "https://appleid.apple.com/",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-    "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; dat={dat}; itspod=16; aid={aid_4}; caw-at={caw_at}; awat={awat_8}",
-}
-response = requests.delete(
-    url="https://appleid.apple.com/account/manage/security/devices/684ae5d650c591684b3e98519e898075",
-    headers=headers,
-)
-logging.info(f"caw_at_4----{response.text}")
+    url = f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+    headers = {
+        "Host": "appleid.apple.com",
+        "Connection": "keep-alive",
+        "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
+        "scnt": scnt_8,
+        "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTodcTeVSfxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1SpDAtIEo_UWuY5BNlY5cklY5BqNAE.lTjV.8Ez"}',
+        "X-Apple-I-Request-Context": "ca",
+        "sec-ch-ua-mobile": "?0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/plain, */*",
+        "X-Apple-I-TimeZone": "Asia/Shanghai",
+        "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
+        "sec-ch-ua-platform": '"Windows"',
+        "Origin": "https://appleid.apple.com",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+        "Referer": "https://appleid.apple.com/",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+        "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={myacinfo}; caw={caw}; aidsp={aidsp_2}; dat={dat}; itspod=16; aid={aid_4}; caw-at={caw_at}; awat={awat_8}",
+    }
+    response = requests.delete(
+        url=url,
+        headers=headers,
+    )
+    logging.info(f"caw_at_4----{response.text}")
