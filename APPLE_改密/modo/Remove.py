@@ -7,7 +7,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()],
 )
 
-name = "antbpibailey@hotmail.com"
+name = "jacobgordon6s@hotmail.com"
 passs = "Aa147369"
 
 question_one = "你少年时代最好的朋友叫什么名字？"
@@ -17,6 +17,7 @@ answer_two = "gz1234"
 question_three = "你的父母是在哪里认识的？"
 answer_three = "fm1234"
 # ------------------------------------------------------------------------------------------------------------------------------------
+# one
 cookies = {
     "dssid2": "c71e8b00-8802-4176-aec7-02d1e369f1d3",
     "dssf": "1",
@@ -46,6 +47,7 @@ scnt_7 = response_1.headers["scnt"]
 logging.info(f"aidsp_1----{aidsp_1}")
 logging.info(f"scnt_7----{scnt_7}")
 
+# two
 headers = {
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
@@ -73,6 +75,7 @@ logging.info(f"aidsp_2----{aidsp_2}")
 logging.info(f"serviceKey----{serviceKey}")
 
 # 用aidsp_1,
+# three
 headers = {
     "Host": "appleid.apple.com",
     "Connection": "keep-alive",
@@ -101,6 +104,7 @@ X_Apple_I_Request_ID = response.headers["X-Apple-I-Request-ID"]
 logging.info(f"scnt----{scnt}")
 logging.info(f"X_Apple_I_Request_ID----{X_Apple_I_Request_ID}")
 
+# four
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -136,6 +140,7 @@ aid_1 = response.cookies.get("aid")
 logging.info(f"aid_1----{aid_1}")
 
 # X-Apple-ID-Session-Id和aid_2同一个
+# five
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -172,6 +177,7 @@ aid_2 = response.cookies.get("aid")
 logging.info(f"aid_2----{aid_2}")
 
 # 他也会返回scnt，但是没用到
+# six
 url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
 headers = {
     "Host": "idmsa.apple.com",
@@ -199,6 +205,7 @@ logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
 logging.info(f"X_Apple_HC_Challenge----{X_Apple_HC_Challenge}")
 logging.info(f"aasp----{aasp}")
 
+# seven
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
     "Host": "idmsa.apple.com",
@@ -231,10 +238,12 @@ response = requests.post(url, headers=headers, data=data)
 aa = response.cookies.get("aa")
 logging.info(f"aa----{aa}")
 
+# eight
 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
 payload = {f"email": {name}}
 Key = requests.post(url=url, data=payload).json()
 
+# nine
 combined_headers_and_cookies = {
     "Accept": "application/json, text/javascript, */*; q=0.01",
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
@@ -255,6 +264,7 @@ response_2 = requests.post(
 scnt_1 = response_2.headers["scnt"]
 logging.info(f"scnt_1----{scnt_1}")
 
+# ten
 url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
 payload = {
     "email": name,
@@ -268,6 +278,7 @@ payload = {
 }
 response_3 = requests.post(url=url, json=payload).json()
 
+# eleven
 headers = {
     "Host": "idmsa.apple.com",
     "Connection": "keep-alive",
@@ -323,6 +334,7 @@ logging.info(f"scnt_2----{scnt_2}")
 logging.info(f"X_Apple_ID_Session_Id----{X_Apple_ID_Session_Id}")
 logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
 
+# twelve
 url = "https://idmsa.apple.com/appleauth/auth"
 headers = {
     "Host": "idmsa.apple.com",
@@ -407,8 +419,9 @@ else:
 
 logging.info(f"scnt_3----{scnt_3}")
 logging.info(f"X_Apple_Auth_Attributes----{X_Apple_Auth_Attributes}")
-logging.info(f"X_Apple_Auth_Attributes----{response.text}")
+# logging.info(f"X_Apple_Auth_Attributes----{response.text}")
 
+# thirteen
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
     "Host": "idmsa.apple.com",
@@ -442,6 +455,7 @@ response = requests.post(url, headers=headers, data=data)
 aa_2 = response.cookies.get("aa")
 logging.info(f"aa_2----{aa_2}")
 
+# fourteen
 url = "https://idmsa.apple.com/appleauth/jslog"
 headers = {
     "Host": "idmsa.apple.com",
@@ -475,6 +489,7 @@ response = requests.post(url, headers=headers, data=data)
 aa_3 = response.cookies.get("aa")
 logging.info(f"aa_3----{aa_3}")
 
+# fifteen
 url = "https://idmsa.apple.com/appleauth/auth/verify/questions"
 headers = {
     "Host": "idmsa.apple.com",
@@ -520,6 +535,7 @@ logging.info(f"X_Apple_Repair_Session_Token----{X_Apple_Repair_Session_Token}")
 logging.info(f"X_Apple_OAuth_Context----{X_Apple_OAuth_Context}")
 logging.info(f"Location----{Location}")
 
+# sixteen
 url = "https://appleid.apple.com/widget/account/repair?widgetKey=af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3&rv=1&language=zh_CN_CHN"
 headers = {
     "Host": "appleid.apple.com",
@@ -546,6 +562,7 @@ response = requests.get(
 scnt_5 = response.headers["scnt"]
 logging.info(f"scnt_5----{scnt_5}")
 
+# seventeen
 url = "https://appleid.apple.com/account/manage/repair/options"
 headers = {
     "Host": "appleid.apple.com",
@@ -582,6 +599,7 @@ X_Apple_Session_Token = response.headers["X-Apple-Session-Token"]
 logging.info(f"scnt_6----{scnt_6}")
 logging.info(f"X_Apple_Session_Token----{X_Apple_Session_Token}")
 
+# eighteen
 url = "https://appleid.apple.com/account/security/upgrade"
 headers = {
     "Host": "appleid.apple.com",
@@ -617,6 +635,7 @@ X_Apple_Session_Token_2 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_2----{X_Apple_Session_Token_2}")
 # logging.info(f'response----{response.text}')
 
+# nineteen
 url = "https://appleid.apple.com/account/security/upgrade/setuplater"
 headers = {
     "Host": "appleid.apple.com",
@@ -651,6 +670,7 @@ response = requests.get(
 X_Apple_Session_Token_3 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_3----{X_Apple_Session_Token_3}")
 
+# twenty
 url = "https://appleid.apple.com/account/manage/repair/options"
 headers = {
     "Host": "appleid.apple.com",
@@ -685,6 +705,7 @@ response = requests.get(
 X_Apple_Session_Token_4 = response.headers["X-Apple-Session-Token"]
 logging.info(f"X_Apple_Session_Token_4----{X_Apple_Session_Token_4}")
 
+# twenty-one
 url = "https://idmsa.apple.com/appleauth/auth/repair/complete"
 headers = {
     "Host": "idmsa.apple.com",
@@ -725,6 +746,7 @@ response = requests.post(url, headers=headers, data=data)
 myacinfo = response.cookies.get("myacinfo")
 logging.info(f"myacinfo----{myacinfo}")
 
+# twenty-two
 url = "https://appleid.apple.com/account/manage/gs/ws/token"
 headers = {
     "Host": "appleid.apple.com",
@@ -764,6 +786,7 @@ logging.info(f"caw----{caw}")
 logging.info(f"caw_at----{caw_at}")
 logging.info(f"aidsp_2----{aidsp_2}")
 
+# twenty-three
 url = "https://appleid.apple.com/account/manage/profile/avatar"
 headers = {
     "Host": "appleid.apple.com",
@@ -793,6 +816,7 @@ response = requests.get(
 caw_at_2 = response.cookies.get("caw-at")
 logging.info(f"caw_at_2----{caw_at_2}")
 
+# twenty-four
 url = "https://appleid.apple.com/account/manage"
 headers = {
     "Host": "appleid.apple.com",
@@ -826,6 +850,7 @@ logging.info(f"scnt_9----{scnt_9}")
 logging.info(f"awat_2----{awat_2}")
 logging.info(f"dat----{dat}")
 
+# twenty-five
 url = "https://appleid.apple.com/account/manage/profile/avatar"
 headers = {
     "Host": "appleid.apple.com",
@@ -860,6 +885,7 @@ logging.info(f"scnt_10----{scnt_10}")
 logging.info(f"caw_at_3----{caw_at_3}")
 logging.info(f"awat_5----{awat_5}")
 
+# twenty-six
 url = "https://appleid.apple.com/account/manage/payment"
 headers = {
     "Host": "appleid.apple.com",
@@ -891,6 +917,7 @@ awat_7 = response.cookies.get("awat")
 logging.info(f"awat_7----{awat_7}")
 
 # 显示所有设备!!!
+# twenty-seven
 url = "https://appleid.apple.com/account/manage/security/devices"
 headers = {
     "Host": "appleid.apple.com",
@@ -926,6 +953,7 @@ logging.info(f"response----{response.json()}")
 logging.info(f"scnt_11----{scnt_11}")
 logging.info(f"awat_6----{awat_6}")
 
+# twenty-eight
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -960,6 +988,7 @@ data = {
 }
 response = requests.post(url, headers=headers, json=data)
 
+# twenty-nine
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -996,6 +1025,7 @@ response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
 # logging.info(f'scnt_11----{response.status_code}')
 
+# thirty
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1032,6 +1062,7 @@ response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
 # logging.info(f'scnt_11----{response.status_code}')
 
+# thirty-one
 url = "https://familyws.icloud.apple.com/api/i18n"
 headers = {
     "Host": "familyws.icloud.apple.com",
@@ -1055,6 +1086,7 @@ response = requests.get(
 )
 # logging.info(f'scnt_11----{response.text}')
 
+# thirty-two
 url = "https://familyws.icloud.apple.com/api/member-photos"
 Header = {
     "Host": "familyws.icloud.apple.com",
@@ -1078,6 +1110,7 @@ response = requests.get(
 )
 # logging.info(f'scnt_11----{response.text}')
 
+# thirty-three
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1113,6 +1146,7 @@ data = {
 response = requests.post(url, headers=headers, json=data)
 # logging.info(f'scnt_11----{response.headers}')
 
+# thirty-four
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1151,6 +1185,7 @@ X_Apple_ID_Session_Id = response.headers["X-Apple-ID-Session-Id"]
 logging.info(f"aid_3----{aid_3}")
 logging.info(f"X_Apple_ID_Session_Id----{X_Apple_ID_Session_Id}")
 
+# thirty-five
 url = "https://appleid.apple.com/jslog"
 headers = {
     "Host": "appleid.apple.com",
@@ -1187,8 +1222,8 @@ response = requests.post(url, headers=headers, json=data)
 aid_4 = response.cookies.get("aid")
 X_Apple_ID_Session_Id_3 = response.headers["X-Apple-ID-Session-Id"]
 
-ids = ["1256c06f282f35b63fb673f4a32b4941", "fdc812c98ac4fb96deef24d48b473f82"]
-for device_id in ids[:]:
+
+for device_id in id_list[:]:
     url = f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
     headers = {
         "Host": "appleid.apple.com",
