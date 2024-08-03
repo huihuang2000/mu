@@ -1,30 +1,23 @@
-from ast import Return
-from typing import Self
-from zlib import DEF_BUF_SIZE
 import requests, re, logging, json
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s\n",
-    datefmt="%Y-%m-%d %H:%M:%S",
-    handlers=[logging.StreamHandler()],
+    datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-name = "jacobgordon6s@hotmail.com"
-passs = "Aa147369"
-
-question_one = "你少年时代最好的朋友叫什么名字？"
-answer_one = "py1234"
-question_two = "你的理想工作是什么？"
-answer_two = "gz1234"
-question_three = "你的父母是在哪里认识的？"
-answer_three = "fm1234"
 # ------------------------------------------------------------------------------------------------------------------------------------
 
-
 class APPLE_Remove:
-    def __init__(self) -> None:
-        pass
+    def __init__(self,**kwargs) -> None:
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.question_one = kwargs.get("Question_one")
+        self.answer_one = kwargs.get("Answer_one")
+        self.question_two = kwargs.get("Question_two")
+        self.answer_two = kwargs.get("Answer_two")
+        self.question_three = kwargs.get("Question_three")
+        self.answer_three = kwargs.get("Answer_three")
 
     def one(self):
         cookies = {
@@ -253,7 +246,7 @@ class APPLE_Remove:
 
     def eight(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
-        payload = {f"email": {self.name}}
+        payload = {f"email": {self.username}}
         self.Key = requests.post(url=url, data=payload).json()
         return self
 
@@ -264,7 +257,7 @@ class APPLE_Remove:
         }
         json_data = {
             "a": self.Key["r"],
-            "accountName": self.name,
+            "accountName": self.username,
             "protocols": [
                 "s2k",
                 "s2k_fo",
@@ -282,11 +275,11 @@ class APPLE_Remove:
     def ten(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
         payload = {
-            "email": self.name,
+            "email": self.username,
             "iterations": self.response_2.json()["iteration"],
             "Value": self.response_2.json()["b"],
             "salt": self.response_2.json()["salt"],
-            "password": self.passs,
+            "password": self.password,
             "protocol": self.response_2.json()["protocol"],
             "privateHexValue": self.Key["privateHexValue"],
             "publicHexValue": self.Key["publicHexValue"],
@@ -329,7 +322,7 @@ class APPLE_Remove:
             "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa}",
         }
         json_data = {
-            "accountName": name,
+            "accountName": self.username,
             "rememberMe": False,
             "m1": self.response_3["M1"],
             "c": self.response_2.json()["c"],
@@ -399,25 +392,25 @@ class APPLE_Remove:
             try:
                 security_questions_data = json.loads(json_str)
                 print("Security Questions Data:", security_questions_data)
-                # questions_answers = {
-                #     self.question_one: self.answer_one,
-                #     self.question_two: self.answer_two,
-                #     self.question_three: self.answer_three,
-                # }
                 questions_answers = {
-                    question_one: answer_one,
-                    question_two: answer_two,
-                    question_three: answer_three,
+                    self.question_one: self.answer_one,
+                    self.question_two: self.answer_two,
+                    self.question_three: self.answer_three,
                 }
+                # questions_answers = {
+                #     question_one: answer_one,
+                #     question_two: answer_two,
+                #     question_three: answer_three,
+                # }
                 self.answers = []
                 questions = security_questions_data["questions"]
                 for question in questions:
-                    if question["question"] == question_one:
-                        answer = questions_answers.get(question_one)
-                    elif question["question"] == question_two:
-                        answer = questions_answers.get(question_two)
-                    elif question["question"] == question_three:
-                        answer = questions_answers.get(question_three)
+                    if question["question"] == self.question_one:
+                        answer = questions_answers.get(self.question_one)
+                    elif question["question"] == self.question_two:
+                        answer = questions_answers.get(self.question_two)
+                    elif question["question"] == self.question_three:
+                        answer = questions_answers.get(self.question_three)
                     else:
                         answer = ""
 
@@ -1324,13 +1317,67 @@ class APPLE_Remove:
                 headers=headers,
             )
             logging.info(f"caw_at_4----{response.text}")
-            return self
+        return self
         
 
 
         
 
+def main():
 
+    apple_remove = APPLE_Remove(
+        username="jacobgordon6s@hotmail.com",
+        password="Aa147369",
+        Question_one = "你少年时代最好的朋友叫什么名字？",
+        Answer_one = "py1234",
+        Question_two = "你的理想工作是什么？",
+        Answer_two = "gz1234",
+        Question_three = "你的父母是在哪里认识的？",
+        Answer_three = "fm1234",
+    )
+
+    result_one = apple_remove.one()
+    result_two = apple_remove.two()
+    result_three = apple_remove.three()
+    result_four = apple_remove.four()
+    result_five = apple_remove.five()
+    result_six = apple_remove.six()
+    result_seven = apple_remove.seven()
+    result_eight = apple_remove.eight()
+    result_nine = apple_remove.nine()
+    result_ten = apple_remove.ten()
+    result_eleven = apple_remove.eleven()
+    result_twelve = apple_remove.twelve()
+    result_thirteen = apple_remove.thirteen()
+    result_fourteen = apple_remove.fourteen()
+    result_fifteen =  apple_remove.fifteen()
+    result_sixteen = apple_remove.sixteen()
+    result_seventeen =  apple_remove.seventeen()
+    result_eighteen = apple_remove.eighteen()
+    result_nineteen = apple_remove.nineteen()
+    result_twenty = apple_remove.twenty()
+    result_twenty_one = apple_remove.twenty_one()
+    result_twenty_two = apple_remove.twenty_two()
+    result_twenty_three = apple_remove.twenty_three()
+    result_twenty_four = apple_remove.twenty_four()
+    result_twenty_five = apple_remove.twenty_five()
+    result_twenty_six = apple_remove.twenty_six()
+    result_twenty_seven = apple_remove.twenty_seven()
+    result_twenty_eight = apple_remove.twenty_eight()
+    result_twenty_nine =  apple_remove.twenty_nine()
+    result_thirty = apple_remove.thirty()
+    result_thirty_one = apple_remove.thirty_one()
+    result_thirty_two = apple_remove.thirty_two()
+    result_thirty_three = apple_remove.thirty_three()
+    result_thirty_four =  apple_remove.thirty_four()
+    result_thirty_five = apple_remove.thirty_five()
+    result_thirty_six = apple_remove.thirty_six()
+
+    
+
+
+if __name__ == "__main__":
+    main()
 
 
 
