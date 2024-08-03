@@ -1,10 +1,60 @@
-
-
-A = {'devices': [{'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/1256c06f282f35b63fb673f4a32b4940', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': '1256c06f282f35b63fb673f4a32b4940'}, {'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/fdc812c98ac4fb96deef24d48b473f81', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': 'fdc812c98ac4fb96deef24d48b473f81'}], 'hsa2SignedInDevicesLink': 'https://support.apple.com/HT205064', 'suppressChangePasswordLink': False}
+A = {
+    "devices": [
+        {
+            "currentDevice": False,
+            "supportsVerificationCodes": False,
+            "hasApplePayCards": False,
+            "hasActiveSurfAccount": False,
+            "removalPending": False,
+            "deviceDetailUri": "https://appleid.apple.com/account/manage/security/devices/1256c06f282f35b63fb673f4a32b4940",
+            "deviceDetailHttpMethod": "GET",
+            "listImageLocation": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png",
+            "listImageLocation2x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png",
+            "listImageLocation3x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png",
+            "infoboxImageLocation": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png",
+            "infoboxImageLocation2x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png",
+            "infoboxImageLocation3x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png",
+            "qualifiedDeviceClass": "MacBookPro",
+            "deviceClass": "MacBookPro",
+            "os": "Mac OS X",
+            "osAndVersion": "macOS 10.13",
+            "modelName": "MacBook Pro 16″",
+            "unsupported": False,
+            "osVersion": "10.13",
+            "name": "macUbwISqTsVSRB的MAC",
+            "id": "1256c06f282f35b63fb673f4a32b4940",
+        },
+        {
+            "currentDevice": False,
+            "supportsVerificationCodes": False,
+            "hasApplePayCards": False,
+            "hasActiveSurfAccount": False,
+            "removalPending": False,
+            "deviceDetailUri": "https://appleid.apple.com/account/manage/security/devices/fdc812c98ac4fb96deef24d48b473f81",
+            "deviceDetailHttpMethod": "GET",
+            "listImageLocation": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png",
+            "listImageLocation2x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png",
+            "listImageLocation3x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png",
+            "infoboxImageLocation": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png",
+            "infoboxImageLocation2x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png",
+            "infoboxImageLocation3x": "https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png",
+            "qualifiedDeviceClass": "MacBookPro",
+            "deviceClass": "MacBookPro",
+            "os": "Mac OS X",
+            "osAndVersion": "macOS 10.13",
+            "modelName": "MacBook Pro 16″",
+            "unsupported": False,
+            "osVersion": "10.13",
+            "name": "macUbwISqTsVSRB的MAC",
+            "id": "fdc812c98ac4fb96deef24d48b473f81",
+        },
+    ],
+    "hsa2SignedInDevicesLink": "https://support.apple.com/HT205064",
+    "suppressChangePasswordLink": False,
+}
 # A = {'devices': [{'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/1256c06f282f35b63fb673f4a32b4940', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': '1256c06f282f35b63fb673f4a32b4940'}, {'currentDevice': False, 'supportsVerificationCodes': False, 'hasApplePayCards': False, 'hasActiveSurfAccount': False, 'removalPending': False, 'deviceDetailUri': 'https://appleid.apple.com/account/manage/security/devices/fdc812c98ac4fb96deef24d48b473f81', 'deviceDetailHttpMethod': 'GET', 'listImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist.png', 'listImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__2x.png', 'listImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-sourcelist__3x.png', 'infoboxImageLocation': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox.png', 'infoboxImageLocation2x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__2x.png', 'infoboxImageLocation3x': 'https://appleid.cdn-apple.com/static/deviceImages-7.0/MacBookPro/MacBookPro4,1/online-infobox__3x.png', 'qualifiedDeviceClass': 'MacBookPro', 'deviceClass': 'MacBookPro', 'os': 'Mac OS X', 'osAndVersion': 'macOS 10.13', 'modelName': 'MacBook Pro 16″', 'unsupported': False, 'osVersion': '10.13', 'name': 'macUbwISqTsVSRB的MAC', 'id': 'fdc812c98ac4fb96deef24d48b473f81'}], 'hsa2SignedInDevicesLink': 'https://support.apple.com/HT205064', 'suppressChangePasswordLink': False}
 
 
-
-id_list = [device['id'] for device in A['devices']]
+id_list = [device["id"] for device in A["devices"]]
 
 print(id_list)

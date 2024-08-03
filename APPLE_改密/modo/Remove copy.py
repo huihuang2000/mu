@@ -1,15 +1,20 @@
 import requests, re, logging, json
+from tenacity import retry, stop_after_attempt, retry_if_exception_type
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s\n",
-    datefmt="%Y-%m-%d %H:%M:%S"
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-# ------------------------------------------------------------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------------------------------------------------------------
 class APPLE_Remove:
-    def __init__(self,**kwargs) -> None:
+    retry_decorator = retry(
+        stop=stop_after_attempt(5), retry=retry_if_exception_type(Exception)
+    )
+
+    def __init__(self, **kwargs) -> None:
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
         self.question_one = kwargs.get("Question_one")
@@ -19,10 +24,17 @@ class APPLE_Remove:
         self.question_three = kwargs.get("Question_three")
         self.answer_three = kwargs.get("Answer_three")
 
+        self.DL = {
+            "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+            "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+        }
+        self.time = (3, 5)
+
+    @retry_decorator
     def one(self):
         cookies = {
-        "dssid2": "c71e8b00-8802-4176-aec7-02d1e369f1d3",
-        "dssf": "1",
+            "dssid2": "c71e8b00-8802-4176-aec7-02d1e369f1d3",
+            "dssf": "1",
         }
         headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -42,7 +54,11 @@ class APPLE_Remove:
             "sec-ch-ua-platform": '"Windows"',
         }
         response_1 = requests.get(
-            "https://appleid.apple.com/", cookies=cookies, headers=headers
+            "https://appleid.apple.com/",
+            cookies=cookies,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.aidsp_1 = response_1.cookies.get("aidsp")
         self.scnt_7 = response_1.headers["scnt"]
@@ -50,6 +66,7 @@ class APPLE_Remove:
         logging.info(f"scnt_7----{self.scnt_7}")
         return self
 
+    @retry_decorator
     def two(self):
         headers = {
             "Accept": "application/json, text/plain, */*",
@@ -71,13 +88,19 @@ class APPLE_Remove:
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
         }
-        response_2 = requests.get("https://appleid.apple.com/bootstrap/portal", headers=headers)
+        response_2 = requests.get(
+            "https://appleid.apple.com/bootstrap/portal",
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aidsp_2 = response_2.cookies.get("aidsp")  # 没用上
         self.serviceKey = response_2.json()["serviceKey"]  # 用上了
         logging.info(f"aidsp_2----{self.aidsp_2}")
         logging.info(f"serviceKey----{self.serviceKey}")
         return self
-    
+
+    @retry_decorator
     def three(self):
         headers = {
             "Host": "appleid.apple.com",
@@ -100,7 +123,10 @@ class APPLE_Remove:
             "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN",
         }
         response = requests.get(
-            "https://appleid.apple.com/account/manage/gs/ws/token", headers=headers
+            "https://appleid.apple.com/account/manage/gs/ws/token",
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt = response.headers["scnt"]
         self.X_Apple_I_Request_ID = response.headers["X-Apple-I-Request-ID"]
@@ -108,6 +134,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_I_Request_ID----{self.X_Apple_I_Request_ID}")
         return self
 
+    @retry_decorator
     def four(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -139,11 +166,18 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": "{}",
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aid_1 = response.cookies.get("aid")
         logging.info(f"aid_1----{self.aid_1}")
         return self
-    
+
+    @retry_decorator
     def five(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -176,11 +210,18 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": "{}",
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aid_2 = response.cookies.get("aid")
         logging.info(f"aid_2----{self.aid_2}")
         return self
 
+    @retry_decorator
     def six(self):
         url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={self.serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
         headers = {
@@ -201,7 +242,12 @@ class APPLE_Remove:
             "Accept-Language": "zh-CN,zh;q=0.9",
             "Cookie": "dslang=CN-ZH; site=CHN; geo=CN",
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(
+            url,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.X_Apple_Auth_Attributes = response.headers["X-Apple-Auth-Attributes"]
         self.X_Apple_HC_Challenge = response.headers["X-Apple-HC-Challenge"]
         self.aasp = response.cookies.get("aasp")
@@ -209,7 +255,8 @@ class APPLE_Remove:
         logging.info(f"X_Apple_HC_Challenge----{self.X_Apple_HC_Challenge}")
         logging.info(f"aasp----{self.aasp}")
         return self
-    
+
+    @retry_decorator
     def seven(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -239,17 +286,30 @@ class APPLE_Remove:
             "message": "APPLE ID : Performace - 0.027300000000046565 s",
             "details": '{"pageVisibilityState":"visible"}',
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aa = response.cookies.get("aa")
         logging.info(f"aa----{self.aa}")
         return self
 
+    @retry_decorator
     def eight(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
         payload = {f"email": {self.username}}
-        self.Key = requests.post(url=url, data=payload).json()
+        self.Key = requests.post(
+            url=url,
+            data=payload,
+            proxies=self.DL,
+            timeout=self.time,
+        ).json()
         return self
 
+    @retry_decorator
     def nine(self):
         combined_headers_and_cookies = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -267,11 +327,14 @@ class APPLE_Remove:
             url="https://idmsa.apple.com/appleauth/auth/signin/init",
             headers=combined_headers_and_cookies,
             json=json_data,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_1 = self.response_2.headers["scnt"]
         logging.info(f"scnt_1----{self.scnt_1}")
         return self
 
+    @retry_decorator
     def ten(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
         payload = {
@@ -284,9 +347,15 @@ class APPLE_Remove:
             "privateHexValue": self.Key["privateHexValue"],
             "publicHexValue": self.Key["publicHexValue"],
         }
-        self.response_3 = requests.post(url=url, json=payload).json()
+        self.response_3 = requests.post(
+            url=url,
+            json=payload,
+            proxies=self.DL,
+            timeout=self.time,
+        ).json()
         return self
 
+    @retry_decorator
     def eleven(self):
         headers = {
             "Host": "idmsa.apple.com",
@@ -332,6 +401,8 @@ class APPLE_Remove:
             url="https://idmsa.apple.com/appleauth/auth/signin/complete?isRememberMeEnabled=true",
             headers=headers,
             json=json_data,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # CK = response_4.headers.get("Set-Cookie")
         # myacinfo_pattern = re.compile(r"myacinfo=([^;]+)")
@@ -345,6 +416,7 @@ class APPLE_Remove:
         return self
 
     # 此处需要修改密保
+    @retry_decorator
     def twelve(self):
         url = "https://idmsa.apple.com/appleauth/auth"
         headers = {
@@ -381,11 +453,15 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_3 = response.headers["scnt"]
         self.X_Apple_Auth_Attributes = response.headers["X-Apple-Auth-Attributes"]
 
-        regex_pattern = r'"securityQuestions":\s*(\{(?:[^{}]|\{(?:[^{}]|\{.*?\})*\})*\})'
+        regex_pattern = (
+            r'"securityQuestions":\s*(\{(?:[^{}]|\{(?:[^{}]|\{.*?\})*\})*\})'
+        )
         match = re.search(regex_pattern, response.text, re.DOTALL)
         if match:
             json_str = match.group(1)
@@ -433,6 +509,7 @@ class APPLE_Remove:
         # logging.info(f"X_Apple_Auth_Attributes----{response.text}")
         return self
 
+    @retry_decorator
     def thirteen(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -463,11 +540,18 @@ class APPLE_Remove:
             "iframeId": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
             "details": '{"pageVisibilityState":"visible"}',
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aa_2 = response.cookies.get("aa")
         logging.info(f"aa_2----{self.aa_2}")
         return self
-    
+
+    @retry_decorator
     def fourteen(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -498,11 +582,18 @@ class APPLE_Remove:
             "iframeId": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
             "details": '{"pageVisibilityState":"visible"}',
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aa_3 = response.cookies.get("aa")
         logging.info(f"aa_3----{self.aa_3}")
         return self
-    
+
+    @retry_decorator
     def fifteen(self):
         url = "https://idmsa.apple.com/appleauth/auth/verify/questions"
         headers = {
@@ -539,17 +630,28 @@ class APPLE_Remove:
             "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa_3}",
         }
         data = {"questions": self.answers}
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.scnt_4 = response.headers["scnt"]
-        self.X_Apple_Repair_Session_Token = response.headers["X-Apple-Repair-Session-Token"]
+        self.X_Apple_Repair_Session_Token = response.headers[
+            "X-Apple-Repair-Session-Token"
+        ]
         self.X_Apple_OAuth_Context = response.headers["X-Apple-OAuth-Context"]
         self.Location = response.headers["Location"]
         logging.info(f"scnt_4----{self.scnt_4}")
-        logging.info(f"X_Apple_Repair_Session_Token----{self.X_Apple_Repair_Session_Token}")
+        logging.info(
+            f"X_Apple_Repair_Session_Token----{self.X_Apple_Repair_Session_Token}"
+        )
         logging.info(f"X_Apple_OAuth_Context----{self.X_Apple_OAuth_Context}")
         logging.info(f"Location----{self.Location}")
         return self
-    
+
+    @retry_decorator
     def sixteen(self):
         url = "https://appleid.apple.com/widget/account/repair?widgetKey=af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3&rv=1&language=zh_CN_CHN"
         headers = {
@@ -573,11 +675,14 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_5 = response.headers["scnt"]
         logging.info(f"scnt_5----{self.scnt_5}")
         return self
 
+    @retry_decorator
     def seventeen(self):
         url = "https://appleid.apple.com/account/manage/repair/options"
         headers = {
@@ -609,13 +714,16 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_6 = response.headers["scnt"]
         self.X_Apple_Session_Token = response.headers["X-Apple-Session-Token"]
         logging.info(f"scnt_6----{self.scnt_6}")
         logging.info(f"X_Apple_Session_Token----{self.X_Apple_Session_Token}")
         return self
-    
+
+    @retry_decorator
     def eighteen(self):
         url = "https://appleid.apple.com/account/security/upgrade"
         headers = {
@@ -647,12 +755,15 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.X_Apple_Session_Token_2 = response.headers["X-Apple-Session-Token"]
         logging.info(f"X_Apple_Session_Token_2----{self.X_Apple_Session_Token_2}")
         # logging.info(f'response----{response.text}')
         return self
-    
+
+    @retry_decorator
     def nineteen(self):
         url = "https://appleid.apple.com/account/security/upgrade/setuplater"
         headers = {
@@ -684,11 +795,14 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.X_Apple_Session_Token_3 = response.headers["X-Apple-Session-Token"]
         logging.info(f"X_Apple_Session_Token_3----{self.X_Apple_Session_Token_3}")
         return self
 
+    @retry_decorator
     def twenty(self):
         url = "https://appleid.apple.com/account/manage/repair/options"
         headers = {
@@ -720,11 +834,14 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.X_Apple_Session_Token_4 = response.headers["X-Apple-Session-Token"]
         logging.info(f"X_Apple_Session_Token_4----{self.X_Apple_Session_Token_4}")
         return self
-    
+
+    @retry_decorator
     def twenty_one(self):
         url = "https://idmsa.apple.com/appleauth/auth/repair/complete"
         headers = {
@@ -762,11 +879,18 @@ class APPLE_Remove:
             "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa_3}",
         }
         data = ""
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            data=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.myacinfo = response.cookies.get("myacinfo")
         logging.info(f"myacinfo----{self.myacinfo}")
         return self
 
+    @retry_decorator
     def twenty_two(self):
         url = "https://appleid.apple.com/account/manage/gs/ws/token"
         headers = {
@@ -793,6 +917,8 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.X_Apple_I_Request_ID = response.headers["X-Apple-I-Request-ID"]
         self.scnt_8 = response.headers["scnt"]
@@ -807,7 +933,8 @@ class APPLE_Remove:
         logging.info(f"caw_at----{self.caw_at}")
         logging.info(f"aidsp_2----{self.aidsp_2}")
         return self
-    
+
+    @retry_decorator
     def twenty_three(self):
         url = "https://appleid.apple.com/account/manage/profile/avatar"
         headers = {
@@ -834,11 +961,14 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.caw_at_2 = response.cookies.get("caw-at")
         logging.info(f"caw_at_2----{self.caw_at_2}")
         return self
-    
+
+    @retry_decorator
     def twenty_four(self):
         url = "https://appleid.apple.com/account/manage"
         headers = {
@@ -865,6 +995,8 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_9 = response.headers["scnt"]
         self.awat_2 = response.cookies.get("awat")
@@ -873,7 +1005,8 @@ class APPLE_Remove:
         logging.info(f"awat_2----{self.awat_2}")
         logging.info(f"dat----{self.dat}")
         return self
-    
+
+    @retry_decorator
     def twenty_five(self):
         url = "https://appleid.apple.com/account/manage/profile/avatar"
         headers = {
@@ -901,6 +1034,8 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_10 = response.headers["scnt"]
         self.caw_at_3 = response.cookies.get("caw-at")
@@ -909,7 +1044,8 @@ class APPLE_Remove:
         logging.info(f"caw_at_3----{self.caw_at_3}")
         logging.info(f"awat_5----{self.awat_5}")
         return self
-    
+
+    @retry_decorator
     def twenty_six(self):
         url = "https://appleid.apple.com/account/manage/payment"
         headers = {
@@ -937,11 +1073,15 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.awat_7 = response.cookies.get("awat")
         logging.info(f"awat_7----{self.awat_7}")
         return self
+
     # 设备目录
+    @retry_decorator
     def twenty_seven(self):
         url = "https://appleid.apple.com/account/manage/security/devices"
         headers = {
@@ -969,6 +1109,8 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.scnt_11 = response.headers["scnt"]
         self.awat_6 = response.cookies.get("awat")
@@ -978,7 +1120,8 @@ class APPLE_Remove:
         logging.info(f"scnt_11----{self.scnt_11}")
         logging.info(f"awat_6----{self.awat_6}")
         return self
-    
+
+    @retry_decorator
     def twenty_eight(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1012,9 +1155,16 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": "{}",
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         return self
-    
+
+    @retry_decorator
     def twenty_nine(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1048,9 +1198,16 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":505}',
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         return self
-    
+
+    @retry_decorator
     def thirty(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1084,9 +1241,16 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":663,"version":"unknown"}',
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         return self
-    
+
+    @retry_decorator
     def thirty_one(self):
         url = "https://familyws.icloud.apple.com/api/i18n"
         headers = {
@@ -1108,10 +1272,13 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # logging.info(f'scnt_11----{response.text}')
         return self
-    
+
+    @retry_decorator
     def thirty_two(self):
         url = "https://familyws.icloud.apple.com/api/member-photos"
         Header = {
@@ -1133,10 +1300,13 @@ class APPLE_Remove:
         response = requests.get(
             url=url,
             headers=Header,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # logging.info(f'scnt_11----{response.text}')
         return self
-    
+
+    @retry_decorator
     def thirty_three(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1170,10 +1340,17 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":965}',
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         # logging.info(f'scnt_11----{response.headers}')
         return self
-    
+
+    @retry_decorator
     def thirty_four(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1207,13 +1384,20 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":965}',
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aid_3 = response.cookies.get("aid")
         self.X_Apple_ID_Session_Id = response.headers["X-Apple-ID-Session-Id"]
         logging.info(f"aid_3----{self.aid_3}")
         logging.info(f"X_Apple_ID_Session_Id----{self.X_Apple_ID_Session_Id}")
         return self
-    
+
+    @retry_decorator
     def thirty_five(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1247,14 +1431,23 @@ class APPLE_Remove:
             "messageMap": {"ACTION": "FE_INFO"},
             "details": "{}",
         }
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         self.aid_4 = response.cookies.get("aid")
         self.X_Apple_ID_Session_Id_3 = response.headers["X-Apple-ID-Session-Id"]
         return self
-    
+
+    @retry_decorator
     def thirty_six(self):
         for device_id in self.id_list[:]:
-            url = f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+            url = (
+                f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+            )
             headers = {
                 "Host": "appleid.apple.com",
                 "Connection": "keep-alive",
@@ -1280,6 +1473,8 @@ class APPLE_Remove:
             response = requests.get(
                 url=url,
                 headers=headers,
+                proxies=self.DL,
+                timeout=self.time,
             )
             self.caw_at_4 = response.cookies.get("caw-at")
             self.awat_8 = response.cookies.get("awat")
@@ -1288,7 +1483,9 @@ class APPLE_Remove:
             logging.info(f"awat_8----{self.awat_8}")
             logging.info(f"scnt_12----{self.scnt_12}")
 
-            url = f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+            url = (
+                f"https://appleid.apple.com/account/manage/security/devices/{device_id}"
+            )
             headers = {
                 "Host": "appleid.apple.com",
                 "Connection": "keep-alive",
@@ -1315,25 +1512,24 @@ class APPLE_Remove:
             response = requests.delete(
                 url=url,
                 headers=headers,
+                proxies=self.DL,
+                timeout=self.time,
             )
             logging.info(f"caw_at_4----{response.text}")
         return self
-        
 
-
-        
 
 def main():
 
     apple_remove = APPLE_Remove(
         username="jacobgordon6s@hotmail.com",
         password="Aa147369",
-        Question_one = "你少年时代最好的朋友叫什么名字？",
-        Answer_one = "py1234",
-        Question_two = "你的理想工作是什么？",
-        Answer_two = "gz1234",
-        Question_three = "你的父母是在哪里认识的？",
-        Answer_three = "fm1234",
+        Question_one="你少年时代最好的朋友叫什么名字？",
+        Answer_one="py1234",
+        Question_two="你的理想工作是什么？",
+        Answer_two="gz1234",
+        Question_three="你的父母是在哪里认识的？",
+        Answer_three="fm1234",
     )
 
     result_one = apple_remove.one()
@@ -1350,9 +1546,9 @@ def main():
     result_twelve = apple_remove.twelve()
     result_thirteen = apple_remove.thirteen()
     result_fourteen = apple_remove.fourteen()
-    result_fifteen =  apple_remove.fifteen()
+    result_fifteen = apple_remove.fifteen()
     result_sixteen = apple_remove.sixteen()
-    result_seventeen =  apple_remove.seventeen()
+    result_seventeen = apple_remove.seventeen()
     result_eighteen = apple_remove.eighteen()
     result_nineteen = apple_remove.nineteen()
     result_twenty = apple_remove.twenty()
@@ -1364,72 +1560,15 @@ def main():
     result_twenty_six = apple_remove.twenty_six()
     result_twenty_seven = apple_remove.twenty_seven()
     result_twenty_eight = apple_remove.twenty_eight()
-    result_twenty_nine =  apple_remove.twenty_nine()
+    result_twenty_nine = apple_remove.twenty_nine()
     result_thirty = apple_remove.thirty()
     result_thirty_one = apple_remove.thirty_one()
     result_thirty_two = apple_remove.thirty_two()
     result_thirty_three = apple_remove.thirty_three()
-    result_thirty_four =  apple_remove.thirty_four()
+    result_thirty_four = apple_remove.thirty_four()
     result_thirty_five = apple_remove.thirty_five()
     result_thirty_six = apple_remove.thirty_six()
-
-    
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
