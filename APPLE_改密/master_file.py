@@ -14,6 +14,7 @@ from PySide6.QtCore import QThread, Signal
 from ui.Ui_untitled import Ui_Form
 from modo.change_password import APPLE
 from modo.Security_Code import APPLE_2
+from modo.Remove_copy import APPLE_Remove
 
 
 class APPLE_UI(QWidget, Ui_Form):
@@ -41,6 +42,9 @@ class APPLE_UI(QWidget, Ui_Form):
         elif current == "改密保":
             self.start.clicked.disconnect()
             self.start.clicked.connect(self.start_process_2)
+        elif current == "删设备":
+            self.start.clicked.disconnect()
+            self.start.clicked.connect(self.start_process_3)
         else:
             QMessageBox.information(self, "提示", "你选择了其他选项")
 
@@ -124,6 +128,38 @@ class APPLE_UI(QWidget, Ui_Form):
             thread.progress_signal.connect(self.update_progress)
             self.threads.append(thread)
             thread.start()
+
+    def start_process_3(self):
+        self.threads = []
+        for row in range(self.tableWidget.rowCount()):
+            username = self.tableWidget.item(row, 0).text()
+            password = self.tableWidget.item(row, 1).text()
+
+            Question_one = self.tableWidget.item(row, 2).text()
+            Answer_one = self.tableWidget.item(row, 3).text()
+
+            Question_two = self.tableWidget.item(row, 4).text()
+            Answer_two = self.tableWidget.item(row, 5).text()
+
+            Question_three = self.tableWidget.item(row, 6).text()
+            Answer_three = self.tableWidget.item(row, 7).text()
+
+            kwargs = {
+                "username": username,
+                "password": password,
+                "Question_one": Question_one,
+                "Answer_one": Answer_one,
+                "Question_two": Question_two,
+                "Answer_two": Answer_two,
+                "Question_three": Question_three,
+                "Answer_three": Answer_three,
+                "row": row,
+            }
+            thread = APPLEThread_3(self, **kwargs)
+            thread.progress_signal.connect(self.update_progress)
+            self.threads.append(thread)
+            thread.start()
+
 
     def clear_table(self):
         self.tableWidget.clearContents()
@@ -388,6 +424,69 @@ class APPLEThread_2(QThread):
         #     result = None
         #     self.emit_progress(result, self.row)
 
+    def emit_progress(self, message, row):
+        self.progress_signal.emit(message, row)
+
+
+class APPLEThread_3(QThread):
+    progress_signal = Signal(str, int)
+
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent)
+        self.kwargs = {
+            "username": kwargs.get("username"),
+            "password": kwargs.get("password"),
+            "Question_one": kwargs.get("Question_one"),
+            "Answer_one": kwargs.get("Answer_one"),
+            "Question_two": kwargs.get("Question_two"),
+            "Answer_two": kwargs.get("Answer_two"),
+            "Question_three": kwargs.get("Question_three"),
+            "Answer_three": kwargs.get("Answer_three"),
+        }
+
+        self.row = kwargs.get("row")
+
+    def run(self):
+        self.emit_progress("开始", self.row)
+        self.apple_remove = APPLE_Remove(**self.kwargs)
+
+        result_one = self.apple_remove.one()
+        self.emit_progress("获取SSTT", self.row)
+        result_two = self.apple_remove.two()
+        result_three = self.apple_remove.three()
+        result_four = self.apple_remove.four()
+        result_five = self.apple_remove.five()
+        result_six = self.apple_remove.six()
+        result_seven = self.apple_remove.seven()
+        result_eight = self.apple_remove.eight()
+        result_nine = self.apple_remove.nine()
+        result_ten = self.apple_remove.ten()
+        result_eleven = self.apple_remove.eleven()
+        result_twelve = self.apple_remove.twelve()
+        result_thirteen = self.apple_remove.thirteen()
+        result_fourteen = self.apple_remove.fourteen()
+        result_fifteen = self.apple_remove.fifteen()
+        result_sixteen = self.apple_remove.sixteen()
+        result_seventeen = self.apple_remove.seventeen()
+        result_eighteen = self.apple_remove.eighteen()
+        result_nineteen = self.apple_remove.nineteen()
+        result_twenty = self.apple_remove.twenty()
+        result_twenty_one = self.apple_remove.twenty_one()
+        result_twenty_two = self.apple_remove.twenty_two()
+        result_twenty_three = self.apple_remove.twenty_three()
+        result_twenty_four = self.apple_remove.twenty_four()
+        result_twenty_five = self.apple_remove.twenty_five()
+        result_twenty_six = self.apple_remove.twenty_six()
+        result_twenty_seven = self.apple_remove.twenty_seven()
+        result_twenty_eight = self.apple_remove.twenty_eight()
+        result_twenty_nine = self.apple_remove.twenty_nine()
+        result_thirty = self.apple_remove.thirty()
+        result_thirty_one = self.apple_remove.thirty_one()
+        result_thirty_two = self.apple_remove.thirty_two()
+        result_thirty_three = self.apple_remove.thirty_three()
+        result_thirty_four = self.apple_remove.thirty_four()
+        result_thirty_five = self.apple_remove.thirty_five()
+        result_thirty_six = self.apple_remove.thirty_six()
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)
 

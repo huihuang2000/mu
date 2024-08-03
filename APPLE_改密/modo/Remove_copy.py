@@ -1,5 +1,6 @@
 import requests, re, logging, json
-from tenacity import retry, stop_after_attempt, retry_if_exception_type
+from retry import retry
+from sympy import true
 
 logging.basicConfig(
     level=logging.INFO,
@@ -10,10 +11,6 @@ logging.basicConfig(
 
 # ------------------------------------------------------------------------------------------------------------------------------------
 class APPLE_Remove:
-    retry_decorator = retry(
-        stop=stop_after_attempt(5), retry=retry_if_exception_type(Exception)
-    )
-
     def __init__(self, **kwargs) -> None:
         self.username = kwargs.get("username")
         self.password = kwargs.get("password")
@@ -30,7 +27,7 @@ class APPLE_Remove:
         }
         self.time = (3, 5)
 
-    @retry_decorator
+    @retry(tries=20)
     def one(self):
         cookies = {
             "dssid2": "c71e8b00-8802-4176-aec7-02d1e369f1d3",
@@ -66,7 +63,7 @@ class APPLE_Remove:
         logging.info(f"scnt_7----{self.scnt_7}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def two(self):
         headers = {
             "Accept": "application/json, text/plain, */*",
@@ -100,7 +97,7 @@ class APPLE_Remove:
         logging.info(f"serviceKey----{self.serviceKey}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def three(self):
         headers = {
             "Host": "appleid.apple.com",
@@ -134,7 +131,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_I_Request_ID----{self.X_Apple_I_Request_ID}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def four(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -177,7 +174,7 @@ class APPLE_Remove:
         logging.info(f"aid_1----{self.aid_1}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def five(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -221,7 +218,7 @@ class APPLE_Remove:
         logging.info(f"aid_2----{self.aid_2}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def six(self):
         url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={self.serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
         headers = {
@@ -256,7 +253,7 @@ class APPLE_Remove:
         logging.info(f"aasp----{self.aasp}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def seven(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -297,7 +294,7 @@ class APPLE_Remove:
         logging.info(f"aa----{self.aa}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def eight(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=1"
         payload = {f"email": {self.username}}
@@ -309,7 +306,7 @@ class APPLE_Remove:
         ).json()
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def nine(self):
         combined_headers_and_cookies = {
             "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -334,7 +331,7 @@ class APPLE_Remove:
         logging.info(f"scnt_1----{self.scnt_1}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def ten(self):
         url = "https://env-00jxgsqva6td.dev-hz.cloudbasefunction.cn/A1?type=2"
         payload = {
@@ -355,7 +352,7 @@ class APPLE_Remove:
         ).json()
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def eleven(self):
         headers = {
             "Host": "idmsa.apple.com",
@@ -416,7 +413,7 @@ class APPLE_Remove:
         return self
 
     # 此处需要修改密保
-    @retry_decorator
+    @retry(tries=20)
     def twelve(self):
         url = "https://idmsa.apple.com/appleauth/auth"
         headers = {
@@ -509,7 +506,7 @@ class APPLE_Remove:
         # logging.info(f"X_Apple_Auth_Attributes----{response.text}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirteen(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -551,7 +548,7 @@ class APPLE_Remove:
         logging.info(f"aa_2----{self.aa_2}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def fourteen(self):
         url = "https://idmsa.apple.com/appleauth/jslog"
         headers = {
@@ -593,7 +590,7 @@ class APPLE_Remove:
         logging.info(f"aa_3----{self.aa_3}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def fifteen(self):
         url = "https://idmsa.apple.com/appleauth/auth/verify/questions"
         headers = {
@@ -651,7 +648,7 @@ class APPLE_Remove:
         logging.info(f"Location----{self.Location}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def sixteen(self):
         url = "https://appleid.apple.com/widget/account/repair?widgetKey=af1139274f266b22b68c2a3e7ad932cb3c0bbe854e13a79af78dcc73136882c3&rv=1&language=zh_CN_CHN"
         headers = {
@@ -682,7 +679,7 @@ class APPLE_Remove:
         logging.info(f"scnt_5----{self.scnt_5}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def seventeen(self):
         url = "https://appleid.apple.com/account/manage/repair/options"
         headers = {
@@ -723,7 +720,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_Session_Token----{self.X_Apple_Session_Token}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def eighteen(self):
         url = "https://appleid.apple.com/account/security/upgrade"
         headers = {
@@ -763,7 +760,7 @@ class APPLE_Remove:
         # logging.info(f'response----{response.text}')
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def nineteen(self):
         url = "https://appleid.apple.com/account/security/upgrade/setuplater"
         headers = {
@@ -802,7 +799,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_Session_Token_3----{self.X_Apple_Session_Token_3}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty(self):
         url = "https://appleid.apple.com/account/manage/repair/options"
         headers = {
@@ -841,7 +838,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_Session_Token_4----{self.X_Apple_Session_Token_4}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_one(self):
         url = "https://idmsa.apple.com/appleauth/auth/repair/complete"
         headers = {
@@ -890,7 +887,7 @@ class APPLE_Remove:
         logging.info(f"myacinfo----{self.myacinfo}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_two(self):
         url = "https://appleid.apple.com/account/manage/gs/ws/token"
         headers = {
@@ -934,7 +931,7 @@ class APPLE_Remove:
         logging.info(f"aidsp_2----{self.aidsp_2}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_three(self):
         url = "https://appleid.apple.com/account/manage/profile/avatar"
         headers = {
@@ -968,7 +965,7 @@ class APPLE_Remove:
         logging.info(f"caw_at_2----{self.caw_at_2}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_four(self):
         url = "https://appleid.apple.com/account/manage"
         headers = {
@@ -1006,7 +1003,7 @@ class APPLE_Remove:
         logging.info(f"dat----{self.dat}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_five(self):
         url = "https://appleid.apple.com/account/manage/profile/avatar"
         headers = {
@@ -1045,7 +1042,7 @@ class APPLE_Remove:
         logging.info(f"awat_5----{self.awat_5}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_six(self):
         url = "https://appleid.apple.com/account/manage/payment"
         headers = {
@@ -1081,7 +1078,7 @@ class APPLE_Remove:
         return self
 
     # 设备目录
-    @retry_decorator
+    @retry(tries=20)
     def twenty_seven(self):
         url = "https://appleid.apple.com/account/manage/security/devices"
         headers = {
@@ -1121,7 +1118,7 @@ class APPLE_Remove:
         logging.info(f"awat_6----{self.awat_6}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_eight(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1164,7 +1161,7 @@ class APPLE_Remove:
         )
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def twenty_nine(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1207,7 +1204,7 @@ class APPLE_Remove:
         )
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1250,7 +1247,7 @@ class APPLE_Remove:
         )
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_one(self):
         url = "https://familyws.icloud.apple.com/api/i18n"
         headers = {
@@ -1278,7 +1275,7 @@ class APPLE_Remove:
         # logging.info(f'scnt_11----{response.text}')
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_two(self):
         url = "https://familyws.icloud.apple.com/api/member-photos"
         Header = {
@@ -1306,7 +1303,7 @@ class APPLE_Remove:
         # logging.info(f'scnt_11----{response.text}')
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_three(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1350,7 +1347,7 @@ class APPLE_Remove:
         # logging.info(f'scnt_11----{response.headers}')
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_four(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1397,7 +1394,7 @@ class APPLE_Remove:
         logging.info(f"X_Apple_ID_Session_Id----{self.X_Apple_ID_Session_Id}")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_five(self):
         url = "https://appleid.apple.com/jslog"
         headers = {
@@ -1440,9 +1437,10 @@ class APPLE_Remove:
         )
         self.aid_4 = response.cookies.get("aid")
         self.X_Apple_ID_Session_Id_3 = response.headers["X-Apple-ID-Session-Id"]
+        logging.info(f"thirty_five----true")
         return self
 
-    @retry_decorator
+    @retry(tries=20)
     def thirty_six(self):
         for device_id in self.id_list[:]:
             url = (
@@ -1516,6 +1514,8 @@ class APPLE_Remove:
                 timeout=self.time,
             )
             logging.info(f"caw_at_4----{response.text}")
+            logging.info(f"thirty_six----true")
+        logging.info(f"thirty_six----true")    
         return self
 
 
