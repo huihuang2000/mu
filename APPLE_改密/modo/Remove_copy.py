@@ -1,6 +1,5 @@
 import requests, re, logging, json
 from retry import retry
-from sympy import true
 
 logging.basicConfig(
     level=logging.INFO,
@@ -1522,7 +1521,7 @@ class APPLE_Remove:
 def main():
 
     apple_remove = APPLE_Remove(
-        username="jacobgordon6s@hotmail.com",
+        username="yohtaydarv11@gmail.com",
         password="Aa147369",
         Question_one="你少年时代最好的朋友叫什么名字？",
         Answer_one="py1234",

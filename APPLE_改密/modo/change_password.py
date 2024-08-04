@@ -797,16 +797,16 @@ if __name__ == "__main__":
 
     # 使用示例
     result = start_process(
-        username="takakoy0901@gmail.com",
-        password="Aa14755471",
+        username="yohtaydarv11@gmail.com",
+        password="Aa1473691",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py12345",
+        answer_one="py1234",
         question_two="你的理想工作是什么？",
-        answer_two="gz12345",
+        answer_two="gz1234",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm13245",
+        answer_three="fm1234",
     )
     print(result)

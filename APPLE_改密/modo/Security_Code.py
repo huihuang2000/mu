@@ -672,20 +672,20 @@ class APPLE_2:
 
 if __name__ == "__main__":
     apple = APPLE_2(
-        username="asheral35@outlook.com",
-        password="Aa147369",
+        username="yohtaydarv11@gmail.com",
+        password="Aa1473691",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
-        question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py1234",
-        question_two="你的理想工作是什么？",
-        answer_two="gz1234",
-        question_three="你的父母是在哪里认识的？",
-        answer_three="fm1234",
-        pass_1="py1234",
-        pass_2="gz1234",
-        pass_3="fm1234",
+        Question_one="你少年时代最好的朋友叫什么名字？",
+        Answer_one="py12345",
+        Question_two="你的理想工作是什么？",
+        Answer_two="gz12345",
+        Question_three="你的父母是在哪里认识的？",
+        Answer_three="fm12345",
+        pass_1="py123456",
+        pass_2="gz123456",
+        pass_3="fm123456",
     )
 
     apple.Get_sstt()
