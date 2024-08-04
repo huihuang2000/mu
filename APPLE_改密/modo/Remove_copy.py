@@ -1515,7 +1515,7 @@ class APPLE_Remove:
             )
             logging.info(f"caw_at_4----{response.text}")
             logging.info(f"thirty_six----true")
-        logging.info(f"thirty_six----true")    
+        logging.info(f"thirty_six----true")
         return self
 
 
