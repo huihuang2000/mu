@@ -475,7 +475,7 @@ class APPLE_2:
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
         self.three_times = response.json()
-        # print(response.text)
+        print(response.text)
         return self
 
     @retry(tries=20)
@@ -637,6 +637,7 @@ class APPLE_2:
         question_texts = [
             question["question"] for question in self.three_times["questions"]
         ]
+        print(question_texts)
         available_question_ids = {
             question["question"]: question["id"]
             for group in self.available["availableQuestions"]
@@ -672,20 +673,20 @@ class APPLE_2:
 
 if __name__ == "__main__":
     apple = APPLE_2(
-        username="yohtaydarv11@gmail.com",
-        password="Aa1473691",
+        username="matgordonidn@outlook.com",
+        password="Aa147369",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         Question_one="你少年时代最好的朋友叫什么名字？",
-        Answer_one="py12345",
+        Answer_one="py1234",
         Question_two="你的理想工作是什么？",
-        Answer_two="gz12345",
+        Answer_two="gz1234",
         Question_three="你的父母是在哪里认识的？",
-        Answer_three="fm12345",
-        pass_1="py123456",
-        pass_2="gz123456",
-        pass_3="fm123456",
+        Answer_three="fm1234",
+        pass_1="py12345",
+        pass_2="gz12345",
+        pass_3="fm12345",
     )
 
     apple.Get_sstt()

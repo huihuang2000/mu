@@ -1,4 +1,3 @@
-from ast import Import
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
