@@ -6,8 +6,8 @@ ocr = ddddocr.DdddOcr(
     det=False,
     show_ad=False,
     ocr=False,
-    import_onnx_path="APPLE_改密/modo/A1.onnx",
-    charsets_path="APPLE_改密/modo/charsets.json",
+    import_onnx_path=".\ocr\A1.onnx",
+    charsets_path=".\ocr\charsets.json",
 )
 
 
