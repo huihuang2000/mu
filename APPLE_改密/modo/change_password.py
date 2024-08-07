@@ -1,14 +1,6 @@
-import requests, re, ddddocr
+import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
-
-ocr = ddddocr.DdddOcr(
-    det=False,
-    show_ad=False,
-    ocr=False,
-    import_onnx_path=".\ocr\A1.onnx",
-    charsets_path=".\ocr\charsets.json",
-)
 
 
 class APPLE:
@@ -96,7 +88,9 @@ class APPLE:
 
     @retry(tries=20)
     def Identification_codes(self):
-        self.res = ocr.classification(self.captcha)
+        url = 'http://110.41.40.215:8044/ocr'
+        params = {'captcha': self.captcha}
+        self.res = requests.get(url, params=params).text
         return self
 
     @retry(tries=20)
@@ -797,7 +791,7 @@ if __name__ == "__main__":
 
     # 使用示例
     result = start_process(
-        username="yohtaydarv11@gmail.com",
+        username="matgordonidn@outlook.com",
         password="Aa1473691",
         year_item="1993",
         monthOfYear_item="05",
