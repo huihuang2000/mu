@@ -458,7 +458,9 @@ class APPLEThread_3(QThread):
         result_five = self.apple_remove.five()
         self.emit_progress("5-获取aid_2", self.row)
         result_six = self.apple_remove.six()
-        self.emit_progress("6-获取X_Apple_Auth_Attributes|X_Apple_HC_Challenge|aasp", self.row)
+        self.emit_progress(
+            "6-获取X_Apple_Auth_Attributes|X_Apple_HC_Challenge|aasp", self.row
+        )
         result_seven = self.apple_remove.seven()
         self.emit_progress("7-获取aa", self.row)
         result_eight = self.apple_remove.eight()
@@ -468,7 +470,9 @@ class APPLEThread_3(QThread):
         result_ten = self.apple_remove.ten()
         self.emit_progress("10-获取response_3", self.row)
         result_eleven = self.apple_remove.eleven()
-        self.emit_progress("11-获取scnt_2|X_Apple_ID_Session_Id|X_Apple_Auth_Attributes", self.row)
+        self.emit_progress(
+            "11-获取scnt_2|X_Apple_ID_Session_Id|X_Apple_Auth_Attributes", self.row
+        )
         result_twelve = self.apple_remove.twelve()
         self.emit_progress("12-获取服务器密保", self.row)
         result_thirteen = self.apple_remove.thirteen()

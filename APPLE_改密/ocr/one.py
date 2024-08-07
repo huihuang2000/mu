@@ -12,12 +12,14 @@ ocr = ddddocr.DdddOcr(
 
 app = Flask(__name__)
 
-@app.route('/ocr', methods=['GET'])
+
+@app.route("/ocr", methods=["GET"])
 def home():
 
-    captcha = request.args.get('captcha', default=None, type=str)
+    captcha = request.args.get("captcha", default=None, type=str)
     res = ocr.classification(captcha)
     return res
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8044)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8044)

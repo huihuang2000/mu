@@ -88,8 +88,8 @@ class APPLE:
 
     @retry(tries=20)
     def Identification_codes(self):
-        url = 'http://110.41.40.215:8044/ocr'
-        params = {'captcha': self.captcha}
+        url = "http://110.41.40.215:8044/ocr"
+        params = {"captcha": self.captcha}
         self.res = requests.get(url, params=params).text
         return self
 
