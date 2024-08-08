@@ -1,0 +1,39 @@
+import requests
+
+cookies = {
+    'pltvcid': 'undefined',
+    'idclient': 'web',
+    'dslang': 'CN-ZH',
+    'site': 'CHN',
+    'geo': 'CN',
+    'pldfltcid': '9d562bc73d6f4a3e8623983cd00792dc047',
+    'ifssp': '3F4E990AC70FE29E3B2A749AD8FF15A800F56A9293A0A812180D6B01FE714C094C4DAA94DBD0C6EE8B68E2D07B110729F269A9C96589127B42987D0DC77AB4C096A32A8F8A5800DE9873D08B1D5B7833201B9D16FA5FF1D4923C2E82B2ED51BC6F3E68CE7812B74601F779F4B7A1603C2276EF4EDD855EAD',
+    'X-Apple-I-Web-Token': 'AAAAKjd8MDY5NGM3OWJkN2Q4YWMzMGVlNjY4OWM0OTgzMzNiNmEAAAGRMfTFyw482CLokVFNLUlHUKgBHHa2eW1E43Fv8RzRM+pGD4heNH7GOAd1V/+D7gSgt/3wWH4QhJm1NPl6yq5xPobvMNxkNEaFuBuEyrDDKTjjUETC2nIs78dT4qaFsXuE3FNvtKanfDu3tbV7jfYqvCRetRTMjHMdcjKKERtfiaeWiIELMABN88xAFmZ93Gfd9Huix6JsozXwcw9Fc9Oy0IhHLSxmeZEpYZtJFXMUU4bQL7yPyRYVcSHi+ezCux3kI3owj75+QRsRTlU09ecwxh5Me+SRe0gGoOmkLG4/U7i7SVe0N2bAAuZ7VAPoagSah+ljGlZyE2znq3j3l4UG7oiZSwbLPS8DY/PYjETY2G6qmdya9Qt7l9h6v2wtUnsAr22HEbr6KD28ZjNj5Sjs1lLm0deDT8IFNcrpQI4OFcNT+q0Nh6kEbvaKACvY8Ey+sD/1xYXvfaLz732MPs2eMJmiSXyNBtqd4KpmFE2mKCE8HUwLQK8prMhROF5h2OqujZxb2Ctkmi3c/41wggEgamE4Rr4+kKti8G2MQwevNrUVwATmBr0VDvbXGzWVptEonOtYEOwTWrvWu9Ji4hbVech6NHAKruXu3WLJO0H8EBe5ynfIxkZU8nx+d7uU9axP9ykArTihMkYyojeui6GWeuPaL+LBWjpH9vhXpQKK1xBHz5R8tiY8hwm4KnYdddEjjcsd9IuFweJo6fv/Q9FMFmTIz60aD/rInZVOWQOl8cLubT2kIhBnxnQ7oZg2Xa9iNrSghJJXo43hVMDkfFma4HERPxsk5V9MX6rHG8LgY59QMABSAv1f5+JlgSIwXGA9Ju9i9uB5Y7nPCvcuGB4v10tVJQM/pJ37Jvfbk1abMhgvm/r/V9ZWTg74lCxTURITWPkZEuuYkqu6hOhS81ErVFJeTqahOIK52pvlF/KwfoejF0GC3RpXm10ZqQSAnYnhNvnmoyA08uBGyKV065KgK00jSp3m3zivbLIuIMcAD3PKbT28+1CGsEuJoBb8gtfrz8TTCnnXsahLKfhdfOSE7oECXDAAJo+iP1eMgUUFx3/mJW58lKMsN3G77TtLjdzk0E1Hf8f8p9iRoK3o',
+}
+
+headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    # 'Cookie': 'pltvcid=undefined; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; ifssp=3F4E990AC70FE29E3B2A749AD8FF15A800F56A9293A0A812180D6B01FE714C094C4DAA94DBD0C6EE8B68E2D07B110729F269A9C96589127B42987D0DC77AB4C096A32A8F8A5800DE9873D08B1D5B7833201B9D16FA5FF1D4923C2E82B2ED51BC6F3E68CE7812B74601F779F4B7A1603C2276EF4EDD855EAD; X-Apple-I-Web-Token=AAAAKjd8MDY5NGM3OWJkN2Q4YWMzMGVlNjY4OWM0OTgzMzNiNmEAAAGRMfTFyw482CLokVFNLUlHUKgBHHa2eW1E43Fv8RzRM+pGD4heNH7GOAd1V/+D7gSgt/3wWH4QhJm1NPl6yq5xPobvMNxkNEaFuBuEyrDDKTjjUETC2nIs78dT4qaFsXuE3FNvtKanfDu3tbV7jfYqvCRetRTMjHMdcjKKERtfiaeWiIELMABN88xAFmZ93Gfd9Huix6JsozXwcw9Fc9Oy0IhHLSxmeZEpYZtJFXMUU4bQL7yPyRYVcSHi+ezCux3kI3owj75+QRsRTlU09ecwxh5Me+SRe0gGoOmkLG4/U7i7SVe0N2bAAuZ7VAPoagSah+ljGlZyE2znq3j3l4UG7oiZSwbLPS8DY/PYjETY2G6qmdya9Qt7l9h6v2wtUnsAr22HEbr6KD28ZjNj5Sjs1lLm0deDT8IFNcrpQI4OFcNT+q0Nh6kEbvaKACvY8Ey+sD/1xYXvfaLz732MPs2eMJmiSXyNBtqd4KpmFE2mKCE8HUwLQK8prMhROF5h2OqujZxb2Ctkmi3c/41wggEgamE4Rr4+kKti8G2MQwevNrUVwATmBr0VDvbXGzWVptEonOtYEOwTWrvWu9Ji4hbVech6NHAKruXu3WLJO0H8EBe5ynfIxkZU8nx+d7uU9axP9ykArTihMkYyojeui6GWeuPaL+LBWjpH9vhXpQKK1xBHz5R8tiY8hwm4KnYdddEjjcsd9IuFweJo6fv/Q9FMFmTIz60aD/rInZVOWQOl8cLubT2kIhBnxnQ7oZg2Xa9iNrSghJJXo43hVMDkfFma4HERPxsk5V9MX6rHG8LgY59QMABSAv1f5+JlgSIwXGA9Ju9i9uB5Y7nPCvcuGB4v10tVJQM/pJ37Jvfbk1abMhgvm/r/V9ZWTg74lCxTURITWPkZEuuYkqu6hOhS81ErVFJeTqahOIK52pvlF/KwfoejF0GC3RpXm10ZqQSAnYnhNvnmoyA08uBGyKV065KgK00jSp3m3zivbLIuIMcAD3PKbT28+1CGsEuJoBb8gtfrz8TTCnnXsahLKfhdfOSE7oECXDAAJo+iP1eMgUUFx3/mJW58lKMsN3G77TtLjdzk0E1Hf8f8p9iRoK3o',
+    'DNT': '1',
+    'Pragma': 'no-cache',
+    'Referer': 'https://iforgot.apple.com/',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-origin',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0',
+    'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8HxX_W.MhUfSHolk2dUJKy_Aw7GY5ay.EKY.6eke4FIidrMpFjm_UaW5BNlY5CGWY5BOgkLT0XxU..8Uf"}',
+    'sec-ch-ua': '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sstt': 'Lb4540DdULEKx2F0bSquO6FeCb%2F1YmT0IabwyFWLUhdnEJVLhlbPoPaqdUQCPriNObceMD9FRhwnYBjg%2FPrq5M2fIBN3wnWCWDdYXOmxc1RRjgd00W0EcE02fbaJBKy0uVR5vkr%2F91AUx4HqHz5c8lotywtZ%2FRBjcd9IeM%2BLYqZ%2BGXDloDTNqM1bZXvfLNA%2FVvicxl0AlwnGPWFBiouK0OjEBlAPh0%2FQLTfpGxJf41fnZy6BWGn88HPZhYphitJfezjxDGW3bKXZys8ZjrnhVRhrS6FY0cpY45GFliceDnWbbKVKm%2FvNAzoWHauiLBwspnp2xWDZqDUSl4e%2B9tg%2B%2BXCT7F5u62ckEYcUHsUyAEEAQTLOKEfxz%2BuEqmHFDqCTxkbOiJopTvQV8lEqGrWcsvaYrC7BAfjCpxes3P7vs8AuoweB1BGr0qfDV23j3viHi%2B4tIJ2yOJ3iazrtkoz%2BA8z%2BAd5rEw%3D%3D',
+}
+
+params = {
+    'sstt': 'w+/xn1AVD0Scu8HGZqg343sJ1hp1A9+Wde0MC1TMf0Z7c2q7+goKYtyDR60I5AZXSLqlhykDMIiJzslY5ED0lFOpRjNNsA5cEwlJifFDStFeabxncdQwVIu6p+6Tz9vzcB48WWYtltymqFja4gRAirAgC55XL8vRkYntAKrDgp9arUo/YKy3fQGbvbyvzTcKUkP1+BEfaYuwYPrW4n9al4BncTdPs4kR9eh1k0l75XeaWXmFKKTUB2v9kA9y25YL1HSv9+sZXOClydAEZcz9TSJxZiW32icCI8xcApwzwJ4T1HLeNzvzZZKksfHUsPGgSXG9SmVIcB/CTwTHpD+qPMsPEIweTAkEQEYPGlT6ieSwGA1jpzql3E6UJVFIRja03aQmOOzNrXwe9yohQvdMI/+lP7FZ87f6Uqa4Wiv2Ar51a2l7dxS/Jfq64f4r5rR5rz17zVijLZVn45i3hz+9l7Y0qECSo6uUIgHgIY10BhySNLcc3g27qfs+0ypyfbSMDlQEAQ==',
+}
+
+response = requests.get('https://iforgot.apple.com/unenrollment/verify/birthday', params=params, cookies=cookies, headers=headers)
+print(response.text)
