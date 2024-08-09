@@ -1,39 +1,593 @@
-import requests
+import requests, re
+from urllib.parse import unquote, quote
+from retry import retry
 
-cookies = {
-    'pltvcid': 'undefined',
-    'idclient': 'web',
-    'dslang': 'CN-ZH',
-    'site': 'CHN',
-    'geo': 'CN',
-    'pldfltcid': '9d562bc73d6f4a3e8623983cd00792dc047',
-    'ifssp': '3F4E990AC70FE29E3B2A749AD8FF15A800F56A9293A0A812180D6B01FE714C094C4DAA94DBD0C6EE8B68E2D07B110729F269A9C96589127B42987D0DC77AB4C096A32A8F8A5800DE9873D08B1D5B7833201B9D16FA5FF1D4923C2E82B2ED51BC6F3E68CE7812B74601F779F4B7A1603C2276EF4EDD855EAD',
-    'X-Apple-I-Web-Token': 'AAAAKjd8MDY5NGM3OWJkN2Q4YWMzMGVlNjY4OWM0OTgzMzNiNmEAAAGRMfTFyw482CLokVFNLUlHUKgBHHa2eW1E43Fv8RzRM+pGD4heNH7GOAd1V/+D7gSgt/3wWH4QhJm1NPl6yq5xPobvMNxkNEaFuBuEyrDDKTjjUETC2nIs78dT4qaFsXuE3FNvtKanfDu3tbV7jfYqvCRetRTMjHMdcjKKERtfiaeWiIELMABN88xAFmZ93Gfd9Huix6JsozXwcw9Fc9Oy0IhHLSxmeZEpYZtJFXMUU4bQL7yPyRYVcSHi+ezCux3kI3owj75+QRsRTlU09ecwxh5Me+SRe0gGoOmkLG4/U7i7SVe0N2bAAuZ7VAPoagSah+ljGlZyE2znq3j3l4UG7oiZSwbLPS8DY/PYjETY2G6qmdya9Qt7l9h6v2wtUnsAr22HEbr6KD28ZjNj5Sjs1lLm0deDT8IFNcrpQI4OFcNT+q0Nh6kEbvaKACvY8Ey+sD/1xYXvfaLz732MPs2eMJmiSXyNBtqd4KpmFE2mKCE8HUwLQK8prMhROF5h2OqujZxb2Ctkmi3c/41wggEgamE4Rr4+kKti8G2MQwevNrUVwATmBr0VDvbXGzWVptEonOtYEOwTWrvWu9Ji4hbVech6NHAKruXu3WLJO0H8EBe5ynfIxkZU8nx+d7uU9axP9ykArTihMkYyojeui6GWeuPaL+LBWjpH9vhXpQKK1xBHz5R8tiY8hwm4KnYdddEjjcsd9IuFweJo6fv/Q9FMFmTIz60aD/rInZVOWQOl8cLubT2kIhBnxnQ7oZg2Xa9iNrSghJJXo43hVMDkfFma4HERPxsk5V9MX6rHG8LgY59QMABSAv1f5+JlgSIwXGA9Ju9i9uB5Y7nPCvcuGB4v10tVJQM/pJ37Jvfbk1abMhgvm/r/V9ZWTg74lCxTURITWPkZEuuYkqu6hOhS81ErVFJeTqahOIK52pvlF/KwfoejF0GC3RpXm10ZqQSAnYnhNvnmoyA08uBGyKV065KgK00jSp3m3zivbLIuIMcAD3PKbT28+1CGsEuJoBb8gtfrz8TTCnnXsahLKfhdfOSE7oECXDAAJo+iP1eMgUUFx3/mJW58lKMsN3G77TtLjdzk0E1Hf8f8p9iRoK3o',
-}
 
-headers = {
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    # 'Cookie': 'pltvcid=undefined; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; ifssp=3F4E990AC70FE29E3B2A749AD8FF15A800F56A9293A0A812180D6B01FE714C094C4DAA94DBD0C6EE8B68E2D07B110729F269A9C96589127B42987D0DC77AB4C096A32A8F8A5800DE9873D08B1D5B7833201B9D16FA5FF1D4923C2E82B2ED51BC6F3E68CE7812B74601F779F4B7A1603C2276EF4EDD855EAD; X-Apple-I-Web-Token=AAAAKjd8MDY5NGM3OWJkN2Q4YWMzMGVlNjY4OWM0OTgzMzNiNmEAAAGRMfTFyw482CLokVFNLUlHUKgBHHa2eW1E43Fv8RzRM+pGD4heNH7GOAd1V/+D7gSgt/3wWH4QhJm1NPl6yq5xPobvMNxkNEaFuBuEyrDDKTjjUETC2nIs78dT4qaFsXuE3FNvtKanfDu3tbV7jfYqvCRetRTMjHMdcjKKERtfiaeWiIELMABN88xAFmZ93Gfd9Huix6JsozXwcw9Fc9Oy0IhHLSxmeZEpYZtJFXMUU4bQL7yPyRYVcSHi+ezCux3kI3owj75+QRsRTlU09ecwxh5Me+SRe0gGoOmkLG4/U7i7SVe0N2bAAuZ7VAPoagSah+ljGlZyE2znq3j3l4UG7oiZSwbLPS8DY/PYjETY2G6qmdya9Qt7l9h6v2wtUnsAr22HEbr6KD28ZjNj5Sjs1lLm0deDT8IFNcrpQI4OFcNT+q0Nh6kEbvaKACvY8Ey+sD/1xYXvfaLz732MPs2eMJmiSXyNBtqd4KpmFE2mKCE8HUwLQK8prMhROF5h2OqujZxb2Ctkmi3c/41wggEgamE4Rr4+kKti8G2MQwevNrUVwATmBr0VDvbXGzWVptEonOtYEOwTWrvWu9Ji4hbVech6NHAKruXu3WLJO0H8EBe5ynfIxkZU8nx+d7uU9axP9ykArTihMkYyojeui6GWeuPaL+LBWjpH9vhXpQKK1xBHz5R8tiY8hwm4KnYdddEjjcsd9IuFweJo6fv/Q9FMFmTIz60aD/rInZVOWQOl8cLubT2kIhBnxnQ7oZg2Xa9iNrSghJJXo43hVMDkfFma4HERPxsk5V9MX6rHG8LgY59QMABSAv1f5+JlgSIwXGA9Ju9i9uB5Y7nPCvcuGB4v10tVJQM/pJ37Jvfbk1abMhgvm/r/V9ZWTg74lCxTURITWPkZEuuYkqu6hOhS81ErVFJeTqahOIK52pvlF/KwfoejF0GC3RpXm10ZqQSAnYnhNvnmoyA08uBGyKV065KgK00jSp3m3zivbLIuIMcAD3PKbT28+1CGsEuJoBb8gtfrz8TTCnnXsahLKfhdfOSE7oECXDAAJo+iP1eMgUUFx3/mJW58lKMsN3G77TtLjdzk0E1Hf8f8p9iRoK3o',
-    'DNT': '1',
-    'Pragma': 'no-cache',
-    'Referer': 'https://iforgot.apple.com/',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-origin',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0',
-    'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8HxX_W.MhUfSHolk2dUJKy_Aw7GY5ay.EKY.6eke4FIidrMpFjm_UaW5BNlY5CGWY5BOgkLT0XxU..8Uf"}',
-    'sec-ch-ua': '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
-    'sstt': 'Lb4540DdULEKx2F0bSquO6FeCb%2F1YmT0IabwyFWLUhdnEJVLhlbPoPaqdUQCPriNObceMD9FRhwnYBjg%2FPrq5M2fIBN3wnWCWDdYXOmxc1RRjgd00W0EcE02fbaJBKy0uVR5vkr%2F91AUx4HqHz5c8lotywtZ%2FRBjcd9IeM%2BLYqZ%2BGXDloDTNqM1bZXvfLNA%2FVvicxl0AlwnGPWFBiouK0OjEBlAPh0%2FQLTfpGxJf41fnZy6BWGn88HPZhYphitJfezjxDGW3bKXZys8ZjrnhVRhrS6FY0cpY45GFliceDnWbbKVKm%2FvNAzoWHauiLBwspnp2xWDZqDUSl4e%2B9tg%2B%2BXCT7F5u62ckEYcUHsUyAEEAQTLOKEfxz%2BuEqmHFDqCTxkbOiJopTvQV8lEqGrWcsvaYrC7BAfjCpxes3P7vs8AuoweB1BGr0qfDV23j3viHi%2B4tIJ2yOJ3iazrtkoz%2BA8z%2BAd5rEw%3D%3D',
-}
+class APPLE:
 
-params = {
-    'sstt': 'w+/xn1AVD0Scu8HGZqg343sJ1hp1A9+Wde0MC1TMf0Z7c2q7+goKYtyDR60I5AZXSLqlhykDMIiJzslY5ED0lFOpRjNNsA5cEwlJifFDStFeabxncdQwVIu6p+6Tz9vzcB48WWYtltymqFja4gRAirAgC55XL8vRkYntAKrDgp9arUo/YKy3fQGbvbyvzTcKUkP1+BEfaYuwYPrW4n9al4BncTdPs4kR9eh1k0l75XeaWXmFKKTUB2v9kA9y25YL1HSv9+sZXOClydAEZcz9TSJxZiW32icCI8xcApwzwJ4T1HLeNzvzZZKksfHUsPGgSXG9SmVIcB/CTwTHpD+qPMsPEIweTAkEQEYPGlT6ieSwGA1jpzql3E6UJVFIRja03aQmOOzNrXwe9yohQvdMI/+lP7FZ87f6Uqa4Wiv2Ar51a2l7dxS/Jfq64f4r5rR5rz17zVijLZVn45i3hz+9l7Y0qECSo6uUIgHgIY10BhySNLcc3g27qfs+0ypyfbSMDlQEAQ==',
-}
+    def __init__(self, **kwargs) -> None:
+        self.username = kwargs.get("username")
+        self.password = kwargs.get("password")
+        self.year = kwargs.get("year_item")
+        self.monthOfYear = kwargs.get("monthOfYear_item")
+        self.dayOfMonth = kwargs.get("dayOfMonth_item")
+        self.question_one = kwargs.get("Question_one")
+        self.answer_one = kwargs.get("Answer_one")
+        self.question_two = kwargs.get("Question_two")
+        self.answer_two = kwargs.get("Answer_two")
+        self.question_three = kwargs.get("Question_three")
+        self.answer_three = kwargs.get("Answer_three")
+        self.pass_2 = ""
 
-response = requests.get('https://iforgot.apple.com/unenrollment/verify/birthday', params=params, cookies=cookies, headers=headers)
-print(response.text)
+        # self.DL = {
+        #     "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+        #     "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
+        # }
+        self.time = (20, 20)
+
+    @retry(tries=20)
+    def Get_sstt(self):
+        headers = {
+            "Host": "iforgot.apple.com",
+            "Connection": "keep-alive",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "Upgrade-Insecure-Requests": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-User": "?1",
+            "Sec-Fetch-Dest": "document",
+            "Referer": "https://idmsa.apple.com.cn/",
+            # "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            # "Cookie": "idclient=web; dslang=CN-ZH; site=CHN; ifssp=8F6D6A18FFA1A8AFF0ADB6956DB0E7474DAD3DBE0B9B52D7DEE473886AFA3295C1C6359E8C6370EABACF449D8ED6993B287621F6199695CA11613D923CB4EAF9F3514E0D4C1D3F12ABC1761B59A5836867B436AE0AA82721C95453EC30C465C1E35177645C16EF1C8B90C7B4B8BC2B8876C7A6D869F9F1F1; geo=CN"
+        }
+        response = requests.get(
+            "https://iforgot.apple.com/password/verify/appleid", headers=headers
+        )
+        self.sstt = re.search(r'"sstt":"([^"]+)"', response.text).group(1)
+        self.x_apple_i_web_token = response.cookies.get("X-Apple-I-Web-Token")
+        self.ifssp = response.cookies.get("ifssp")
+        return self
+
+    @retry(tries=20)
+    def get_verification_code(self):
+        headers = {
+            "Host": "iforgot.apple.com",
+            "Connection": "keep-alive",
+            "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            "sstt": quote(self.sstt),
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9cedK9AqApNurJhBR.uMp4UdHz13Nl_jV2pNk0ug9WJ3uJsjMm_U_WU_v25BNlY5cklY5BqNAE.lTjV.9OX"}',
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua-platform": '"Windows"',
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://iforgot.apple.com/",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; X-Apple-I-Web-Token={self.x_apple_i_web_token}; ifssp={self.ifssp}",
+        }
+        params = {
+            "captchaType": "IMAGE",
+        }
+        response = requests.get(
+            "https://iforgot.apple.com/captcha", params=params, headers=headers
+        )
+        self.captcha = response.json()["payload"]["content"]
+        self.x_apple_i_web_token_2 = response.cookies.get("X-Apple-I-Web-Token")
+        self.Token = response.json()["token"]
+        self.Id = response.json()["id"]
+        return self
+
+    @retry(tries=20)
+    def Identification_codes(self):
+        url = "http://110.41.40.215:8044/ocr"
+        params = {"captcha": self.captcha}
+        self.res = requests.get(url, params=params).text
+        return self
+
+    @retry(tries=20)
+    def Submit_302_1(self):
+        max_retries = 10  # 设置最大重试次数
+        retries = 0  # 初始化重试计数器
+        while retries < max_retries:
+            try:
+                cookies = {
+                    "idclient": "web",
+                    "dslang": "CN-ZH",
+                    "site": "CHN",
+                    "geo": "CN",
+                    "ifssp": self.ifssp,
+                    "X-Apple-I-Web-Token": self.x_apple_i_web_token_2,
+                }
+                headers = {
+                    "Accept": "application/json, text/javascript, */*; q=0.01",
+                    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+                    "Cache-Control": "no-cache",
+                    "Connection": "keep-alive",
+                    "Content-Type": "application/json",
+                    "Origin": "https://iforgot.apple.com",
+                    "Pragma": "no-cache",
+                    "Referer": "https://iforgot.apple.com/",
+                    "Sec-Fetch-Dest": "empty",
+                    "Sec-Fetch-Mode": "cors",
+                    "Sec-Fetch-Site": "same-origin",
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+                    "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9cedFWv9AqururJhBR.uMp4UdHz13NlejV2pNk0ug9WJ3uJsjMm_UWujme5BNlY5CGWY5BOgkLT0XxU..0ch"}',
+                    "X-Requested-With": "XMLHttpRequest",
+                    "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": '"Windows"',
+                    "sstt": quote(self.sstt),
+                }
+                json_data = {
+                    "id": self.username,
+                    "captcha": {
+                        "id": self.Id,
+                        "answer": self.res,
+                        "token": self.Token,
+                    },
+                }
+                response = requests.post(
+                    "https://iforgot.apple.com/password/verify/appleid",
+                    cookies=cookies,
+                    headers=headers,
+                    json=json_data,
+                    allow_redirects=False,
+                )
+                self.sstt_2 = unquote(response.headers["Sstt"])
+                self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
+                return self
+            except Exception:
+                retries += 1
+                if retries < max_retries:
+                    self.get_verification_code()
+                    self.Identification_codes()
+                    print("Submit_302_1 failed.")
+                else:
+                    print("Max retries reached. Submit_302_1 failed.")
+
+    @retry(tries=20)
+    def Five(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "geo": "CN",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "ifssp": self.ifssp,
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_3,
+        }
+
+        headers = {
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "DNT": "1",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"sda44j1e3NlY5BNlY5BSmHACVZXnNA9d8Hka9c3A6Lu_dYV6Hycfx9MsFY5CKw.Tf5.EKWJ9VbSIij__UWujyVNlY5BNp55BNlan0Os5Apw.8gh"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": self.sstt,
+        }
+
+        params = {
+            "sstt": self.sstt_2,
+        }
+        response = requests.get(
+            "https://iforgot.apple.com/password/verify/phone",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+        )
+        self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
+        self.sstt_3 = response.headers["Sstt"]
+        # print(response.text)
+        return self
+
+    @retry(tries=20)
+    def Six(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_4,
+        }
+
+        headers = {
+            "Accept": "text/html;format=fragmented",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "DNT": "1",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":".la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTmOF5NurJhBR.uMp4UdHz13Nl_jV2pNk0ug9WJ3veSqwc6tifwoclY5BNleBBNlYCa1nkBMfs.C_z"}',
+            "X-Requested-With": "XMLHttpRequest",
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": self.sstt_3,
+        }
+        response = requests.get(
+            "https://iforgot.apple.com/password/verify/phone",
+            cookies=cookies,
+            headers=headers,
+        )
+        self.x_apple_i_web_token_5 = response.cookies.get("X-Apple-I-Web-Token")
+        self.sstt_4 = re.search(r'"sstt":"([^"]+)"', response.text).group(1)
+        # print(response.headers)
+        # print(response.text)
+        return self
+
+    @retry(tries=20)
+    def Seven(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_5,
+        }
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "DNT": "1",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTliog8fxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1SpDvTJ2wrOyMgBNlY5BPY25BNnOVgw24uy.56Y"}',
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_4),
+        }
+
+        response = requests.post(
+            "https://iforgot.apple.com/password/verify/phone/unenrollment",
+            cookies=cookies,
+            headers=headers,
+            allow_redirects=False,
+        )
+        self.x_apple_i_web_token_6 = response.cookies.get("X-Apple-I-Web-Token")
+        self.Location = response.headers["Location"]
+        self.sstt_5 = response.headers["Sstt"]
+        return self
+
+    @retry(tries=20)
+    def Eight(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_6,
+        }
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "DNT": "1",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTliog8fxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1SpDvTJ2wrOyMgBNlY5BPY25BNnOVgw24uy.56Y"}',
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": quote(self.sstt_4),
+        }
+        response = requests.get(
+            f"https://iforgot.apple.com{self.Location}",
+            cookies=cookies,
+            headers=headers,
+        )
+        self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
+        self.sstt_6 = response.headers["Sstt"]
+        return self
+
+    @retry(tries=20)
+    def Nine(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_7,
+        }
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            "DNT": "1",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTk25WKUfSHolk2dUJKy_Aw7GY5ay.EKY.6eke4FIidrQmVUavEp55BNlY5CGWY5BOgkLT0XxU..42Z"}',
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": self.sstt_6,
+        }
+
+        json_data = {
+            "monthOfYear": "05",
+            "dayOfMonth": "25",
+            "year": "1993",
+        }
+
+        response = requests.post(
+            "https://iforgot.apple.com/unenrollment/verify/birthday",
+            cookies=cookies,
+            headers=headers,
+            json=json_data,
+            allow_redirects=False,
+        )
+        self.x_apple_i_web_token_8 = response.cookies.get("X-Apple-I-Web-Token")
+        self.Location_2 = response.headers["Location"]
+        self.sstt_7 = response.headers["Sstt"]
+        return self
+
+    @retry(tries=20)
+    def Ten(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_8,
+        }
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            # 'Cookie': 'pltvcid=undefined; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; idclient=web; dslang=CN-ZH; site=CHN; ifssp=A769EB512342739EBF9CDEE4E63BEE61F02B98E272D259C8EBADA74F315C74FAEE4A44331F985A218A96E1E96A19810436EAE79D5BD496A6BD461ECE5FB71614231878DD669204867E00B4B7FB5B2AC3FF0BE6C7B705FA9F96140F77C81765B4780B4195E5FE5A1D18F447E09845AE159E07C0FB514F07AB; geo=CN; X-Apple-I-Web-Token=AAAAKzExfDNmNDk0ZjczNDlhMGYwZWEwNDU2YzkzYWE5ZTE0ODMzAAABkTZq+mr/V2uoJN9kIJfaMxRJ+jdV4u/knXmufheQKJ3zq0RLB7ch2KrTnR++hGkNdsIxi8EnCF03Q9q7h3e0vSKRtSglZSE4BAKpQi7drzMBczXTtVXkk/Fcfr21f4ezRhqZs2ToA+qG/SyCANZDILmS1Xjn3IIZ/aAbM4BybEgGcNarrWnoBCj9iD56WfgU1VNs8EwJ7P9GLZUngRBd9ZyHdWntpt+GKdkQN9mTit23a2iRWaAG0skfSAPsJ5476QKn6UAixBE5Gr5XsHe3WlPyTv8J4M/khtP4N0fDDTQbwdLYfqyLTh/AbisYnkDDIZoGKdMXjxHeQuYOPcwjl4aJBuxFRamI9GndP3/KtZe9F/tk+3Z4SB+7jBfMY1XJD4rlCk6OcDc+cKzK0zNGZzZguWukQ0junebuw4PwGJYxEo8nSZpG6m+X0UtUloFhupKCBzEPUz9iVdWEpAVhIXb4kwvEDFuDs6c3lYnLVVBoV8HdCBAf80v5z2gXf9pWlwGt4bAX9aTST6LvRzL1p8NqWzLY5r2/v8VsPQ005RNxg8K+uDplKxYeypGK5zTegza2XBCbwwnZcnqCplapk5Pk6bKScUgPqqINUwpShmpNKVwKu8OhtgkZvYOv9YgGJYnd8DHYEuHRPTFxPjMkHe45M2d6xQKfKy453Dv8Bj7NXb5k33jIBnac/uHL3R5uk9lKtXdiUU1UOFSlXr/8pcgPyI8KrYWQTNyRhduzVFheJtu1LTK/2+TOyfgPZkHQ+9LSquTSz7Fwu8TfAXqVCs91jFXiaK1xYhGD6RD0ZZE0GQq6DLCoPF8QYqTYnBujm6fxz6g66nZYyAfcjBDZ80EFmxrn0Ou/3n/6aQHFPHqsDRkFa3JaJpxqPPUlmpzGfTqAaH1XlK+MoRAbssOnk3MNvivl03KDkydCb9QT2VTSsn0v6Atohw8uS2z7wuiZtVySyCW3kq2+A22z80JzD7pYLLnTVBiLDe4F7Mkd3FLgdrrUtAAm4PVKgsHApYA54BwnoeZoIrqjAAuC2DZzcWotc71UAMk1SOiNkVw=',
+            "DNT": "1",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTk25WKUfSHolk2dUJKy_Aw7GY5ay.EKY.6eke4FIidrQmVUavEp55BNlY5CGWY5BOgkLT0XxU..42Z"}',
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": self.sstt_7,
+        }
+        response = requests.get(
+            f"https://iforgot.apple.com{self.Location_2}",
+            cookies=cookies,
+            headers=headers,
+        )
+        print(response.text)
+        self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
+        self.sstt_8 = response.headers["Sstt"]
+        return self
+
+    @retry(tries=20)
+    def Eleven(self):
+        cookies = {
+            "pltvcid": "undefined",
+            "pldfltcid": "9d562bc73d6f4a3e8623983cd00792dc047",
+            "idclient": "web",
+            "dslang": "CN-ZH",
+            "site": "CHN",
+            "ifssp": self.ifssp,
+            "geo": "CN",
+            "X-Apple-I-Web-Token": self.x_apple_i_web_token_9,
+        }
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json",
+            # 'Cookie': 'pltvcid=undefined; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; idclient=web; dslang=CN-ZH; site=CHN; ifssp=A769EB512342739EBF9CDEE4E63BEE61F02B98E272D259C8EBADA74F315C74FAEE4A44331F985A218A96E1E96A19810436EAE79D5BD496A6BD461ECE5FB71614231878DD669204867E00B4B7FB5B2AC3FF0BE6C7B705FA9F96140F77C81765B4780B4195E5FE5A1D18F447E09845AE159E07C0FB514F07AB; geo=CN; X-Apple-I-Web-Token=AAAAKzEyfDNmNDk0ZjczNDlhMGYwZWEwNDU2YzkzYWE5ZTE0ODMzAAABkTZq+4iBz9cIIWg9ve81PppzikzoXM6/6WnosgfCwq0Wt6WCiHTbiDOp0JSEN1uBD6Zl2jOD+xifkwWlgaOSACYGxZajh49gXwqxGeE/Qb/bMjREkMkWjpq2zwQvr9Jp05LI80IRQPkU+Y1c9yd4gkLuX01D2lben68ukp+RG/UMEVfraT4T72tWVa04m4Jbpt4SwLLyIXySwi19j+ltxb1Wv7BJLIUwlseFuV8HhATNTAh7/qkT/Itv6AB/NSHx/1YDwpEllQhA1q+/jxrJhJS1OcuzbZ/2cyIUMheFlzpFI/hu4f6dIYyv48QZWn/qBM67SjIpm+1aSjqHBwCuo6WaNxNRqHjQbAaJr4QxwC4M85AcUAYJH6ZKfasey8y2INxfb6EmRq+S9D8TnwMJQ1PrAtbDA02NYlZCmAWlnPBz+6JFFEmwu2/JK4nRL1oQPClmhCmtrdxurL8jGZoZB+/C3oRl3Lc8a/v6qm4pOpNJDcYwXlsA/JEo0VRoHbnQburKJnUHIoXTAAC2DkCkXKgFZMYbN0H5OkPhyZKVIUR6SjgE7HmXlEJphznoG8RghsBTZdc/K2FMu/QmrCGvfynnj2y7WX+w9U5ZYC8cvM0qAdaNSjawdnCntMeFM/jBNsiml00/35JqVD48bWz0U7yYzPxJJTjWsvnubsQESBniB5fxkGgpYJqbYdSqAxslJRoRQ55HFxxsdlppdinEX+jARxsBUtltuhDHDI0u/3ML4Tn2niSf2lqAQrbE8HTBEKc91zdMzkDqRuw4rqCKJzuubZVGkj5zhwR1p/B3NYIQk00Y5w15IoqceG8RXGmwhUNOdFGCSNnHRHPMUbCUWBMTVVlhIqpj7Sc6Oe3QVF4xumy7gNODAg6W8UPKp7kKhaF9EoAOrezRKvO8/cd8fMs61fMhvAEvww6RXB2dv/4XwCKePcrjVut/rHe8VHYsEMHAarH9z2jFUDioaWKLxIPAluN+yiOURgiEz0u7mhkSs/49KgAm4PVbjBs1pInC2HyLOVAawwNFdqDwUhtRgvcddvMrDhznHqY7Nns=',
+            "DNT": "1",
+            "Origin": "https://iforgot.apple.com",
+            "Pragma": "no-cache",
+            "Referer": "https://iforgot.apple.com/",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0",
+            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTrJkDlQxQeLaD.SAuXjodUW1BNork0ugN.xL4Fe1SpDvTJ2wrOy3klY5BNleBBNlYCa1nkBMfs.2fd"}',
+            "sec-ch-ua": '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sstt": self.sstt_8,
+        }
+
+        json_data = {
+            "questions": [
+                {
+                    "answer": "gz1234",
+                    "id": 136,
+                    "number": 2,
+                    "question": "你的理想工作是什么？",
+                },
+                {
+                    "answer": "fm1324",
+                    "id": 142,
+                    "number": 3,
+                    "question": "你的父母是在哪里认识的？",
+                },
+            ],
+        }
+
+        response = requests.post(
+            "https://iforgot.apple.com/unenrollment/verify/questions",
+            cookies=cookies,
+            headers=headers,
+            json=json_data,
+            allow_redirects=False,
+        )
+        # print(response.headers)
+        # print(response.status_code)
+        # print(response.text)
+        self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
+        self.Location_3 = response.headers["Location"]
+        self.sstt_9 = response.headers["sstt"]
+        return self
+
+    @retry(tries=20)
+    def Twelve(self):
+        cookies = {
+            'pltvcid': 'undefined',
+            'pldfltcid': '9d562bc73d6f4a3e8623983cd00792dc047',
+            'idclient': 'web',
+            'dslang': 'CN-ZH',
+            'site': 'CHN',
+            'ifssp': self.ifssp,
+            'geo': 'CN',
+            'X-Apple-I-Web-Token': self.x_apple_i_web_token_10,
+        }
+
+        headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            # 'Cookie': 'pltvcid=undefined; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; idclient=web; dslang=CN-ZH; site=CHN; ifssp=A769EB512342739EBF9CDEE4E63BEE61F02B98E272D259C8EBADA74F315C74FAEE4A44331F985A218A96E1E96A19810436EAE79D5BD496A6BD461ECE5FB71614231878DD669204867E00B4B7FB5B2AC3FF0BE6C7B705FA9F96140F77C81765B4780B4195E5FE5A1D18F447E09845AE159E07C0FB514F07AB; geo=CN; X-Apple-I-Web-Token=AAAAKzE0fDNmNDk0ZjczNDlhMGYwZWEwNDU2YzkzYWE5ZTE0ODMzAAABkTZrb95JVfX4u7jRQuIGCMlfIgdoP3CPVg+PTq2hOcxHtWYzDbogtwC1rIAcne1wLGbAtQUxUTne85LixVi9wKLUtxRQKa5AZXTXEitIuAPBKetl8oJ5gD7db6Hfd+7ION32BPUAU6GJGEGLbxFj30Ig0QK759QJwnes3kHeQ7eFsmICe/ImyN2H8dQ0aq/IMwb5JodlcALB9v5MUT1dnASk2wDvPY1yF2Vi2Ljl4f6Tn9YKOUu1OIZPR8JkISJG6n41Lr6IxexD4wMUqAXOr9pp8+ip+5tcsNLkT+n5Kqm7FWPIgaqvUKto2xzldmRKMpORZiDATPKXs78rL8DX+1/u40kMZyj6LcZoVS2jcJ05JQIj2vAUM1c2q10+qjZ6ukhN5akCJk9r3A+VpzF8Ejjts60Euum17IE1YMEpxFOTpT+0kcn0CNwnqPmLf8TH7QxRnj6jKF7gYmKyDambq4qnFsXtJfrnfKRmy7G83AOPTJL3Irr6D85+Y+AdjF5SFkv19YI3Q1c8kdCTA3SR433AvMcCbiWluYOgqoiwCOHxzgVrl4di03NQ0Q2pM2p/gJhYq3196j/FqQgx7kHpb2zk6ayl0P/OMFCqgqLEG5ApsIRqEkefIYJL8q1ntkHkLciF0FdZZHA6qx0xvHDbCB2VqeWPibGsEOeALI3gy31j2Hb4YAiKr8ub7wxaEjXeMCYdyJN81VAyn4k4hhmxlLf5teSkpa9z7BLRF1gOFJosG7LuoVMQIrDyFpGQRtPVWGzJMZ1Gqm4Lv12CQzuAj+YWvXVmirxScVeYU/jnjZdGOzTpZ+5BVd8lxv03yGS5h3JjCKi7jYKMW9qsPIVxyE6zBoKvAxUVE5rcLf/xqRurZ9biSDcz/QKDXnTyOUcC+TrTCuFqumlMjJ2IZPmior8NraO4TqrbvO8HXpqx3SgAlnfgqrR5ISC47oOQ2Jtp5S44LkqJ32ywgNp8hmHJTPZiGmVrpBu6Tla6pkVnVbpoobZ6wr59L+GfonGvE9Sg9l2URtbkLh87z2DcsmmyqtyOvwlUACco6UgvoelDhKWG78zZLFQDobCRgmRcQRHfasghFSC2kk1cE6lIJA==',
+            'DNT': '1',
+            'Pragma': 'no-cache',
+            'Referer': 'https://iforgot.apple.com/',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0',
+            'X-Apple-I-FD-Client-Info': '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8TmTrNldHrurJhBR.uMp4UdHz13NlejV2pNk0ug9WJ3veSqwc6tinwlWY5BNlYJNNlY5QB4bVNjMk.1vC"}',
+            'sec-ch-ua': '"Not)A;Brand";v="99", "Microsoft Edge";v="127", "Chromium";v="127"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sstt': self.sstt_9,
+        }
+
+        response = requests.get(f'https://iforgot.apple.com{self.Location_3}', cookies=cookies, headers=headers)
+        
+        print('-'*100)
+        print(response.text)
+
+        print(response.headers)
+        print(response.status_code)
+
+
+if __name__ == "__main__":
+
+    def start_process(
+        username,
+        password,
+        year_item,
+        monthOfYear_item,
+        dayOfMonth_item,
+        question_one,
+        answer_one,
+        question_two,
+        answer_two,
+        question_three,
+        answer_three,
+    ):
+        apple = APPLE(
+            username=username,
+            password=password,
+            year_item=year_item,
+            monthOfYear_item=monthOfYear_item,
+            dayOfMonth_item=dayOfMonth_item,
+            Question_one=question_one,
+            Answer_one=answer_one,
+            Question_two=question_two,
+            Answer_two=answer_two,
+            Question_three=question_three,
+            Answer_three=answer_three,
+        )
+
+        apple.Get_sstt()
+        apple.get_verification_code()
+        apple.Identification_codes()
+        apple.Submit_302_1()
+        apple.Five()
+        apple.Six()
+        apple.Seven()
+        apple.Eight()
+        apple.Nine()
+        apple.Ten()
+        apple.Eleven()
+        apple.Twelve()
+        return apple
+
+    # 使用示例
+    result = start_process(
+        username="jpicciotto@mac.com",
+        password="Aa147369.11",
+        year_item="1993",
+        monthOfYear_item="05",
+        dayOfMonth_item="25",
+        question_one="你少年时代最好的朋友叫什么名字？",
+        answer_one="py1234",
+        question_two="你的理想工作是什么？",
+        answer_two="gz1234",
+        question_three="你的父母是在哪里认识的？",
+        answer_three="fm1234",
+    )
+    print(result)
