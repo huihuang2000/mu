@@ -1,11 +1,6 @@
-from email import header
-from nturl2path import url2pathname
-from uuid import RESERVED_FUTURE
-from wsgiref import headers
 import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
-from yarl import URL
 
 
 class APPLE_verification:
