@@ -14,7 +14,7 @@ from ui.Ui_untitled import Ui_Form
 from modo.change_password import APPLE
 from modo.Security_Code import APPLE_2
 from modo.Remove_copy import APPLE_Remove
-from modo.Second_verification import APPLE
+from modo.Second_verification import APPLE_verification
 
 
 class APPLE_UI(QWidget, Ui_Form):
@@ -582,9 +582,12 @@ class APPLEThread_4(QThread):
 
     def run(self):
         self.emit_progress("开始", self.row)
-        self.apple_remove = APPLE_Remove(**self.kwargs)
-        result_one = self.apple_remove.one()
-        self.emit_progress("1-获取aidsp_1|scnt_7", self.row)
+        self.apple_remove = APPLE_verification(**self.kwargs)
+        result_Get_sstt = self.apple_remove.Get_sstt()
+        self.emit_progress("1-获取ifssp", self.row)
+
+
+
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)

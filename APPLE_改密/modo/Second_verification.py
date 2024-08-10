@@ -8,7 +8,7 @@ from retry import retry
 from yarl import URL
 
 
-class APPLE:
+class APPLE_verification:
 
     def __init__(self, **kwargs) -> None:
         self.username = kwargs.get("username")
@@ -659,7 +659,7 @@ if __name__ == "__main__":
         question_three,
         answer_three,
     ):
-        apple = APPLE(
+        apple = APPLE_verification(
             username=username,
             password=password,
             year_item=year_item,
