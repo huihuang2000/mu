@@ -1,6 +1,12 @@
+
+from email import header
+from nturl2path import url2pathname
+from uuid import RESERVED_FUTURE
+from wsgiref import headers
 import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
+from yarl import URL
 
 
 class APPLE:
@@ -18,7 +24,7 @@ class APPLE:
         self.question_three = kwargs.get("Question_three")
         self.answer_three = kwargs.get("Answer_three")
         self.pass_2 = ""
-
+        self.status = ""
         # self.DL = {
         #     "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
         #     "https": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -197,10 +203,12 @@ class APPLE:
             cookies=cookies,
             headers=headers,
         )
-        self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
-        self.sstt_3 = response.headers["Sstt"]
-        # print(response.text)
-        return self
+        if response.text == '{ }':
+            self.status = '此号无密保'
+        elif response.text != '{ }':
+            self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
+            self.sstt_3 = response.headers["Sstt"]
+            return self
 
     @retry(tries=20)
     def Six(self):
@@ -419,7 +427,7 @@ class APPLE:
             cookies=cookies,
             headers=headers,
         )
-        print(response.text)
+        self.question = response.json()
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_8 = response.headers["Sstt"]
         return self
@@ -458,22 +466,35 @@ class APPLE:
             "sec-ch-ua-platform": '"Windows"',
             "sstt": self.sstt_8,
         }
+        questions_answers = {
+            self.question_one: self.answer_one,
+            self.question_two: self.answer_two,
+            self.question_three: self.answer_three,
+        }
+
+        answers = []
+        questions = self.question['questions']
+        for question in questions:
+            if question["question"] == self.question_one:
+                answer = questions_answers.get(self.question_one)
+            elif question["question"] == self.question_two:
+                answer = questions_answers.get(self.question_two)
+            elif question["question"] == self.question_three:
+                answer = questions_answers.get(self.question_three)
+            else:
+                answer = ""
+
+            answers.append(
+                {
+                    "question": question["question"],
+                    "answer": answer,
+                    "number": question["number"],
+                    "id": question["id"],
+                }
+            )
 
         json_data = {
-            "questions": [
-                {
-                    "answer": "gz1234",
-                    "id": 136,
-                    "number": 2,
-                    "question": "你的理想工作是什么？",
-                },
-                {
-                    "answer": "fm1324",
-                    "id": 142,
-                    "number": 3,
-                    "question": "你的父母是在哪里认识的？",
-                },
-            ],
+            "questions": answers,
         }
 
         response = requests.post(
@@ -509,7 +530,6 @@ class APPLE:
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            # 'Cookie': 'pltvcid=undefined; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; idclient=web; dslang=CN-ZH; site=CHN; ifssp=A769EB512342739EBF9CDEE4E63BEE61F02B98E272D259C8EBADA74F315C74FAEE4A44331F985A218A96E1E96A19810436EAE79D5BD496A6BD461ECE5FB71614231878DD669204867E00B4B7FB5B2AC3FF0BE6C7B705FA9F96140F77C81765B4780B4195E5FE5A1D18F447E09845AE159E07C0FB514F07AB; geo=CN; X-Apple-I-Web-Token=AAAAKzE0fDNmNDk0ZjczNDlhMGYwZWEwNDU2YzkzYWE5ZTE0ODMzAAABkTZrb95JVfX4u7jRQuIGCMlfIgdoP3CPVg+PTq2hOcxHtWYzDbogtwC1rIAcne1wLGbAtQUxUTne85LixVi9wKLUtxRQKa5AZXTXEitIuAPBKetl8oJ5gD7db6Hfd+7ION32BPUAU6GJGEGLbxFj30Ig0QK759QJwnes3kHeQ7eFsmICe/ImyN2H8dQ0aq/IMwb5JodlcALB9v5MUT1dnASk2wDvPY1yF2Vi2Ljl4f6Tn9YKOUu1OIZPR8JkISJG6n41Lr6IxexD4wMUqAXOr9pp8+ip+5tcsNLkT+n5Kqm7FWPIgaqvUKto2xzldmRKMpORZiDATPKXs78rL8DX+1/u40kMZyj6LcZoVS2jcJ05JQIj2vAUM1c2q10+qjZ6ukhN5akCJk9r3A+VpzF8Ejjts60Euum17IE1YMEpxFOTpT+0kcn0CNwnqPmLf8TH7QxRnj6jKF7gYmKyDambq4qnFsXtJfrnfKRmy7G83AOPTJL3Irr6D85+Y+AdjF5SFkv19YI3Q1c8kdCTA3SR433AvMcCbiWluYOgqoiwCOHxzgVrl4di03NQ0Q2pM2p/gJhYq3196j/FqQgx7kHpb2zk6ayl0P/OMFCqgqLEG5ApsIRqEkefIYJL8q1ntkHkLciF0FdZZHA6qx0xvHDbCB2VqeWPibGsEOeALI3gy31j2Hb4YAiKr8ub7wxaEjXeMCYdyJN81VAyn4k4hhmxlLf5teSkpa9z7BLRF1gOFJosG7LuoVMQIrDyFpGQRtPVWGzJMZ1Gqm4Lv12CQzuAj+YWvXVmirxScVeYU/jnjZdGOzTpZ+5BVd8lxv03yGS5h3JjCKi7jYKMW9qsPIVxyE6zBoKvAxUVE5rcLf/xqRurZ9biSDcz/QKDXnTyOUcC+TrTCuFqumlMjJ2IZPmior8NraO4TqrbvO8HXpqx3SgAlnfgqrR5ISC47oOQ2Jtp5S44LkqJ32ywgNp8hmHJTPZiGmVrpBu6Tla6pkVnVbpoobZ6wr59L+GfonGvE9Sg9l2URtbkLh87z2DcsmmyqtyOvwlUACco6UgvoelDhKWG78zZLFQDobCRgmRcQRHfasghFSC2kk1cE6lIJA==',
             'DNT': '1',
             'Pragma': 'no-cache',
             'Referer': 'https://iforgot.apple.com/',
@@ -525,12 +545,98 @@ class APPLE:
         }
 
         response = requests.get(f'https://iforgot.apple.com{self.Location_3}', cookies=cookies, headers=headers)
-        
-        print('-'*100)
-        print(response.text)
+        # print(response.text)
+        # print(response.headers)
+        # print(response.status_code)
+        self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
+        self.sstt_10 = response.headers["sstt"]
+        return self
 
-        print(response.headers)
-        print(response.status_code)
+    @retry(tries=20)
+    def thirteen(self):
+        url = "https://iforgot.apple.com/unenrollment"
+        headers = {
+            "Host": "iforgot.apple.com",
+            "Connection": "keep-alive",
+            "Content-Length": "0",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+            "Accept": "application/json, text/plain, */*",
+            "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8NTlFke1azLu_dYV6Hycfx9MsFY5CKw.Tf5.EKWJ9VbSIij__UeBz21BNlY5BPY25BNnOVgw24uy.1hq\"}",
+            "sstt": self.sstt_10,
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Origin": "https://iforgot.apple.com",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://iforgot.apple.com/",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; pltvcid=undefined; ifssp={self.ifssp}; X-Apple-I-Web-Token={self.x_apple_i_web_token_11}"
+        }
+        data = ""
+        response = requests.post(url=url, headers=headers,data=data,allow_redirects=False)
+        # print(response.headers)
+        # print(response.status_code)
+        self.Location_4 = response.headers["Location"]
+        self.x_apple_i_web_token_12 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
+
+    @retry(tries=20)
+    def fourteen(self):
+        url = f'https://iforgot.apple.com{self.Location_4}'
+        headers = {
+            "Host": "iforgot.apple.com",
+            "Connection": "keep-alive",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+            "Accept": "application/json, text/plain, */*",
+            "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\"7la44j1e3NlY5BNlY5BSmHACVZXnNA9d8NTlFke1azLu_dYV6Hycfx9MsFY5CKw.Tf5.EKWJ9VbSIij__UeBz21BNlY5BPY25BNnOVgw24uy.1hq\"}",
+            "sstt": self.sstt_10,
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://iforgot.apple.com/",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; pltvcid=undefined; ifssp={self.ifssp}; X-Apple-I-Web-Token={self.x_apple_i_web_token_12}"
+        }
+        response = requests.get(url=url, headers=headers)
+        # print(response.text)
+        self.sstt_11 = response.headers["sstt"]
+        self.x_apple_i_web_token_13 = response.cookies.get("X-Apple-I-Web-Token")
+        return self
+
+    @retry(tries=20)
+    def fifteen(self):
+        url = 'https://iforgot.apple.com/unenrollment/reset'
+        headers = {
+            "Host": "iforgot.apple.com",
+            "Connection": "keep-alive",
+            "Content-Length": "26",
+            "sec-ch-ua": "\"Not)A;Brand\";v=\"99\", \"Google Chrome\";v=\"127\", \"Chromium\";v=\"127\"",
+            "sstt": self.sstt_11,
+            "X-Apple-I-FD-Client-Info": "{\"U\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36\",\"L\":\"zh-CN\",\"Z\":\"GMT+08:00\",\"V\":\"1.1\",\"F\":\".la44j1e3NlY5BNlY5BSmHACVZXnNA9d8NTlI870jpidPNs0oje9zH_y37lYKU.6elV2pNK1c8rJvftOMuYEn85BNlY5CGWY5BOgkLT0XxU..0p9\"}",
+            "sec-ch-ua-mobile": "?0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/plain, */*",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "Origin": "https://iforgot.apple.com",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
+            "Referer": "https://iforgot.apple.com/",
+            "Accept-Encoding": "gzip, deflate, br, zstd",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; pltvcid=undefined; ifssp={self.ifssp}; X-Apple-I-Web-Token={self.x_apple_i_web_token_13}"
+        }
+        json_data = {"password":self.password}
+        response = requests.post(url=url, headers=headers,json=json_data)
+        print(response.text)
 
 
 if __name__ == "__main__":
@@ -574,20 +680,25 @@ if __name__ == "__main__":
         apple.Ten()
         apple.Eleven()
         apple.Twelve()
+        apple.thirteen()
+        apple.fourteen()
+        apple.fifteen()
         return apple
 
     # 使用示例
     result = start_process(
-        username="jpicciotto@mac.com",
-        password="Aa147369.11",
+        # username="versity@mac.com",
+        username="yohtaydarv11@gmail.com",
+
+        password="Aa147369a1",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py1234",
+        answer_one="py12345",
         question_two="你的理想工作是什么？",
-        answer_two="gz1234",
+        answer_two="gz12345",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm1234",
+        answer_three="fm12345",
     )
     print(result)
