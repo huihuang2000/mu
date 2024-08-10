@@ -97,6 +97,11 @@
              <string>删设备</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>关闭二次</string>
+            </property>
+           </item>
           </widget>
          </item>
          <item>

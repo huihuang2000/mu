@@ -14,6 +14,7 @@ from ui.Ui_untitled import Ui_Form
 from modo.change_password import APPLE
 from modo.Security_Code import APPLE_2
 from modo.Remove_copy import APPLE_Remove
+from modo.Second_verification import APPLE
 
 
 class APPLE_UI(QWidget, Ui_Form):
@@ -33,7 +34,6 @@ class APPLE_UI(QWidget, Ui_Form):
         self.threads = []
 
     def on_comboBox_changed(self):
-
         current = self.comboBox.currentText()
         if current == "改密码":
             self.start.clicked.disconnect()
@@ -44,6 +44,9 @@ class APPLE_UI(QWidget, Ui_Form):
         elif current == "删设备":
             self.start.clicked.disconnect()
             self.start.clicked.connect(self.start_process_3)
+        elif current == "关闭二次":
+            self.start.clicked.disconnect()
+            self.start.clicked.connect(self.start_process_4)
         else:
             QMessageBox.information(self, "提示", "你选择了其他选项")
 
@@ -155,6 +158,37 @@ class APPLE_UI(QWidget, Ui_Form):
                 "row": row,
             }
             thread = APPLEThread_3(self, **kwargs)
+            thread.progress_signal.connect(self.update_progress)
+            self.threads.append(thread)
+            thread.start()
+
+    def start_process_4(self):
+        self.threads = []
+        for row in range(self.tableWidget.rowCount()):
+            username = self.tableWidget.item(row, 0).text()
+            password = self.lineEdit.text()
+
+            Question_one = self.tableWidget.item(row, 2).text()
+            Answer_one = self.tableWidget.item(row, 3).text()
+
+            Question_two = self.tableWidget.item(row, 4).text()
+            Answer_two = self.tableWidget.item(row, 5).text()
+
+            Question_three = self.tableWidget.item(row, 6).text()
+            Answer_three = self.tableWidget.item(row, 7).text()
+
+            kwargs = {
+                "username": username,
+                "password": password,
+                "Question_one": Question_one,
+                "Answer_one": Answer_one,
+                "Question_two": Question_two,
+                "Answer_two": Answer_two,
+                "Question_three": Question_three,
+                "Answer_three": Answer_three,
+                "row": row,
+            }
+            thread = APPLEThread_4(self, **kwargs)
             thread.progress_signal.connect(self.update_progress)
             self.threads.append(thread)
             thread.start()
@@ -523,6 +557,34 @@ class APPLEThread_3(QThread):
         self.emit_progress("35-过jslog", self.row)
         result_thirty_six = self.apple_remove.thirty_six()
         self.emit_progress("36-更改", self.row)
+
+    def emit_progress(self, message, row):
+        self.progress_signal.emit(message, row)
+
+
+class APPLEThread_4(QThread):
+    progress_signal = Signal(str, int)
+
+    def __init__(self, parent, **kwargs):
+        super().__init__(parent)
+        self.kwargs = {
+            "username": kwargs.get("username"),
+            "password": kwargs.get("password"),
+            "Question_one": kwargs.get("Question_one"),
+            "Answer_one": kwargs.get("Answer_one"),
+            "Question_two": kwargs.get("Question_two"),
+            "Answer_two": kwargs.get("Answer_two"),
+            "Question_three": kwargs.get("Question_three"),
+            "Answer_three": kwargs.get("Answer_three"),
+        }
+
+        self.row = kwargs.get("row")
+
+    def run(self):
+        self.emit_progress("开始", self.row)
+        self.apple_remove = APPLE_Remove(**self.kwargs)
+        result_one = self.apple_remove.one()
+        self.emit_progress("1-获取aidsp_1|scnt_7", self.row)
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)

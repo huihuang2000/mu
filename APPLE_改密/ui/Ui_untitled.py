@@ -96,6 +96,7 @@ class Ui_Form(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.comboBox.setObjectName("comboBox")
 
         self.horizontalLayout.addWidget(self.comboBox)
@@ -191,6 +192,9 @@ class Ui_Form(object):
         )
         self.comboBox.setItemText(
             2, QCoreApplication.translate("Form", "\u5220\u8bbe\u5907", None)
+        )
+        self.comboBox.setItemText(
+            3, QCoreApplication.translate("Form", "\u5173\u95ed\u4e8c\u6b21", None)
         )
 
         # if QT_CONFIG(statustip)
