@@ -170,6 +170,10 @@ class APPLE_UI(QWidget, Ui_Form):
             username = self.tableWidget.item(row, 0).text()
             password = self.lineEdit.text()
 
+            year_item = self.lineEdit_2.text()
+            monthOfYear_item = self.lineEdit_3.text()
+            dayOfMonth_item = self.lineEdit_4.text()
+
             Question_one = self.tableWidget.item(row, 2).text()
             Answer_one = self.tableWidget.item(row, 3).text()
 
@@ -182,6 +186,9 @@ class APPLE_UI(QWidget, Ui_Form):
             kwargs = {
                 "username": username,
                 "password": password,
+                "year_item": year_item,
+                "monthOfYear_item": monthOfYear_item,
+                "dayOfMonth_item": dayOfMonth_item,
                 "Question_one": Question_one,
                 "Answer_one": Answer_one,
                 "Question_two": Question_two,
@@ -572,6 +579,9 @@ class APPLEThread_4(QThread):
         self.kwargs = {
             "username": kwargs.get("username"),
             "password": kwargs.get("password"),
+            "year_item": kwargs.get("year_item"),
+            "monthOfYear_item": kwargs.get("monthOfYear_item"),
+            "dayOfMonth_item": kwargs.get("dayOfMonth_item"),
             "Question_one": kwargs.get("Question_one"),
             "Answer_one": kwargs.get("Answer_one"),
             "Question_two": kwargs.get("Question_two"),
@@ -620,7 +630,8 @@ class APPLEThread_4(QThread):
             result_fourteen = self.apple_remove.fourteen()
             self.emit_progress("14-获取sstt_11", self.row)
             result_fifteen = self.apple_remove.fifteen()
-            self.emit_progress("15-关闭", self.row)
+            status = result_fifteen.status
+            self.emit_progress(status, self.row)
         except Exception as e:
             self.emit_progress(str(e), self.row)
 

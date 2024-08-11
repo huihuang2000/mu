@@ -17,7 +17,20 @@ class APPLE_verification:
         self.answer_two = kwargs.get("Answer_two")
         self.question_three = kwargs.get("Question_three")
         self.answer_three = kwargs.get("Answer_three")
-        self.pass_2 = ""
+
+        print("Username:", self.username)
+        print("Password:", self.password)
+        print("Year:", self.year)
+        print("Month of Year:", self.monthOfYear)
+        print("Day of Month:", self.dayOfMonth)
+        print("Question One:", self.question_one)
+        print("Answer One:", self.answer_one)
+        print("Question Two:", self.question_two)
+        print("Answer Two:", self.answer_two)
+        print("Question Three:", self.question_three)
+        print("Answer Three:", self.answer_three)
+
+
         self.status = ""
         # self.DL = {
         #     "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -202,7 +215,7 @@ class APPLE_verification:
         elif response.text != "{ }":
             self.x_apple_i_web_token_4 = response.cookies.get("X-Apple-I-Web-Token")
             self.sstt_3 = response.headers["Sstt"]
-            return self
+        return self
 
     @retry(tries=20)
     def Six(self):
@@ -365,11 +378,11 @@ class APPLE_verification:
             "sec-ch-ua-platform": '"Windows"',
             "sstt": self.sstt_6,
         }
-
+        # 1111
         json_data = {
-            "monthOfYear": "05",
-            "dayOfMonth": "25",
-            "year": "1993",
+            "monthOfYear": self.monthOfYear,
+            "dayOfMonth": self.dayOfMonth,
+            "year": self.year,
         }
 
         response = requests.post(
@@ -636,6 +649,14 @@ class APPLE_verification:
         }
         json_data = {"password": self.password}
         response = requests.post(url=url, headers=headers, json=json_data)
+        response_data = response.json()
+        service_errors = response_data.get('service_errors', [])
+        if isinstance(service_errors, list) and len(service_errors) > 0:
+            message = service_errors[0].get('message')
+            self.status = message
+        else:
+            self.status = '修改成功'
+        print(response.text)
         return self
 
 
@@ -688,8 +709,8 @@ if __name__ == "__main__":
     # 使用示例
     result = start_process(
         # username="versity@mac.com",
-        username="yohtaydarv11@gmail.com",
-        password="Aa147369a1",
+        username="versity@mac.com",
+        password="Aa1473691a",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
