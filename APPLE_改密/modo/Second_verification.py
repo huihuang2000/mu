@@ -30,7 +30,6 @@ class APPLE_verification:
         print("Question Three:", self.question_three)
         print("Answer Three:", self.answer_three)
 
-
         self.status = ""
         # self.DL = {
         #     "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -650,12 +649,12 @@ class APPLE_verification:
         json_data = {"password": self.password}
         response = requests.post(url=url, headers=headers, json=json_data)
         response_data = response.json()
-        service_errors = response_data.get('service_errors', [])
+        service_errors = response_data.get("service_errors", [])
         if isinstance(service_errors, list) and len(service_errors) > 0:
-            message = service_errors[0].get('message')
+            message = service_errors[0].get("message")
             self.status = message
         else:
-            self.status = '修改成功'
+            self.status = "修改成功"
         print(response.text)
         return self
 
