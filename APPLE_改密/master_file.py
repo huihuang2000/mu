@@ -1,3 +1,5 @@
+import pdb
+from xxlimited import Str
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -581,13 +583,46 @@ class APPLEThread_4(QThread):
         self.row = kwargs.get("row")
 
     def run(self):
-        self.emit_progress("开始", self.row)
-        self.apple_remove = APPLE_verification(**self.kwargs)
-        result_Get_sstt = self.apple_remove.Get_sstt()
-        self.emit_progress("1-获取ifssp", self.row)
+        try:
+            self.emit_progress("开始", self.row)
+            self.apple_remove = APPLE_verification(**self.kwargs)
+            result_Get_sstt = self.apple_remove.Get_sstt()
+            # pdb.set_trace()
+            self.emit_progress("1-获取ifssp", self.row)
+            result_get_verification_code = self.apple_remove.get_verification_code()
+            self.emit_progress("2-获取token", self.row)
+            result_Identification_codes = self.apple_remove.Identification_codes()
+            self.emit_progress("3-过captcha", self.row)
+            result_Submit_302_1 = self.apple_remove.Submit_302_1()
+            self.emit_progress("4-过验证", self.row)
+            try:
+                self.emit_progress("5-判断有无二次", self.row)
+                result_Five = self.apple_remove.Five()
+                result_Six = self.apple_remove.Six()
+                self.emit_progress("6-获取sstt_4", self.row)
+            except Exception as original_exception:
+                raise Exception("无二次") from original_exception
 
-
-
+            result_Seven = self.apple_remove.Seven()
+            self.emit_progress("7-获取Location", self.row)
+            result_Eight = self.apple_remove.Eight()
+            self.emit_progress("8-获取sstt_6", self.row)
+            result_Nine = self.apple_remove.Nine()
+            self.emit_progress("9-获取Location_2", self.row)
+            result_Ten = self.apple_remove.Ten()
+            self.emit_progress("10-sstt_8", self.row)
+            result_Eleven = self.apple_remove.Eleven()
+            self.emit_progress("11-匹配密保", self.row)
+            result_Twelve = self.apple_remove.Twelve()
+            self.emit_progress("12-获取sstt_10", self.row)
+            result_thirteen = self.apple_remove.thirteen()
+            self.emit_progress("13-获取Location_4", self.row)
+            result_fourteen = self.apple_remove.fourteen()
+            self.emit_progress("14-获取sstt_11", self.row)
+            result_fifteen = self.apple_remove.fifteen()
+            self.emit_progress("15-关闭", self.row)
+        except Exception as e:
+            self.emit_progress(str(e), self.row)
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)
