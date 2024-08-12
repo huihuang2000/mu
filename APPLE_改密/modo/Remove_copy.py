@@ -174,50 +174,6 @@ class APPLE_Remove:
         return self
 
     @retry(tries=20)
-    def five(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "108",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqB0J9QxQeLaD.SAuXjodUW1BNpMk0ugN.xL4Fe1S9Ra6mVUeBzB.NlY5BNp55BNlan0Os5Apw.1_d"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_1}",
-        }
-        data = {
-            "message": "sign-in",
-            "title": "ROUTE CHANGED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": "{}",
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            data=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aid_2 = response.cookies.get("aid")
-        logging.info(f"aid_2----{self.aid_2}")
-        return self
-
-    @retry(tries=20)
     def six(self):
         url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={self.serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
         headers = {
@@ -250,47 +206,6 @@ class APPLE_Remove:
         logging.info(f"X_Apple_Auth_Attributes----{self.X_Apple_Auth_Attributes}")
         logging.info(f"X_Apple_HC_Challenge----{self.X_Apple_HC_Challenge}")
         logging.info(f"aasp----{self.aasp}")
-        return self
-
-    @retry(tries=20)
-    def seven(self):
-        url = "https://idmsa.apple.com/appleauth/jslog"
-        headers = {
-            "Host": "idmsa.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "154",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": "",
-            "x-csrf-token": "",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-type": "application/json",
-            "Accept": "application/json",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://idmsa.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://idmsa.apple.com/",
-            # "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}",
-        }
-        data = {
-            "title": "Hashcash generation",
-            "type": "INFO",
-            "message": "APPLE ID : Performace - 0.027300000000046565 s",
-            "details": '{"pageVisibilityState":"visible"}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            data=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aa = response.cookies.get("aa")
-        logging.info(f"aa----{self.aa}")
         return self
 
     @retry(tries=20)
@@ -384,7 +299,7 @@ class APPLE_Remove:
             "Referer": "https://idmsa.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa}",
+            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp};",
         }
         json_data = {
             "accountName": self.username,
@@ -444,7 +359,7 @@ class APPLE_Remove:
             "Referer": "https://idmsa.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa}",
+            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp};",
         }
         response = requests.get(
             url=url,
@@ -469,11 +384,6 @@ class APPLE_Remove:
                     self.question_two: self.answer_two,
                     self.question_three: self.answer_three,
                 }
-                # questions_answers = {
-                #     question_one: answer_one,
-                #     question_two: answer_two,
-                #     question_three: answer_three,
-                # }
                 self.answers = []
                 questions = security_questions_data["questions"]
                 for question in questions:
@@ -503,90 +413,6 @@ class APPLE_Remove:
         logging.info(f"scnt_3----{self.scnt_3}")
         logging.info(f"X_Apple_Auth_Attributes----{self.X_Apple_Auth_Attributes}")
         # logging.info(f"X_Apple_Auth_Attributes----{response.text}")
-        return self
-
-    @retry(tries=20)
-    def thirteen(self):
-        url = "https://idmsa.apple.com/appleauth/jslog"
-        headers = {
-            "Host": "idmsa.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "518",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_2,
-            "x-csrf-token": "",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-type": "application/json",
-            "Accept": "application/json",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://idmsa.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://idmsa.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa}",
-        }
-        data = {
-            "type": "INFO",
-            "title": "AppleAuthFFPerf-2",
-            "message": 'APPLE ID : {"data":{"showPasswordField":{"federatedCalled":{"duration":361},"duration":1101},"init":{"initData":{"duration":17.699999999953434},"initCalled":{"duration":284.5}},"complete":{"completeData":{"duration":24}},"authFirstFactor":{"errorPasswordCalled":{"duration":336.5999999999767}}},"order":["showPasswordField"]}',
-            "iframeId": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
-            "details": '{"pageVisibilityState":"visible"}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            data=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aa_2 = response.cookies.get("aa")
-        logging.info(f"aa_2----{self.aa_2}")
-        return self
-
-    @retry(tries=20)
-    def fourteen(self):
-        url = "https://idmsa.apple.com/appleauth/jslog"
-        headers = {
-            "Host": "idmsa.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "218",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_3,
-            "x-csrf-token": "",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-type": "application/json",
-            "Accept": "application/json",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://idmsa.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://idmsa.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa_2}",
-        }
-        data = {
-            "type": "INFO",
-            "title": "Second Factor setup",
-            "message": "APPLE ID : Will start second factor setup for sa auth type.",
-            "iframeId": "auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57",
-            "details": '{"pageVisibilityState":"visible"}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            data=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aa_3 = response.cookies.get("aa")
-        logging.info(f"aa_3----{self.aa_3}")
         return self
 
     @retry(tries=20)
@@ -623,7 +449,7 @@ class APPLE_Remove:
             "Referer": "https://idmsa.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa_3}",
+            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp};",
         }
         data = {"questions": self.answers}
         response = requests.post(
@@ -666,7 +492,7 @@ class APPLE_Remove:
             "Referer": "https://idmsa.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN;",
         }
         response = requests.get(
             url=url,
@@ -705,7 +531,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN;",
         }
         response = requests.get(
             url=url,
@@ -746,7 +572,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN;",
         }
         response = requests.get(
             url=url,
@@ -786,7 +612,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN;",
         }
         response = requests.get(
             url=url,
@@ -825,7 +651,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aid_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; ",
         }
         response = requests.get(
             url=url,
@@ -872,7 +698,7 @@ class APPLE_Remove:
             "Referer": "https://idmsa.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp}; aa={self.aa_3}",
+            "Cookie": f"dslang=CN-ZH; site=CHN; geo=CN; aasp={self.aasp};",
         }
         data = ""
         response = requests.post(
@@ -908,7 +734,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN;myacinfo={self.myacinfo}",
         }
         response = requests.get(
             url=url,
@@ -952,7 +778,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; awat={self.awat}; caw={self.caw}; caw-at={self.caw_at}; aidsp={self.aidsp_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN;myacinfo={self.myacinfo}; awat={self.awat}; caw={self.caw}; caw-at={self.caw_at}; aidsp={self.aidsp_2}",
         }
         response = requests.get(
             url=url,
@@ -986,7 +812,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; awat={self.awat}; caw={self.caw}; caw-at={self.caw_at}; aidsp={self.aidsp_2}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN;myacinfo={self.myacinfo}; awat={self.awat}; caw={self.caw}; caw-at={self.caw_at}; aidsp={self.aidsp_2}",
         }
         response = requests.get(
             url=url,
@@ -1025,7 +851,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN;myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
         }
         response = requests.get(
             url=url,
@@ -1064,7 +890,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
         }
         response = requests.get(
             url=url,
@@ -1100,7 +926,7 @@ class APPLE_Remove:
             "Referer": "https://appleid.apple.com/",
             "Accept-Encoding": "gzip, deflate, br, zstd",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
+            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
         }
         response = requests.get(
             url=url,
@@ -1115,135 +941,6 @@ class APPLE_Remove:
         logging.info(f"response----{response.json()}")
         logging.info(f"scnt_11----{self.scnt_11}")
         logging.info(f"awat_6----{self.awat_6}")
-        return self
-
-    @retry(tries=20)
-    def twenty_eight(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "115",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTk1e0UfSHolk2dUJKy_Aw7GY5ey.EKY.6eke4FIidlU9OyZfx70Y5BNlYJNNlY5QB4bVNjMk.1bU"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; caw-at={self.caw_at}; awat={self.awat_2}; dat={self.dat}",
-        }
-        data = {
-            "message": "account/manage",
-            "title": "ROUTE CHANGED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": "{}",
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        return self
-
-    @retry(tries=20)
-    def twenty_nine(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "226",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTk.FxfxQeLaD.SAuXjodUW1BNpMk0ugN.xL4Fe1SpDAtIEo_Ud.BNlY5BPY25BNnOVgw24uy..bi"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; caw-at={self.caw_at}; awat={self.awat_5}",
-        }
-        data = {
-            "message": "Attempting to connect to module.",
-            "title": "MODULE CONNECTING",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":505}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        return self
-
-    @retry(tries=20)
-    def thirty(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "226",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTk.FxfxQeLaD.SAuXjodUW1BNpMk0ugN.xL4Fe1SpDAtIEo_Ud.BNlY5BPY25BNnOVgw24uy..bi"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; aid={self.aa_3}; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; caw-at={self.caw_at}; awat={self.awat_5}",
-        }
-        data = {
-            "message": "Module connected successfully.",
-            "title": "MODULE CONNECTED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":663,"version":"unknown"}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
         return self
 
     @retry(tries=20)
@@ -1299,144 +996,7 @@ class APPLE_Remove:
             proxies=self.DL,
             timeout=self.time,
         )
-        # logging.info(f'scnt_11----{response.text}')
-        return self
-
-    @retry(tries=20)
-    def thirty_three(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "217",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTog7DpyhpAI6.D_xGMuJjkW5BPfs.xLB.Tf1cK0Dub4wdbuHjomY5BNlY5cklY5BqNAE.lTjV.5_U"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; caw-at={self.caw_at}; awat={self.awat_6}; aid={self.aa_3}",
-        }
-        data = {
-            "message": "Module is ready to be shown.",
-            "title": "MODULE READY",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":965}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        # logging.info(f'scnt_11----{response.headers}')
-        return self
-
-    @retry(tries=20)
-    def thirty_four(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "224",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTogBdQxQeLaD.SAuXjodUW1BNpMk0ugN.xL4Fe1SpDAtIEo_Ud_5BNlY5CGWY5BOgkLT0XxU..7e4"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; caw-at={self.caw_at}; awat={self.awat_6}; aid={self.aa_3}",
-        }
-        data = {
-            "message": "Module should be shown",
-            "title": "MODULE WILL SHOW RESOLVED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": '{"name":"family-section","wid":"4e50560c-57c3-4c8f-83ca-b48e334fc262","time":965}',
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aid_3 = response.cookies.get("aid")
-        self.X_Apple_ID_Session_Id = response.headers["X-Apple-ID-Session-Id"]
-        logging.info(f"aid_3----{self.aid_3}")
-        logging.info(f"X_Apple_ID_Session_Id----{self.X_Apple_ID_Session_Id}")
-        return self
-
-    @retry(tries=20)
-    def thirty_five(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "131",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt_8,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"7la44j1e3NlY5BNlY5BSmHACVZXnNA9dFTocTrMebhUfSHolk2dUJKy_Aw7GY55y.EKY.6eke4FIidlU9OyZfxEJNlY5BNp55BNlan0Os5Apw.A1F"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "X-Apple-Api-Key": "cbf64fd6843ee630b463f358ea0b707b",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-            "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; aid={self.aid_3}; itspod=16; caw-at={self.caw_at}; awat={self.awat_7}",
-        }
-        data = {
-            "message": "account/manage/section/devices",
-            "title": "ROUTE CHANGED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": "{}",
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            json=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aid_4 = response.cookies.get("aid")
-        self.X_Apple_ID_Session_Id_3 = response.headers["X-Apple-ID-Session-Id"]
-        logging.info(f"thirty_five----true")
+        logging.info(f'scnt_11----{response.text}')
         return self
 
     @retry(tries=20)
@@ -1465,7 +1025,7 @@ class APPLE_Remove:
                 "Referer": "https://appleid.apple.com/",
                 "Accept-Encoding": "gzip, deflate, br, zstd",
                 "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-                "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; itspod=16; caw-at={self.caw_at}; awat={self.awat_7}; aid={self.aid_4}",
+                "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; itspod=16; caw-at={self.caw_at}; awat={self.awat_7};",
             }
             response = requests.get(
                 url=url,
@@ -1504,7 +1064,7 @@ class APPLE_Remove:
                 "Referer": "https://appleid.apple.com/",
                 "Accept-Encoding": "gzip, deflate, br, zstd",
                 "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-                "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; itspod=16; aid={self.aid_4}; caw-at={self.caw_at}; awat={self.awat_8}",
+                "Cookie": f"dssid2=b99cb946-5068-4333-b0bb-11d6b876874b; dssf=1; as_sfa=Mnx1c3x1c3x8ZW5fVVN8Y29uc3VtZXJ8aW50ZXJuZXR8MHwwfDE; pltvcid=undefined; pldfltcid=f123ec0ccd59486f8ffee8e4e2c0f00e060; idclient=web; dslang=CN-ZH; site=CHN; geo=CN; myacinfo={self.myacinfo}; caw={self.caw}; aidsp={self.aidsp_2}; dat={self.dat}; itspod=16; caw-at={self.caw_at}; awat={self.awat_8}",
             }
             response = requests.delete(
                 url=url,
@@ -1521,30 +1081,30 @@ class APPLE_Remove:
 def main():
 
     apple_remove = APPLE_Remove(
-        username="antbpibailey@hotmail.com",
-        password="Aa147369",
+        username="versity@mac.com",
+        password="Aa1473691",
         Question_one="你少年时代最好的朋友叫什么名字？",
-        Answer_one="py1234",
+        Answer_one="py12345",
         Question_two="你的理想工作是什么？",
-        Answer_two="gz1234",
+        Answer_two="gz12345",
         Question_three="你的父母是在哪里认识的？",
-        Answer_three="fm1234",
+        Answer_three="fm12345",
     )
 
     result_one = apple_remove.one()
     result_two = apple_remove.two()
     result_three = apple_remove.three()
     result_four = apple_remove.four()
-    result_five = apple_remove.five()
+    # result_five = apple_remove.five()
     result_six = apple_remove.six()
-    result_seven = apple_remove.seven()
+    # result_seven = apple_remove.seven()
     result_eight = apple_remove.eight()
     result_nine = apple_remove.nine()
     result_ten = apple_remove.ten()
     result_eleven = apple_remove.eleven()
     result_twelve = apple_remove.twelve()
-    result_thirteen = apple_remove.thirteen()
-    result_fourteen = apple_remove.fourteen()
+    # result_thirteen = apple_remove.thirteen()
+    # result_fourteen = apple_remove.fourteen()
     result_fifteen = apple_remove.fifteen()
     result_sixteen = apple_remove.sixteen()
     result_seventeen = apple_remove.seventeen()
@@ -1558,14 +1118,14 @@ def main():
     result_twenty_five = apple_remove.twenty_five()
     result_twenty_six = apple_remove.twenty_six()
     result_twenty_seven = apple_remove.twenty_seven()
-    result_twenty_eight = apple_remove.twenty_eight()
-    result_twenty_nine = apple_remove.twenty_nine()
-    result_thirty = apple_remove.thirty()
+    # result_twenty_eight = apple_remove.twenty_eight()
+    # result_twenty_nine = apple_remove.twenty_nine()
+    # result_thirty = apple_remove.thirty()
     result_thirty_one = apple_remove.thirty_one()
     result_thirty_two = apple_remove.thirty_two()
-    result_thirty_three = apple_remove.thirty_three()
-    result_thirty_four = apple_remove.thirty_four()
-    result_thirty_five = apple_remove.thirty_five()
+    # result_thirty_three = apple_remove.thirty_three()
+    # result_thirty_four = apple_remove.thirty_four()
+    # result_thirty_five = apple_remove.thirty_five()
     result_thirty_six = apple_remove.thirty_six()
 
 
