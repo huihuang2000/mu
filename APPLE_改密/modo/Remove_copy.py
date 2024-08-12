@@ -996,7 +996,7 @@ class APPLE_Remove:
             proxies=self.DL,
             timeout=self.time,
         )
-        logging.info(f'scnt_11----{response.text}')
+        logging.info(f"scnt_11----{response.text}")
         return self
 
     @retry(tries=20)
