@@ -131,49 +131,6 @@ class APPLE_Remove:
         return self
 
     @retry(tries=20)
-    def four(self):
-        url = "https://appleid.apple.com/jslog"
-        headers = {
-            "Host": "appleid.apple.com",
-            "Connection": "keep-alive",
-            "Content-Length": "88",
-            "sec-ch-ua": '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-            "scnt": self.scnt,
-            "X-Apple-I-FD-Client-Info": '{"U":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36","L":"zh-CN","Z":"GMT+08:00","V":"1.1","F":"Fla44j1e3NlY5BNlY5BSmHACVZXnNA9dMGAqBZB7AxQeLaD.SAuXjodUW1BNmWjV2pNk0ug9WJ3uJtBE_.zJOyO7lY5BNleBBNlYCa1nkBMfs.ELl"}',
-            "X-Apple-I-Request-Context": "ca",
-            "sec-ch-ua-mobile": "?0",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-            "Content-Type": "application/json",
-            "Accept": "application/json, text/plain, */*",
-            "X-Apple-I-TimeZone": "Asia/Shanghai",
-            "sec-ch-ua-platform": '"Windows"',
-            "Origin": "https://appleid.apple.com",
-            "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "cors",
-            "Sec-Fetch-Dest": "empty",
-            "Referer": "https://appleid.apple.com/",
-            # "Accept-Encoding": "gzip, deflate, br, zstd",
-            "Accept-Language": "zh-CN,zh;q=0.9",
-            "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; aidsp={self.aidsp_1}; geo=CN",
-        }
-        data = {
-            "title": "ROUTE CHANGED",
-            "type": "INFO",
-            "messageMap": {"ACTION": "FE_INFO"},
-            "details": "{}",
-        }
-        response = requests.post(
-            url,
-            headers=headers,
-            data=data,
-            proxies=self.DL,
-            timeout=self.time,
-        )
-        self.aid_1 = response.cookies.get("aid")
-        logging.info(f"aid_1----{self.aid_1}")
-        return self
-
-    @retry(tries=20)
     def six(self):
         url = f"https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&skVersion=7&iframeId=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&client_id={self.serviceKey}&redirect_uri=https://appleid.apple.com&response_type=code&response_mode=web_message&state=auth-xgo22dgf-qlc6-e2kq-uw0c-4z1vnc57&authVersion=latest"
         headers = {
@@ -1094,7 +1051,7 @@ def main():
     result_one = apple_remove.one()
     result_two = apple_remove.two()
     result_three = apple_remove.three()
-    result_four = apple_remove.four()
+    # result_four = apple_remove.four()
     # result_five = apple_remove.five()
     result_six = apple_remove.six()
     # result_seven = apple_remove.seven()
