@@ -1,7 +1,7 @@
 import requests
 
 # Flask 应用程序的地址和端口
-url = "http://110.41.40.215:8044/ocr"
+url = "http://本地显示的.215:8044/ocr"
 
 
 # GET 请求测试

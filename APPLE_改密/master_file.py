@@ -1,5 +1,4 @@
 import pdb
-from xxlimited import Str
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -312,71 +311,72 @@ class APPLEThread(QThread):
         self.row = kwargs.get("row")
 
     def run(self):
-        self.emit_progress("开始", self.row)
-        self.apple = APPLE(**self.kwargs)
+        try:
+            self.emit_progress("开始", self.row)
+            self.apple = APPLE(**self.kwargs)
 
-        result_get_sstt = self.apple.Get_sstt()
-        self.emit_progress("获取SSTT", self.row)
+            result_get_sstt = self.apple.Get_sstt()
+            self.emit_progress("获取SSTT", self.row)
 
-        result_get_verification_code = self.apple.get_verification_code()
-        self.emit_progress("获取验证码", self.row)
+            result_get_verification_code = self.apple.get_verification_code()
+            self.emit_progress("获取验证码", self.row)
 
-        result_identification_codes = self.apple.Identification_codes()
-        self.emit_progress("识别验证码", self.row)
+            result_identification_codes = self.apple.Identification_codes()
+            self.emit_progress("识别验证码", self.row)
 
-        result_submit_302_1 = self.apple.Submit_302_1()
-        self.emit_progress("过302第一次", self.row)
+            result_submit_302_1 = self.apple.Submit_302_1()
+            self.emit_progress("过302第一次", self.row)
 
-        result_change_password = self.apple.Change_password()
-        self.emit_progress("选择密码模式", self.row)
+            try:
+                result_change_password = self.apple.Change_password()
+                self.emit_progress("选择密码模式", self.row)
+            except Exception as original_exception:
+                raise Exception("冻结") from original_exception
 
-        result_convert = self.apple.Convert()
-        self.emit_progress("转换", self.row)
+            result_convert = self.apple.Convert()
+            self.emit_progress("转换", self.row)
 
-        result_passed_302_2 = self.apple.Passed_302_2()
-        self.emit_progress("过302第二次", self.row)
+            result_passed_302_2 = self.apple.Passed_302_2()
+            self.emit_progress("过302第二次", self.row)
 
-        result_show_brief_information = self.apple.Show_brief_information()
-        self.emit_progress("过简介信息", self.row)
+            result_show_brief_information = self.apple.Show_brief_information()
+            self.emit_progress("过简介信息", self.row)
 
-        result_passed_302_3 = self.apple.passed_302_3()
-        self.emit_progress("过302第三次", self.row)
+            try:
+                result_passed_302_3 = self.apple.passed_302_3()
+                self.emit_progress("过302第三次", self.row)
+                result_detailed_year_month_day = self.apple.Detailed_year_month_day()
+                self.emit_progress("过年月日", self.row)
+            except Exception as original_exception:
+                raise Exception("账号频繁") from original_exception
 
-        result_detailed_year_month_day = self.apple.Detailed_year_month_day()
-        self.emit_progress("过年月日", self.row)
+            try:
+                result_passed_302_4 = self.apple.passed_302_4()
+                self.emit_progress("过302第四次", self.row)
+                result_c_j_i = self.apple.Confidential_judgment_information()
+                self.emit_progress("判断密保信息", self.row)
+            except Exception as original_exception:
+                raise Exception("年月日异常") from original_exception
 
-        result_passed_302_4 = self.apple.passed_302_4()
-        self.emit_progress("过302第四次", self.row)
+            try:
+                result_password_detail = self.apple.Please_password_detail()
+                self.emit_progress("过密码详细信息", self.row)
+            except Exception as original_exception:
+                raise Exception("密保有误") from original_exception
 
-        result_confidential_judgment_information = (
-            self.apple.Confidential_judgment_information()
-        )
-        self.emit_progress("判断密保信息", self.row)
+            result_passed_302_5 = self.apple.passed_302_5()
+            self.emit_progress("过302第五次", self.row)
 
-        result_password_detail = self.apple.Please_password_detail()
-        self.emit_progress("过密码详细信息", self.row)
+            result_check_password = self.apple.Check_password()
+            self.emit_progress("校验密码", self.row)
 
-        result_passed_302_5 = self.apple.passed_302_5()
-        self.emit_progress("过302第五次", self.row)
+            result_change_password_2 = self.apple.Change_password_2()
+            self.emit_progress("更改密码", self.row)
 
-        result_check_password = self.apple.Check_password()
-        self.emit_progress("校验密码", self.row)
-
-        result_change_password_2 = self.apple.Change_password_2()
-        self.emit_progress("更改密码", self.row)
-
-        if "resetCompleted" in result_change_password_2:
-            result = str(result_change_password_2["resetCompleted"])
-            self.emit_progress(result, self.row)
-        elif (
-            "service_errors" in result_change_password_2
-            and result_change_password_2["service_errors"]
-        ):
-            result = result_change_password_2["service_errors"][0]["message"]
-            self.emit_progress(result, self.row)
-        else:
-            result = None
-            self.emit_progress(result, self.row)
+            status = result_change_password_2.status
+            self.emit_progress(status, self.row)
+        except Exception as e:
+            self.emit_progress(str(e), self.row)
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)

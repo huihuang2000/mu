@@ -24,6 +24,18 @@ class APPLE:
         }
         self.time = (3, 5)
 
+        print("Username:", self.username)
+        print("Password:", self.password)
+        print("Year:", self.year)
+        print("Month of Year:", self.monthOfYear)
+        print("Day of Month:", self.dayOfMonth)
+        print("Question One:", self.question_one)
+        print("Answer One:", self.answer_one)
+        print("Question Two:", self.question_two)
+        print("Answer Two:", self.answer_two)
+        print("Question Three:", self.question_three)
+        print("Answer Three:", self.answer_three)
+
     @retry(tries=20)
     def Get_sstt(self):
         headers = {
@@ -241,6 +253,8 @@ class APPLE:
             timeout=self.time,
         )
         self.x_apple_i_web_token_5 = response.cookies.get("X-Apple-I-Web-Token")
+        if self.x_apple_i_web_token_5 is None:
+            raise ValueError("X-Apple-I-Web-Token cookie is missing")
         return self
 
     @retry(tries=20)
@@ -278,6 +292,8 @@ class APPLE:
         )
         self.x_apple_i_web_token_6 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_4 = unquote(response.headers["sstt"])
+        if self.x_apple_i_web_token_6 is None:
+            raise ValueError("X-Apple-I-Web-Token6")
         return self
 
     @retry(tries=20)
@@ -402,7 +418,7 @@ class APPLE:
             "sec-ch-ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
-            "sstt": quote(self.sstt_5),
+            "sstt": self.sstt_5,
         }
 
         params = {
@@ -645,6 +661,7 @@ class APPLE:
             timeout=self.time,
         )
         self.sstt_10 = unquote(response.headers["sstt"])
+        # 密码问题
         self.x_apple_i_web_token_13 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
@@ -738,8 +755,15 @@ class APPLE:
             proxies=self.DL,
             timeout=self.time,
         )
+        response_data = response.json()
+        service_errors = response_data.get("service_errors", [])
+        if isinstance(service_errors, list) and len(service_errors) > 0:
+            message = service_errors[0].get("message")
+            self.status = message
+        else:
+            self.status = "修改成功"
         print(response.text)
-        return response.json()
+        return self
 
 
 if __name__ == "__main__":
@@ -791,16 +815,16 @@ if __name__ == "__main__":
 
     # 使用示例
     result = start_process(
-        username="matgordonidn@outlook.com",
-        password="Aa1473691",
+        username="yohtaydarv11@gmail.com",
+        password="Aa147365511",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py1234",
+        answer_one="py123456",
         question_two="你的理想工作是什么？",
-        answer_two="gz1234",
+        answer_two="gz123456",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm1234",
+        answer_three="fm123456",
     )
     print(result)
