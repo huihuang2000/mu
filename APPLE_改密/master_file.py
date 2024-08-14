@@ -436,23 +436,25 @@ class APPLEThread_2(QThread):
                 result_passed_302_3 = self.apple.passed_302_3()
                 self.emit_progress("带密码过302第三次", self.row)
             except Exception as original_exception:
-                raise Exception("密码有误") from original_exception    
+                raise Exception("密码有误") from original_exception
 
             result_passed_302_4 = self.apple.passed_302_4()
             self.emit_progress("过302第四次", self.row)
-            
+
             try:
-                result_confidential_judgment_information =self.apple.three_factor_authentication()
+                result_confidential_judgment_information = (
+                    self.apple.three_factor_authentication()
+                )
                 self.emit_progress("判断原生密保信息", self.row)
             except Exception as original_exception:
-                raise Exception("账号频繁") from original_exception 
+                raise Exception("账号频繁") from original_exception
 
             try:
                 result_passed_302_5 = self.apple.passed_302_5()
                 self.emit_progress("三选一过密保校验", self.row)
             except Exception as original_exception:
-                raise Exception("密保有误") from original_exception 
-            
+                raise Exception("密保有误") from original_exception
+
             result_all_security_information = self.apple.all_security_information()
             self.emit_progress("所有密保信息", self.row)
 
@@ -509,19 +511,22 @@ class APPLEThread_3(QThread):
                 self.emit_progress("10-获取response_3", self.row)
                 result_eleven = self.apple_remove.eleven()
                 self.emit_progress(
-                    "11-获取scnt_2|X_Apple_ID_Session_Id|X_Apple_Auth_Attributes", self.row
+                    "11-获取scnt_2|X_Apple_ID_Session_Id|X_Apple_Auth_Attributes",
+                    self.row,
                 )
             except Exception as original_exception:
-                raise Exception("密码有误或锁定") from original_exception     
-            
+                raise Exception("密码有误或锁定") from original_exception
+
             try:
                 result_twelve = self.apple_remove.twelve()
                 self.emit_progress("12-获取服务器密保", self.row)
                 result_fifteen = self.apple_remove.fifteen()
-                self.emit_progress("15-scnt_4|X_Apple_Repair_Session_Token|...", self.row)
+                self.emit_progress(
+                    "15-scnt_4|X_Apple_Repair_Session_Token|...", self.row
+                )
             except Exception as original_exception:
-                raise Exception("密保有误") from original_exception     
-               
+                raise Exception("密保有误") from original_exception
+
             result_sixteen = self.apple_remove.sixteen()
             self.emit_progress("16-scnt_6|X_Apple_Session_Token", self.row)
             result_seventeen = self.apple_remove.seventeen()
@@ -605,18 +610,25 @@ class APPLEThread_4(QThread):
             self.emit_progress("7-获取Location", self.row)
             result_Eight = self.apple_remove.Eight()
             self.emit_progress("8-获取sstt_6", self.row)
-            result_Nine = self.apple_remove.Nine()
-            self.emit_progress("9-获取Location_2", self.row)
-            result_Ten = self.apple_remove.Ten()
-            self.emit_progress("10-sstt_8", self.row)
-            result_Eleven = self.apple_remove.Eleven()
-            self.emit_progress("11-匹配密保", self.row)
-            result_Twelve = self.apple_remove.Twelve()
-            self.emit_progress("12-获取sstt_10", self.row)
-            result_thirteen = self.apple_remove.thirteen()
-            self.emit_progress("13-获取Location_4", self.row)
-            result_fourteen = self.apple_remove.fourteen()
-            self.emit_progress("14-获取sstt_11", self.row)
+            try:
+                result_Nine = self.apple_remove.Nine()
+                self.emit_progress("9-获取Location_2", self.row)
+                result_Ten = self.apple_remove.Ten()
+                self.emit_progress("10-sstt_8", self.row)
+                result_Eleven = self.apple_remove.Eleven()
+                self.emit_progress("11-匹配密保", self.row)
+            except Exception as original_exception:
+                raise Exception("年月日错误") from original_exception
+
+            try:
+                result_Twelve = self.apple_remove.Twelve()
+                self.emit_progress("12-获取sstt_10", self.row)
+                result_thirteen = self.apple_remove.thirteen()
+                self.emit_progress("13-获取Location_4", self.row)
+                result_fourteen = self.apple_remove.fourteen()
+                self.emit_progress("14-获取sstt_11", self.row)
+            except Exception as original_exception:
+                raise Exception("密保错误") from original_exception
             result_fifteen = self.apple_remove.fifteen()
             status = result_fifteen.status
             self.emit_progress(status, self.row)

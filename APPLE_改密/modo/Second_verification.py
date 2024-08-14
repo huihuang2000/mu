@@ -2,9 +2,10 @@ import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
 
-'''
+"""
 移除二次
-'''
+"""
+
 
 class APPLE_verification:
 
@@ -61,7 +62,10 @@ class APPLE_verification:
             # "Cookie": "idclient=web; dslang=CN-ZH; site=CHN; ifssp=8F6D6A18FFA1A8AFF0ADB6956DB0E7474DAD3DBE0B9B52D7DEE473886AFA3295C1C6359E8C6370EABACF449D8ED6993B287621F6199695CA11613D923CB4EAF9F3514E0D4C1D3F12ABC1761B59A5836867B436AE0AA82721C95453EC30C465C1E35177645C16EF1C8B90C7B4B8BC2B8876C7A6D869F9F1F1; geo=CN"
         }
         response = requests.get(
-            "https://iforgot.apple.com/password/verify/appleid", headers=headers,proxies=self.DL,timeout=self.time,
+            "https://iforgot.apple.com/password/verify/appleid",
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.sstt = re.search(r'"sstt":"([^"]+)"', response.text).group(1)
         self.x_apple_i_web_token = response.cookies.get("X-Apple-I-Web-Token")
@@ -94,7 +98,11 @@ class APPLE_verification:
             "captchaType": "IMAGE",
         }
         response = requests.get(
-            "https://iforgot.apple.com/captcha", params=params, headers=headers,proxies=self.DL,timeout=self.time,
+            "https://iforgot.apple.com/captcha",
+            params=params,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.captcha = response.json()["payload"]["content"]
         self.x_apple_i_web_token_2 = response.cookies.get("X-Apple-I-Web-Token")
@@ -157,7 +165,8 @@ class APPLE_verification:
                     headers=headers,
                     json=json_data,
                     allow_redirects=False,
-                    proxies=self.DL,timeout=self.time,
+                    proxies=self.DL,
+                    timeout=self.time,
                 )
                 self.sstt_2 = unquote(response.headers["Sstt"])
                 self.x_apple_i_web_token_3 = response.cookies.get("X-Apple-I-Web-Token")
@@ -211,7 +220,9 @@ class APPLE_verification:
             "https://iforgot.apple.com/password/verify/phone",
             params=params,
             cookies=cookies,
-            headers=headers,proxies=self.DL,timeout=self.time,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         if response.text == "{ }":
             self.status = "此号无密保"
@@ -256,7 +267,9 @@ class APPLE_verification:
         response = requests.get(
             "https://iforgot.apple.com/password/verify/phone",
             cookies=cookies,
-            headers=headers,proxies=self.DL,timeout=self.time,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_5 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_4 = re.search(r'"sstt":"([^"]+)"', response.text).group(1)
@@ -301,7 +314,9 @@ class APPLE_verification:
             "https://iforgot.apple.com/password/verify/phone/unenrollment",
             cookies=cookies,
             headers=headers,
-            allow_redirects=False,proxies=self.DL,timeout=self.time,
+            allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_6 = response.cookies.get("X-Apple-I-Web-Token")
         self.Location = response.headers["Location"]
@@ -342,7 +357,9 @@ class APPLE_verification:
         response = requests.get(
             f"https://iforgot.apple.com{self.Location}",
             cookies=cookies,
-            headers=headers,proxies=self.DL,timeout=self.time,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
         self.sstt_6 = response.headers["Sstt"]
@@ -393,7 +410,9 @@ class APPLE_verification:
             cookies=cookies,
             headers=headers,
             json=json_data,
-            allow_redirects=False,proxies=self.DL,timeout=self.time,
+            allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.x_apple_i_web_token_8 = response.cookies.get("X-Apple-I-Web-Token")
         self.Location_2 = response.headers["Location"]
@@ -435,7 +454,9 @@ class APPLE_verification:
         response = requests.get(
             f"https://iforgot.apple.com{self.Location_2}",
             cookies=cookies,
-            headers=headers,proxies=self.DL,timeout=self.time,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         self.question = response.json()
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
@@ -512,7 +533,9 @@ class APPLE_verification:
             cookies=cookies,
             headers=headers,
             json=json_data,
-            allow_redirects=False,proxies=self.DL,timeout=self.time,
+            allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # print(response.headers)
         # print(response.status_code)
@@ -557,7 +580,9 @@ class APPLE_verification:
         response = requests.get(
             f"https://iforgot.apple.com{self.Location_3}",
             cookies=cookies,
-            headers=headers,proxies=self.DL,timeout=self.time,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # print(response.text)
         # print(response.headers)
@@ -591,7 +616,12 @@ class APPLE_verification:
         }
         data = ""
         response = requests.post(
-            url=url, headers=headers, data=data, allow_redirects=False,proxies=self.DL,timeout=self.time,
+            url=url,
+            headers=headers,
+            data=data,
+            allow_redirects=False,
+            proxies=self.DL,
+            timeout=self.time,
         )
         # print(response.headers)
         # print(response.status_code)
@@ -620,7 +650,12 @@ class APPLE_verification:
             "Accept-Language": "zh-CN,zh;q=0.9",
             "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; pltvcid=undefined; ifssp={self.ifssp}; X-Apple-I-Web-Token={self.x_apple_i_web_token_12}",
         }
-        response = requests.get(url=url, headers=headers,proxies=self.DL,timeout=self.time,)
+        response = requests.get(
+            url=url,
+            headers=headers,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         # print(response.text)
         self.sstt_11 = response.headers["sstt"]
         self.x_apple_i_web_token_13 = response.cookies.get("X-Apple-I-Web-Token")
@@ -651,7 +686,13 @@ class APPLE_verification:
             "Cookie": f"idclient=web; dslang=CN-ZH; site=CHN; geo=CN; pldfltcid=9d562bc73d6f4a3e8623983cd00792dc047; pltvcid=undefined; ifssp={self.ifssp}; X-Apple-I-Web-Token={self.x_apple_i_web_token_13}",
         }
         json_data = {"password": self.password}
-        response = requests.post(url=url, headers=headers, json=json_data,proxies=self.DL,timeout=self.time,)
+        response = requests.post(
+            url=url,
+            headers=headers,
+            json=json_data,
+            proxies=self.DL,
+            timeout=self.time,
+        )
         response_data = response.json()
         service_errors = response_data.get("service_errors", [])
         if isinstance(service_errors, list) and len(service_errors) > 0:
@@ -713,15 +754,15 @@ if __name__ == "__main__":
     result = start_process(
         # username="versity@mac.com",
         username="antbpibailey@hotmail.com",
-        password="Aa14736911",
+        password="Aa147369112",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         question_one="你少年时代最好的朋友叫什么名字？",
-        answer_one="py12345",
+        answer_one="py123451",
         question_two="你的理想工作是什么？",
-        answer_two="gz12345",
+        answer_two="gz123451",
         question_three="你的父母是在哪里认识的？",
-        answer_three="fm12345",
+        answer_three="fm123451",
     )
     print(result)

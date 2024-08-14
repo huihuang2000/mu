@@ -3,9 +3,10 @@ import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
 
-'''
+"""
 改密保
-'''
+"""
+
 
 class APPLE_2:
 
@@ -346,7 +347,7 @@ class APPLE_2:
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
-    @retry(tries=20)#密码错误
+    @retry(tries=20)  # 密码错误
     def passed_302_3(self):
         cookies = {
             "idclient": "web",
@@ -490,7 +491,7 @@ class APPLE_2:
         # print(response.text)
         return self
 
-    @retry(tries=20)#密保答案
+    @retry(tries=20)  # 密保答案
     def passed_302_5(self):
         cookies = {
             "idclient": "web",
@@ -563,7 +564,7 @@ class APPLE_2:
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
-    @retry(tries=20)#密保答案
+    @retry(tries=20)  # 密保答案
     def all_security_information(self):
         cookies = {
             "idclient": "web",
@@ -684,12 +685,13 @@ class APPLE_2:
         if isinstance(service_errors, list) and len(service_errors) > 0:
             message = service_errors[0].get("message")
             self.status = message
-        elif all(k in response_data for k in ['multipleEmails','name','sstt']):
+        elif all(k in response_data for k in ["multipleEmails", "name", "sstt"]):
             self.status = "修改成功"
         else:
             self.status = "修改失败"
         print(response.text)
         return self
+
 
 if __name__ == "__main__":
     apple = APPLE_2(

@@ -2,9 +2,10 @@ import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
 
-'''
+"""
 更改密码
-'''
+"""
+
 
 class APPLE:
 
