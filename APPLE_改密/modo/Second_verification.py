@@ -2,6 +2,9 @@ import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
 
+'''
+移除二次
+'''
 
 class APPLE_verification:
 
