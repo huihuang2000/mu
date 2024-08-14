@@ -406,64 +406,63 @@ class APPLEThread_2(QThread):
         self.row = kwargs.get("row")
 
     def run(self):
-        self.apple = APPLE_2(**self.kwargs)
+        try:
+            self.apple = APPLE_2(**self.kwargs)
 
-        result_get_sstt = self.apple.Get_sstt()
-        self.emit_progress("获取SSTT", self.row)
+            result_get_sstt = self.apple.Get_sstt()
+            self.emit_progress("获取SSTT", self.row)
 
-        result_get_verification_code = self.apple.get_verification_code()
-        self.emit_progress("获取验证码", self.row)
+            result_get_verification_code = self.apple.get_verification_code()
+            self.emit_progress("获取验证码", self.row)
 
-        result_identification_codes = self.apple.Identification_codes()
-        self.emit_progress("识别验证码", self.row)
+            result_identification_codes = self.apple.Identification_codes()
+            self.emit_progress("识别验证码", self.row)
 
-        result_submit_302_1 = self.apple.Submit_302_1()
-        self.emit_progress("带验证码过302第一次", self.row)
+            result_submit_302_1 = self.apple.Submit_302_1()
+            self.emit_progress("带验证码过302第一次", self.row)
 
-        result_change_password = self.apple.Change_password()
-        self.emit_progress("选择模式", self.row)
+            result_change_password = self.apple.Change_password()
+            self.emit_progress("选择模式", self.row)
 
-        result_convert = self.apple.Convert()
-        self.emit_progress("转换", self.row)
+            result_convert = self.apple.Convert()
+            self.emit_progress("转换", self.row)
 
-        result_passed_302_2 = self.apple.Passed_302_2()
-        self.emit_progress("选择密保模式", self.row)
+            result_passed_302_2 = self.apple.Passed_302_2()
+            self.emit_progress("选择密保模式", self.row)
 
-        result_show_brief_information = self.apple.Show_brief_information()
-        self.emit_progress("过简介信息", self.row)
+            result_show_brief_information = self.apple.Show_brief_information()
+            self.emit_progress("过简介信息", self.row)
+            try:
+                result_passed_302_3 = self.apple.passed_302_3()
+                self.emit_progress("带密码过302第三次", self.row)
+            except Exception as original_exception:
+                raise Exception("密码有误") from original_exception    
 
-        result_passed_302_3 = self.apple.passed_302_3()
-        self.emit_progress("带密码过302第三次", self.row)
+            result_passed_302_4 = self.apple.passed_302_4()
+            self.emit_progress("过302第四次", self.row)
+            
+            try:
+                result_confidential_judgment_information =self.apple.three_factor_authentication()
+                self.emit_progress("判断原生密保信息", self.row)
+            except Exception as original_exception:
+                raise Exception("账号频繁") from original_exception 
 
-        result_passed_302_4 = self.apple.passed_302_4()
-        self.emit_progress("过302第四次", self.row)
+            try:
+                result_passed_302_5 = self.apple.passed_302_5()
+                self.emit_progress("三选一过密保校验", self.row)
+            except Exception as original_exception:
+                raise Exception("密保有误") from original_exception 
+            
+            result_all_security_information = self.apple.all_security_information()
+            self.emit_progress("所有密保信息", self.row)
 
-        result_confidential_judgment_information = (
-            self.apple.three_factor_authentication()
-        )
-        self.emit_progress("判断原生密保信息", self.row)
+            result_change_security_settings = self.apple.change_security_settings()
+            self.emit_progress("更改密保", self.row)
 
-        result_passed_302_5 = self.apple.passed_302_5()
-        self.emit_progress("三选一过密保校验", self.row)
-
-        result_all_security_information = self.apple.all_security_information()
-        self.emit_progress("出所有密保信息", self.row)
-
-        result_change_security_settings = self.apple.change_security_settings()
-        self.emit_progress("更改密保", self.row)
-
-        # if "resetCompleted" in result_change_security_settings:
-        #     result = str(result_change_security_settings["resetCompleted"])
-        #     self.emit_progress(result, self.row)
-        # elif (
-        #     "service_errors" in result_change_security_settings
-        #     and result_change_security_settings["service_errors"]
-        # ):
-        #     result = result_change_security_settings["service_errors"][0]["message"]
-        #     self.emit_progress(result, self.row)
-        # else:
-        #     result = None
-        #     self.emit_progress(result, self.row)
+            status = result_change_security_settings.status
+            self.emit_progress(status, self.row)
+        except Exception as e:
+            self.emit_progress(str(e), self.row)
 
     def emit_progress(self, message, row):
         self.progress_signal.emit(message, row)

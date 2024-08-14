@@ -1,3 +1,4 @@
+from sre_constants import IN
 import requests, re
 from urllib.parse import unquote, quote
 from retry import retry
@@ -23,6 +24,19 @@ class APPLE_2:
         self.pass_1 = kwargs.get("pass_1")
         self.pass_2 = kwargs.get("pass_2")
         self.pass_3 = kwargs.get("pass_3")
+
+        print("Username:", self.username)
+        print("Password:", self.password)
+
+        print("Question One:", self.question_one)
+        print("Answer One:", self.answer_one)
+        print("Question Two:", self.question_two)
+        print("Answer Two:", self.answer_two)
+        print("Question Three:", self.question_three)
+        print("Answer Three:", self.answer_three)
+        print("pass_1", self.pass_1)
+        print("pass_2", self.pass_2)
+        print("pass_3", self.pass_3)
 
         self.DL = {
             "http": "http://usera1:pwdword2@tunnel1.docip.net:18199",
@@ -332,7 +346,7 @@ class APPLE_2:
         self.x_apple_i_web_token_7 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
-    @retry(tries=20)
+    @retry(tries=20)#密码错误
     def passed_302_3(self):
         cookies = {
             "idclient": "web",
@@ -424,6 +438,7 @@ class APPLE_2:
             timeout=self.time,
         )
         self.sstt_7 = unquote(response.headers["sstt"])
+        # print(self.sstt_7)
         self.x_apple_i_web_token_9 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
@@ -472,10 +487,10 @@ class APPLE_2:
         self.sstt_8 = response.json()["sstt"]
         self.x_apple_i_web_token_10 = response.cookies.get("X-Apple-I-Web-Token")
         self.three_times = response.json()
-        print(response.text)
+        # print(response.text)
         return self
 
-    @retry(tries=20)
+    @retry(tries=20)#密保答案
     def passed_302_5(self):
         cookies = {
             "idclient": "web",
@@ -548,7 +563,7 @@ class APPLE_2:
         self.x_apple_i_web_token_11 = response.cookies.get("X-Apple-I-Web-Token")
         return self
 
-    @retry(tries=20)
+    @retry(tries=20)#密保答案
     def all_security_information(self):
         cookies = {
             "idclient": "web",
@@ -664,23 +679,31 @@ class APPLE_2:
             proxies=self.DL,
             timeout=self.time,
         )
-        print(response.json())
-        return response.json()
-
+        response_data = response.json()
+        service_errors = response_data.get("service_errors", [])
+        if isinstance(service_errors, list) and len(service_errors) > 0:
+            message = service_errors[0].get("message")
+            self.status = message
+        elif all(k in response_data for k in ['multipleEmails','name','sstt']):
+            self.status = "修改成功"
+        else:
+            self.status = "修改失败"
+        print(response.text)
+        return self
 
 if __name__ == "__main__":
     apple = APPLE_2(
-        username="matgordonidn@outlook.com",
-        password="Aa147369",
+        username="adamsartin1@gmail.com",
+        password="Qaz1473691",
         year_item="1993",
         monthOfYear_item="05",
         dayOfMonth_item="25",
         Question_one="你少年时代最好的朋友叫什么名字？",
-        Answer_one="py1234",
+        Answer_one="py12345",
         Question_two="你的理想工作是什么？",
-        Answer_two="gz1234",
+        Answer_two="gz12345",
         Question_three="你的父母是在哪里认识的？",
-        Answer_three="fm1234",
+        Answer_three="py12345",
         pass_1="py12345",
         pass_2="gz12345",
         pass_3="fm12345",
