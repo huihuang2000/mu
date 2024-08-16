@@ -17,6 +17,7 @@ from modo.Security_Code import APPLE_2
 from modo.Remove_copy import APPLE_Remove
 from modo.Second_verification import APPLE_verification
 
+# Pyinstaller -F -w .\master_file.py
 
 class APPLE_UI(QWidget, Ui_Form):
 
