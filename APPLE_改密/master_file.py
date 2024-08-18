@@ -1,4 +1,3 @@
-import pdb
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -10,12 +9,13 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QHeaderView,
 )
-from PySide6.QtCore import QThread, Signal
-from ui.Ui_untitled import Ui_Form
-from modo.change_password import APPLE
-from modo.Security_Code import APPLE_2
+
 from modo.Remove_copy import APPLE_Remove
 from modo.Second_verification import APPLE_verification
+from modo.Security_Code import APPLE_2
+from modo.change_password import APPLE
+from ui.Ui_untitled import Ui_Form
+
 
 # Pyinstaller -F -w .\master_file.py
 
@@ -362,11 +362,10 @@ class APPLEThread(QThread):
             try:
                 result_password_detail = self.apple.Please_password_detail()
                 self.emit_progress("过密码详细信息", self.row)
+                result_passed_302_5 = self.apple.passed_302_5()
+                self.emit_progress("过302第五次", self.row)
             except Exception as original_exception:
                 raise Exception("密保有误") from original_exception
-
-            result_passed_302_5 = self.apple.passed_302_5()
-            self.emit_progress("过302第五次", self.row)
 
             result_check_password = self.apple.Check_password()
             self.emit_progress("校验密码", self.row)

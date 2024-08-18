@@ -1,5 +1,7 @@
-from flask import Flask, request
+import asyncio
+
 import ddddocr
+from flask import Flask, request
 
 ocr = ddddocr.DdddOcr(
     det=False,
@@ -12,18 +14,14 @@ ocr = ddddocr.DdddOcr(
 app = Flask(__name__)
 
 
-@app.route("/ocr", methods=["GET", "POST"])  # 添加 "POST"
-def home():
-    # 如果是GET请求，从查询参数中获取captcha
-    # 如果是POST请求，从表单数据中获取captcha
+@app.route("/ocr", methods=["GET", "POST"])
+async def home():
     captcha = request.args.get("captcha") or request.form.get("captcha")
-
     if not captcha:
-        return "No captcha data provided", 400  # 如果没有提供captcha，返回错误信息
+        return "未提供验证码文件", 400
 
-    res = ocr.classification(captcha)
+    res = await asyncio.to_thread(ocr.classification, captcha)  # 异步执行 OCR
     return res
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8044)

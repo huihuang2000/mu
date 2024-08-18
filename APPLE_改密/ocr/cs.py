@@ -1,7 +1,9 @@
+import threading
+
 import requests
 
 # Flask 应用程序的地址和端口
-url = "http://本地显示的.215:8044/ocr"
+url = "http://127.0.0.1:8044/ocr"
 
 
 # GET 请求测试
@@ -22,6 +24,26 @@ def test_post():
     print("POST Response:", response.text)
 
 
-# 调用测试函数
-test_get()
-test_post()
+def test_function():
+    test_get()
+    test_post()
+
+
+# 定义线程的数量
+num_threads = 500
+
+# 创建并启动线程列表
+threads = []
+for i in range(num_threads):
+    # 创建线程，target 是线程要执行的函数
+    thread = threading.Thread(target=test_function)
+    # 启动线程
+    thread.start()
+    # 将线程实例添加到列表中
+    threads.append(thread)
+
+# 等待所有线程完成
+for thread in threads:
+    thread.join()
+
+print(f"所有 {num_threads} 个线程已完成执行。")
