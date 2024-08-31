@@ -5,7 +5,7 @@ import aiohttp
 import os
 import time
 import winsound
-import pygame
+# import pygame
 from itertools import zip_longest
 from PySide6.QtWidgets import (
     QApplication,

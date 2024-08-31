@@ -1,7 +1,6 @@
-import asyncio
-
-import ddddocr
 from flask import Flask, request
+import ddddocr
+import asyncio
 
 ocr = ddddocr.DdddOcr(
     det=False,

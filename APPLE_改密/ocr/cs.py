@@ -1,7 +1,5 @@
-import threading
-
 import requests
-
+import threading
 # Flask 应用程序的地址和端口
 url = "http://127.0.0.1:8044/ocr"
 

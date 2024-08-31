@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 from itertools import zip_longest
 import winsound
-import pygame
+# import pygame
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -238,8 +238,9 @@ class InterFace(QWidget):
             )
             self.table_widget.setItem(row, 8, QTableWidgetItem(str(result["Delivers"])))
             self.table_widget.setItem(row, 9, QTableWidgetItem(str(result["Bills_to"])))
-            # if result['The_status_of_the_goods'] == "DELIVERED":
-            # winsound.Beep(800, 200)
+            if result['status'] == "Cancelled":
+                winsound.Beep(800, 300)
+                
             # !!!
             # if result['The_status_of_the_goods'] == "DELIVERED":
             #         sound.play()
